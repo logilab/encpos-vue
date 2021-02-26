@@ -10,8 +10,21 @@ async function getDocumentFromApi(id) {
     return document
 }
 
+async function getPositionAnneeFromApi(id) {
+    const response = await fetch(`http://localhost:5050/dts/collections?id=ENCPOS_${id}`, {mode: 'cors'})
+    const document = await response.json()
+    return document
+}
+
+async function getMetadataENCPOSFromApi(){
+    const response = await fetch(`http://localhost:5050/dts/collections?id=ENCPOS`, {mode: 'cors'})
+    const document = await response.json()
+    return document
+}
 
 export {
     getDocumentFromApi,
-    getMetadataFromApi
+    getMetadataFromApi,
+    getPositionAnneeFromApi,
+    getMetadataENCPOSFromApi
 }

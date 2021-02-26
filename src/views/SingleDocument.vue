@@ -1,7 +1,8 @@
 <template>
-  <div class="column is-9">
-    Single document page '{{ docId }}'
+  <div class="column is-2">
     <document-metadata :id="docId" />
+  </div>
+    <div class="column is-10">
     <document :id="docId" />
   </div>
 </template>

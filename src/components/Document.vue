@@ -1,5 +1,5 @@
 <template>
-  <div v-html="document"></div>
+  <div v-html="document" id="card-content"></div>
 </template>
 
 <script>
@@ -33,3 +33,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+@import '../assets/css/html.css';
+@import '../assets/css/postprod.css';
+</style>
+
