@@ -1,18 +1,18 @@
 <template>
-  <aside class="menu is-hidden-mobile" v-if="state.metadata">
-    <p class="menu-label">Positions de thèses</p>
+  <aside class="menu is-hidden-mobile" v-if="state">
+    <p class="menu-label">Positions de thèses</p> 
     <ul class="menu-list" v-if="encpos">
       <li v-for="posannee in encpos.metadata['member']" :key="posannee['@id']">
       {{posannee['@id'].split("_")[1]}}
       </li>
     </ul>
-    <p class="menu-label">Metadata position</p>
+    <p class="menu-label">Metadata position </p>
     <ul class="menu-list">
-        <li>Auteur: {{ state.metadata["dts:extensions"]["ns1:creator"] }}</li>
-        <li v-if="state.metadata['dts:extensions']['ns1:coverage']">Période historique: {{ state.metadata["dts:extensions"]["ns1:coverage"] }}</li>
-        <li v-if="state.metadata['dts:dublincore']['dct:isPartOf'][0]['@id']"> idref : {{ state.metadata["dts:dublincore"]["dct:isPartOf"][0]["@id"] }}</li>
+        <li>Auteur: {{ state["author"] }}</li>
+        <li v-if="state['coverage']">Période historique: {{ state["coverage"] }}</li>
+        <li v-if="state['idref'] !== 'Test'"> idref : {{ state["idref"] }}</li>
     </ul>
-    <theseAnnee :id ="state.metadata['dts:extensions']['ns1:date']" />
+    <theseAnnee v-if="state['date']" :id ="state['date']" :textid="id"/>
 
   </aside>
   <div>
@@ -37,12 +37,28 @@ export default {
 
   setup(props) {
     let state = reactive({});
-    let these_annee = reactive({});
     let encpos = reactive({});
     const { id } = toRefs(props);
 
     const getMetadata = async () => {
-      state.metadata = await getMetadataFromApi(id.value);
+      var listmetadata;
+      listmetadata = await getMetadataFromApi(id.value);
+      if (typeof listmetadata["dts:dublincore"]["dct:isPartOf"][0]["@id"] !== 'undefined'){
+        state["idref"] = listmetadata["dts:dublincore"]["dct:isPartOf"][0]["@id"];
+      } else {
+        state["idref"] = "Test";
+      }
+      if (typeof listmetadata["dts:extensions"]["ns2:creator"] !== 'undefined'){
+        state["author"] = listmetadata["dts:extensions"]["ns2:creator"];
+      }
+      if (typeof listmetadata['dts:extensions']['ns2:coverage'] !== 'undefined'){
+        state["coverage"] = listmetadata['dts:extensions']['ns2:coverage'];
+      } else {
+        state["coverage"] = "";
+      }
+      if (typeof listmetadata['dts:extensions']['ns2:date'] !== 'undefined'){
+        state["date"] = listmetadata['dts:extensions']['ns2:date'];
+      }
     }; 
 
     const getMetadataENCPOS= async () =>{
@@ -62,7 +78,6 @@ export default {
 
     return {
       state,
-      these_annee,
       encpos
     };
   },
