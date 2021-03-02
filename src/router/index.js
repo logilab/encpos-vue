@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import SingleDocument from '../views/SingleDocument.vue'
+import DocumentPage from '../views/DocumentPage.vue'
 
 const routes = [
   {
@@ -18,8 +18,8 @@ const routes = [
   },
   {
     path: '/document/:docId',
-    name: 'SingleDocument',
-    component: SingleDocument,
+    name: 'DocumentPage',
+    component: DocumentPage,
     props: true
   },
 ]
