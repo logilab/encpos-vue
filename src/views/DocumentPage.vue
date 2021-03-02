@@ -45,9 +45,19 @@ export default {
       }
       console.log(namespacedt);
       try {
-        metadata["idref"] = listmetadata["dts:dublincore"]["dct:isPartOf"][0]["@id"];
+        metadata["sudoc"] = listmetadata["dts:dublincore"]["dct:isPartOf"][0]["@id"];
       } catch {
-        metadata["idref"] = null; // to be refactored
+        metadata["sudoc"] = null; // to be refactored
+      }
+      try{
+        metadata["benc"] = listmetadata["dts:dublincore"]["dct:isPartOf"][1];
+      } catch{
+        metadata["benc"] = null;
+      }
+      try{
+        metadata["idref"] = listmetadata["dts:dublincore"]["dct:creator"][0]["@id"];
+      } catch{
+        metadata["idref"] = null;
       }
 
       const extensions = listmetadata["dts:extensions"];
@@ -55,6 +65,7 @@ export default {
         metadata["author"] = extensions[namespacedt+":creator"];
         metadata["coverage"] = extensions[namespacedt+":coverage"];
         metadata["date"] = extensions[namespacedt+":date"];
+        metadata["title"] = extensions[namespacedt+":title"][0]['@value'];
       }
 
       state.metadata = metadata;

@@ -1,5 +1,4 @@
 #aside {
-    position: inherit;
     resize: none;
     padding: 0em 1em 1em 0;
     border: none;
@@ -49,11 +48,13 @@
 }
 
 #center {
-
+    width: 100%;
+    margin-left: 2em;
+    margin-right: 2em;
 }
 
 #article {
-    padding-left: 0em;
+    padding-left: 23em;
     float: left;
 }
 
