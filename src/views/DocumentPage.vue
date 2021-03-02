@@ -36,7 +36,14 @@ export default {
     const getMetadata = async () => {
       let metadata = {};
       const listmetadata = await getMetadataFromApi(docId.value);
-
+      var namespacedt = "";
+      console.log(typeof listmetadata["@context"]);
+      for (const namespace in listmetadata["@context"]){
+          if (listmetadata["@context"][namespace]==="http://purl.org/dc/elements/1.1/"){
+            namespacedt = namespace;
+          }
+      }
+      console.log(namespacedt);
       try {
         metadata["idref"] = listmetadata["dts:dublincore"]["dct:isPartOf"][0]["@id"];
       } catch {
@@ -45,9 +52,9 @@ export default {
 
       const extensions = listmetadata["dts:extensions"];
       if (extensions) {
-        metadata["author"] = extensions["ns2:creator"];
-        metadata["coverage"] = extensions["ns2:coverage"];
-        metadata["date"] = extensions["ns2:date"];
+        metadata["author"] = extensions[namespacedt+":creator"];
+        metadata["coverage"] = extensions[namespacedt+":coverage"];
+        metadata["date"] = extensions[namespacedt+":date"];
       }
 
       state.metadata = metadata;
