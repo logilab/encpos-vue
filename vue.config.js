@@ -1,5 +1,4 @@
-// vue.config.js
+// webpack.config.js
 module.exports = {
-    // options...
-    publicPath : '/'
-  }
+  publicPath: '/'
+};
