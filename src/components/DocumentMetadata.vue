@@ -7,9 +7,9 @@
       </ul>
       <p class="menu-label">Metadata position</p>
       <ul class="menu-list">
-        <li>Auteur: {{ state["author"] }}</li>
+        <li v-if="state['author']">Auteur: {{ state["author"] }}</li>
         <li v-if="state['coverage']">Période historique: {{ state["coverage"] }}</li>
-        <li v-if="state['idref'] !== 'Test'">idref : {{ state["idref"] }}</li>
+        <li v-if="state['idref']">idref : {{ state["idref"] }}</li>
       </ul>
     </aside>
 
@@ -42,25 +42,14 @@ export default {
       try {
         state["idref"] = listmetadata["dts:dublincore"]["dct:isPartOf"][0]["@id"];
       } catch {
-        state["idref"] = "Test";
+        state["idref"] = null;
       }
 
-      try {
-        state["author"] = listmetadata["dts:extensions"]["ns2:creator"];
-      } catch {
-        state["author"] = null;
-      }
-
-      try {
-        state["coverage"] = listmetadata["dts:extensions"]["ns2:coverage"];
-      } catch {
-        state["coverage"] = null;
-      }
-
-      try {
-        state["date"] = listmetadata["dts:extensions"]["ns2:date"];
-      } catch {
-        state["date"] = null;
+      const extensions = listmetadata["dts:extensions"];
+      if (extensions) {
+        state["author"] = extensions["ns2:creator"];
+        state["coverage"] = extensions["ns2:coverage"];
+        state["date"] = extensions["ns2:date"];
       }
     };
 
