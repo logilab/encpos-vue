@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import DocumentPage from '../views/DocumentPage.vue'
 
+const rootURL = `${process.env.VUE_APP_APP_ROOT_URL}`
+
 const routes = [
   {
     path: '/',
@@ -25,7 +27,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(rootURL),
   routes
 })
 
