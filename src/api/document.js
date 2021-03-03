@@ -20,7 +20,7 @@ async function getPositionAnneeFromApi(id) {
 }
 
 async function getMetadataENCPOSFromApi(){
-    const response = await fetch(`http://localhost:5050/dts/collections?id=ENCPOS`, {mode: 'cors'})
+    const response = await fetch(`${_baseApiURL}/collections?id=ENCPOS`, {mode: 'cors'})
     const document = await response.json()
     return document
 }
