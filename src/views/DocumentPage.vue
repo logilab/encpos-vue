@@ -37,23 +37,30 @@ export default {
       let metadata = {};
       const listmetadata = await getMetadataFromApi(docId.value);
       var namespacedt = "";
-      console.log(typeof listmetadata["@context"]);
       for (const namespace in listmetadata["@context"]){
           if (listmetadata["@context"][namespace]==="http://purl.org/dc/elements/1.1/"){
             namespacedt = namespace;
           }
       }
-      console.log(namespacedt);
+      metadata["sudoc"] = null;
+      metadata["benc"] = null;
+      var PartOf;
       try {
-        metadata["sudoc"] = listmetadata["dts:dublincore"]["dct:isPartOf"][0]["@id"];
+        PartOf = listmetadata["dts:dublincore"]["dct:isPartOf"];
       } catch {
-        metadata["sudoc"] = null; // to be refactored
+        PartOf  = "";
       }
-      try{
-        metadata["benc"] = listmetadata["dts:dublincore"]["dct:isPartOf"][1];
-      } catch{
-        metadata["benc"] = null;
+      if (PartOf !== undefined){
+        for (const member of PartOf){
+          if (typeof member === "object"){
+            metadata["sudoc"] = member["@id"];
+          }
+          else if (member.includes("benc")){
+            metadata["benc"] = member;
+          }
+        }
       }
+
       try{
         metadata["idref"] = listmetadata["dts:dublincore"]["dct:creator"][0]["@id"];
       } catch{
