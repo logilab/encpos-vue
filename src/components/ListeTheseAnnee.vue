@@ -2,9 +2,13 @@
   <p class="menu-label">Thèses de l'année :</p>
   <ul class="menu-list" v-if="state.metadata">
     <li v-for="these in state.metadata" :key="these">
-      <ul>
+      <ul v-if="these[1] !== 'None'">
         <b v-if="these[0] === textid">{{ these[1] }} - {{ these[2] }}</b>
         <router-link :to="these[0]" v-else>{{ these[1] }} - {{ these[2] }}</router-link>
+      </ul>
+      <ul v-else>
+        <b v-if="these[0] === textid">{{ these[2] }}</b>
+        <router-link :to="these[0]" v-else>{{ these[2] }}</router-link>
       </ul>
     </li>
   </ul>
