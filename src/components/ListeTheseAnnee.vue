@@ -1,5 +1,8 @@
 <template>
-  <p class="menu-label">Thèses de l'année :</p>
+  <p class="menu-label">Thèses de l'année : {{annee}}</p>
+  <button v-on:click="downOneAnne"> - </button>
+  <button v-on:click="reinitalise"> Retour</button>
+  <button v-on:click="addOneAnne"> + </button>
   <ul class="menu-list" v-if="state.metadata">
     <li v-for="these in state.metadata" :key="these">
       <ul v-if="these[1] !== 'None'">
@@ -15,7 +18,7 @@
 </template>
 
 <script>
-import { reactive, toRefs, onMounted } from "vue";
+import { ref, reactive, toRefs, onMounted, onUpdated} from "vue";
 import { getPositionAnneeFromApi } from "@/api/document";
 
 export default {
@@ -25,10 +28,12 @@ export default {
   setup(props) {
     let state = reactive({});
     const { id } = toRefs(props);
+    var annee  = ref(id.value);
+    console.log(annee.value);
 
     const getPositionThese = async () => {
       let metadata = {};
-      const data = await getPositionAnneeFromApi(id.value);
+      const data = await getPositionAnneeFromApi(annee.value);
       var namespacedt;
 
       for (const namespace in data["@context"]){
@@ -55,9 +60,37 @@ export default {
 
     onMounted(getPositionThese);
 
+    onUpdated(getPositionThese);
+
+    const downOneAnne = function() {
+      let anneedown = parseInt(annee.value);
+      anneedown -= 1;
+      annee.value = anneedown.toString();
+      return annee;
+    }
+
+    const reinitalise = function() {
+      console.log(id.value)
+      annee.value = id.value;
+      return annee;
+    }
+
+    const addOneAnne= function() {
+      let anneeup = parseInt(annee.value);
+      anneeup += 1;
+      annee.value = anneeup.toString();
+      return annee;
+    }
+
     return {
       state,
+      addOneAnne,
+      getPositionThese,
+      annee,
+      reinitalise,
+      downOneAnne
     };
-  },
+
+  }
 };
 </script>

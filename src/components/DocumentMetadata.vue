@@ -1,9 +1,9 @@
 <template>
   <div v-if="metadata">
     <aside class="menu is-hidden-mobile">
-      <p class="menu-label">Metadata position</p>
-      <ul class="menu-list">
-        <li v-if="metadata['author'] !== 'None'">Auteur: {{ metadata["author"] }}</li>
+      <p class="menu-label" v-if="metadata['author'] !== 'None'">Metadata position</p>
+      <ul class="menu-list" v-if="metadata['author'] !== 'None'">
+        <li v-if="metadata['author']">Auteur: {{ metadata["author"] }}</li>
         <li v-if="metadata['title']">Titre: {{ metadata["title"] }}</li>
         <li v-if="metadata['coverage']">
           Période historique: {{ metadata["coverage"] }}
