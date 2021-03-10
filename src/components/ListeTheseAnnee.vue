@@ -21,7 +21,7 @@
 
 <script>
 
-import { ref, reactive, toRefs, onMounted, onUpdated} from "vue";
+import { ref, reactive, toRefs, onMounted, watch} from "vue";
 import { getPositionAnneeFromApi } from "@/api/document";
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
@@ -70,7 +70,7 @@ export default {
 
     onMounted(getPositionThese);
 
-    onUpdated(getPositionThese);
+    watch(getPositionThese);
 
     const downOneAnne = function() {
       let anneedown = parseInt(annee.value);
