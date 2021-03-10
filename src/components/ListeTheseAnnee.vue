@@ -1,5 +1,7 @@
 <template>
   <p class="menu-label">Thèses de l'année : {{annee}}</p>
+    <vue-slider v-model="annee" :min="1848" :max="2017" :lazy="true" :tooltip="'active'"></vue-slider>
+  <br>
   <button v-on:click="downOneAnne"> - </button>
   <button v-on:click="reinitalise"> Retour</button>
   <button v-on:click="addOneAnne"> + </button>
@@ -18,13 +20,21 @@
 </template>
 
 <script>
+
 import { ref, reactive, toRefs, onMounted, onUpdated} from "vue";
 import { getPositionAnneeFromApi } from "@/api/document";
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/antd.css';
+
+
 
 export default {
   name: "ListeTheseAnnee",
 
   props: ["id", "textid"],
+  components:{
+    VueSlider
+  },
   setup(props) {
     let state = reactive({});
     const { id } = toRefs(props);
