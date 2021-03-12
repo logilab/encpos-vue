@@ -9,11 +9,11 @@
     <li v-for="these in state.metadata" :key="these">
       <ul v-if="these[1] !== 'None'">
         <b v-if="these[0] === textid">{{ these[1] }} - {{ these[2] }}</b>
-        <router-link :to="these[0]" v-else>{{ these[1] }} - {{ these[2] }}</router-link>
+        <router-link :to="these[0]" v-else><div v-on:click="gotoTop">{{ these[1] }} - {{ these[2] }}</div></router-link>
       </ul>
       <ul v-else>
         <b v-if="these[0] === textid">{{ these[2] }}</b>
-        <router-link :to="these[0]" v-else>{{ these[2] }}</router-link>
+        <router-link :to="these[0]" v-on:click="gotoTop" v-else>{{ these[2] }}</router-link>
       </ul>
     </li>
   </ul>
@@ -85,11 +85,15 @@ export default {
       return annee;
     }
 
-    const addOneAnne= function() {
+    const addOneAnne = function() {
       let anneeup = parseInt(annee.value);
       anneeup += 1;
       annee.value = anneeup.toString();
       return annee;
+    }
+
+    const gotoTop = function () {
+      scroll(0,0);
     }
 
     return {
@@ -98,7 +102,8 @@ export default {
       getPositionThese,
       annee,
       reinitalise,
-      downOneAnne
+      downOneAnne,
+      gotoTop
     };
 
   }

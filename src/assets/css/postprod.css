@@ -1,15 +1,3 @@
-#aside {
-    resize: none;
-    padding: 0em 1em 1em 0;
-    border: none;
-
-    margin-top: 3em;
-
-    color : inherit;
-    font-size : 16px;
-    font-family: Georgia, "Bitstream Vera Serif", Times, serif;
-
-}
 
 .reffs {
     margin-left: 2em;
@@ -21,7 +9,17 @@
     margin: 3em 0em 0em 0em;
 }
 
+#aside {
+    resize: none;
+    padding: 0em 1em 1em 0;
+    border: none;
 
+    margin-top: 3em;
+
+    color : inherit;
+    font-size : 16px;
+
+}
 
 #intro-index {
     margin-top: 3em;
@@ -53,10 +51,15 @@
     margin-right: 2em;
 }
 
-#article {
-    padding-left: 23em;
-    float: left;
+.ListeData {
+    position: sticky;
+    vertical-align: top;
+    max-height: 100vh;
+    overflow-y: auto;
+    top: 0;
+    bottom: 0;
 }
+
 
 #body-1 {
     padding-top: 0;
@@ -78,11 +81,6 @@ article > header {
 article > header > h1, h2 {
     font-family: Georgia, "Bitstream Vera Serif", Times, serif;
 }
-
-.fileDesc > .titleStmt {
-
-}
-
 
 #row-2 {
     margin-top: 30px;

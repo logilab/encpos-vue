@@ -1,6 +1,6 @@
 <template>
   <div class="column is-2">
-    <div v-if="state.metadata">
+    <div v-if="state.metadata" class="hide-button ListeData">
       <document-metadata :metadata="state.metadata" />
       <liste-these-annee
         v-if="state.metadata['date']"
