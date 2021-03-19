@@ -1,6 +1,6 @@
 <template>
   <p class="menu-label">Thèses de l'année : {{annee}}</p>
-    <vue-slider v-model="annee" :min="1848" :max="2017" :lazy="true" :tooltip="'active'"></vue-slider>
+    <vue-slider v-model="annee" :min="1849" :max="2017" :lazy="true" :tooltip="'active'"></vue-slider>
   <br>
   <button v-on:click="downOneAnne"> - </button>
   <button v-on:click="reinitalise"> Retour</button>
@@ -8,12 +8,12 @@
   <ul class="menu-list" v-if="state.metadata">
     <li v-for="these in state.metadata" :key="these">
       <ul v-if="these[1] !== 'None'">
-        <b v-if="these[0] === textid">{{ these[1] }} - {{ these[2] }}</b>
-        <router-link :to="these[0]" v-else><div v-on:click="gotoTop">{{ these[1] }} - {{ these[2] }}</div></router-link>
+        <b v-if="these[0] === textid">{{ these[1] }} - <span v-html="these[2]"></span></b>
+        <router-link :to="these[0]" v-else><div v-on:click="gotoTop">{{ these[1] }} - <span v-html="these[2]"></span></div></router-link>
       </ul>
       <ul v-else>
         <b v-if="these[0] === textid">{{ these[2] }}</b>
-        <router-link :to="these[0]" v-on:click="gotoTop" v-else>{{ these[2] }}</router-link>
+        <router-link :to="these[0]" v-on:click="gotoTop" v-else><span v-html="these[2]"></span></router-link>
       </ul>
     </li>
   </ul>
