@@ -1,16 +1,18 @@
 <template>
-  <div class="column is-2">
-    <div v-if="state.metadata" class="hide-button ListeData">
-      <document-metadata :metadata="state.metadata" />
-      <liste-these-annee
-        v-if="state.metadata['date']"
-        :id="state.metadata['date']"
-        :textid="docId"
-      />
+  <div class="columns">
+    <div class="column is-2">
+      <div v-if="state.metadata" class="hide-button ListeData">
+        <document-metadata :metadata="state.metadata" />
+        <liste-these-annee
+          v-if="state.metadata['date']"
+          :id="state.metadata['date']"
+          :textid="docId"
+        />
+      </div>
     </div>
-  </div>
-  <div class="column is-10">
-    <document :id="docId" />
+    <div class="column">
+      <document :id="docId" />
+    </div>
   </div>
 </template>
 
@@ -37,10 +39,10 @@ export default {
       let metadata = {};
       const listmetadata = await getMetadataFromApi(docId.value);
       var namespacedt = "";
-      for (const namespace in listmetadata["@context"]){
-          if (listmetadata["@context"][namespace]==="http://purl.org/dc/elements/1.1/"){
-            namespacedt = namespace;
-          }
+      for (const namespace in listmetadata["@context"]) {
+        if (listmetadata["@context"][namespace] === "http://purl.org/dc/elements/1.1/") {
+          namespacedt = namespace;
+        }
       }
       metadata["sudoc"] = null;
       metadata["benc"] = null;
@@ -48,31 +50,30 @@ export default {
       try {
         PartOf = listmetadata["dts:dublincore"]["dct:isPartOf"];
       } catch {
-        PartOf  = "";
+        PartOf = "";
       }
-      if (PartOf !== undefined){
-        for (const member of PartOf){
-          if (typeof member === "object"){
+      if (PartOf !== undefined) {
+        for (const member of PartOf) {
+          if (typeof member === "object") {
             metadata["sudoc"] = member["@id"];
-          }
-          else if (member.includes("benc")){
+          } else if (member.includes("benc")) {
             metadata["benc"] = member;
           }
         }
       }
 
-      try{
+      try {
         metadata["idref"] = listmetadata["dts:dublincore"]["dct:creator"][0]["@id"];
-      } catch{
+      } catch {
         metadata["idref"] = null;
       }
 
       const extensions = listmetadata["dts:extensions"];
       if (extensions) {
-        metadata["author"] = extensions[namespacedt+":creator"];
-        metadata["coverage"] = extensions[namespacedt+":coverage"];
-        metadata["date"] = extensions[namespacedt+":date"];
-        metadata["title"] = extensions[namespacedt+":title"][0]['@value'];
+        metadata["author"] = extensions[namespacedt + ":creator"];
+        metadata["coverage"] = extensions[namespacedt + ":coverage"];
+        metadata["date"] = extensions[namespacedt + ":date"];
+        metadata["title"] = extensions[namespacedt + ":title"][0]["@value"];
       }
 
       state.metadata = metadata;

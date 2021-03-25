@@ -4,14 +4,12 @@
 
 <script>
 import { ref, toRefs, onMounted, watch } from "vue";
-import { getDocumentFromApi} from "@/api/document";
-
+import { getDocumentFromApi } from "@/api/document";
 
 export default {
   name: "Document",
 
   props: ["id"],
-
 
   setup(props) {
     const { id } = toRefs(props);
@@ -20,10 +18,8 @@ export default {
     const getDocument = async () => {
       document.value = await getDocumentFromApi(id.value);
     };
-    
 
     onMounted(getDocument);
-
 
     watch(id, getDocument);
 
@@ -35,7 +31,6 @@ export default {
 };
 </script>
 <style scoped>
-@import '../assets/css/html.css';
-@import '../assets/css/postprod.css';
+@import "../assets/css/html.css";
+@import "../assets/css/postprod.css";
 </style>
-
