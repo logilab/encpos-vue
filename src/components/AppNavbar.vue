@@ -2,12 +2,23 @@
   <section>
     <nav class="level">
       <div class="level-left">
-        <span class="level-item">
-          <router-link to="/" active-class="active">Le projet</router-link>
+        <span class="level-item" active-class="active">
+          <router-link :to="{ name: 'SearchPage' }" active-class="active"
+            >Les positions</router-link
+          >
         </span>
-        <span class="level-item"> </span>
         <span class="level-item">
-          <router-link to="/">Les thèses</router-link>
+          <router-link :to="{ name: 'AboutPage' }" active-class="active"
+            >Le projet</router-link
+          >
+        </span>
+        <span class="level-item">
+          <router-link :to="{ name: 'DocumentationPage' }" active-class="active"
+            >Documentation</router-link
+          >
+        </span>
+        <span class="level-item">
+          <router-link to="." active-class="active">Les thèses</router-link>
         </span>
       </div>
     </nav>
@@ -20,7 +31,7 @@ nav {
 }
 section {
   padding: 14px;
-  padding-bottom: 0px;
+  padding-bottom: 30px;
 }
 a {
   color: #457b9d;

@@ -27,8 +27,6 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <article class="tile is-child box">
-            <p class="title has-text-weight-light">Middle box</p>
-            <p class="subtitle">With an image</p>
             <div class="search-form">
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -216,7 +214,7 @@
         </div>
         <div class="tile is-vertical is-parent">
           <article class="tile is-child box">
-            <p class="title has-text-weight-light">Third column</p>
+            <p class="title has-text-weight-light">Le saviez vous ?</p>
             <p class="subtitle">With some content</p>
             <div class="content">
               <p>
@@ -232,11 +230,11 @@
             </div>
           </article>
           <article class="tile is-child box">
-            <p class="title has-text-weight-light">Vertical tiles</p>
+            <p class="title has-text-weight-light">La diplomatique</p>
             <p class="subtitle">Top box</p>
           </article>
           <article class="tile is-child box">
-            <p class="title has-text-weight-light">Vertical tiles</p>
+            <p class="title has-text-weight-light">Histoire des métiers</p>
             <p class="subtitle">Bottom box</p>
           </article>
         </div>
@@ -275,7 +273,7 @@ export default {
 }
 .tiles-section {
   background-color: #ffffff;
-  padding-top: 50px;
+  padding-top: 20px;
   padding-bottom: 100px;
 }
 .tile.box {
