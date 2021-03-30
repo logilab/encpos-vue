@@ -152,7 +152,13 @@ export default {
   methods: {
     async performSearch() {
       if (this.searchedTerm) {
-        const result = await searchDocument(this.searchedTerm);
+        const result = await searchDocument(
+          this.searchedTerm,
+          "-metadata.promotion_year",
+          [],
+          2,
+          3
+        );
         console.log(result.data);
         this.listPosition = []
         for (var position of result.data){
