@@ -1,5 +1,4 @@
 <template>
-
   <section class="tiles-section">
     <div class="tiles">
       <div class="tile is-ancestor">
@@ -39,21 +38,23 @@
                   />
                 </div>
                 <div class="control">
-                  <a class="button is-light is-medium search" @click="performSearch">Chercher</a>
+                  <a class="button is-light is-medium search" @click="performSearch"
+                    >Chercher</a
+                  >
                 </div>
-              </div >
+              </div>
               <div class="block">
                 <div class="field vue-slider is-left">
-                    <div class="control">
-                      <span>Promotions :</span>
-                      <vue-slider
-                        v-model="year"
-                        :min="1849"
-                        :max="2017"
-                        :lazy="true"
-                        :tooltip="'active'"
-                      ></vue-slider>
-                    </div>
+                  <div class="control">
+                    <span>Promotions :</span>
+                    <vue-slider
+                      v-model="year"
+                      :min="1849"
+                      :max="2017"
+                      :lazy="true"
+                      :tooltip="'active'"
+                    ></vue-slider>
+                  </div>
                 </div>
                 <div class="field vue-slider is-right">
                   <div class="control">
@@ -66,31 +67,41 @@
                       :tooltip="'active'"
                     ></vue-slider>
                   </div>
-              </div>
+                </div>
               </div>
             </div>
             <div class="table-container">
               <table class="table is-hoverable is-narrow is-fulldwidth">
                 <thead>
                   <tr>
-                    <th @click="'sort(nom)'">Nom</th>
-                    <th @click="'sort(prenom)'">Prénom</th>
-                    <th @click="'sort(titre)'">Titre</th>
-                    <th @click="'sort(promotion)'"><abbr title="Promotion">Prom</abbr></th>
-                    <th @click="'sort(de)'"><abbr title="Période du sujet">De</abbr></th>
-                    <th @click="'sort(a)'"><abbr title="Période du sujet">A</abbr></th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Titre</th>
+                    <th>
+                      <abbr title="Promotion">Prom</abbr>
+                    </th>
+                    <th>
+                      <abbr title="Période du sujet">De</abbr>
+                    </th>
+                    <th>
+                      <abbr title="Période du sujet">A</abbr>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="position in listPosition" :key="position.id">
-                    <td>{{position.nom}}</td>
-                    <td>{{position.prenom}}</td>
-                    <td>                      <router-link
-                  :to="{ name: 'DocumentPage', params: { docId: position.id } }">
-                     <span v-html="position.titre"></span></router-link></td>
-                    <td>{{position.promotion}}</td>
-                    <td>{{position.de}}</td>
-                    <td>{{position.a}}</td>
+                    <td>{{ position.nom }}</td>
+                    <td>{{ position.prenom }}</td>
+                    <td>
+                      <router-link
+                        :to="{ name: 'DocumentPage', params: { docId: position.id } }"
+                      >
+                        <span v-html="position.titre"></span
+                      ></router-link>
+                    </td>
+                    <td>{{ position.promotion }}</td>
+                    <td>{{ position.de }}</td>
+                    <td>{{ position.a }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -143,9 +154,7 @@ export default {
     return {
       year: 1999,
       date_sujet: [-500, 2000],
-      listPosition:[{id: 'ENCPOS_1972_18', nom:'Pastoureau',prenom:'Michel',titre:'Le bestiaire héraldique au Moyen Âge',promotion:"1972", de:"1000", a:"1499"},
-      {id: 'ENCPOS_1999_35', nom:'Marguin',prenom:'Elsa',titre:'"L<i>Ars lectoria Ecclesie</i> de Jean de Garlande. Étude, édition et traduction"',promotion:"1999", de:"1200", a:"1255"},
-      {id: 'ENCPOS_1994_04', nom:'Bubenicek',prenom:'Michelle',titre:'Le pouvoir au féminin. Une princesse en politique et son entourage : Yolande de Flandre, comtesse de Bar et dame de Cassel (1326-1395)',promotion:"1994", de:"1326", a:"1395"}],
+      listPosition: [],
       searchedTerm: null,
     };
   },
@@ -155,13 +164,17 @@ export default {
         const result = await searchDocument(
           this.searchedTerm,
           "-metadata.promotion_year",
-          [],
-          2,
-          3
+          [
+            { field: "metadata.promotion_year", ops: "gte:1930,lte:1940" },
+            { field: "metadata.topic_notBefore", ops: "gte:1400" },
+            { field: "metadata.topic_notAfter", ops: "lte:1600" },
+          ],
+          1,
+          30
         );
         console.log(result.data);
-        this.listPosition = []
-        for (var position of result.data){
+        this.listPosition = [];
+        for (var position of result.data) {
           var temppos = {};
           console.log(position);
           temppos["id"] = position.id;
@@ -171,7 +184,7 @@ export default {
           temppos["promotion"] = position.fields.metadata.promotion_year;
           temppos["de"] = position.fields.metadata.topic_notAfter;
           temppos["a"] = position.fields.metadata.topic_notBefore;
-          this.listPosition.push(temppos)
+          this.listPosition.push(temppos);
           console.log(temppos);
         }
       }
