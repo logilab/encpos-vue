@@ -34,10 +34,13 @@
                     class="input is-medium"
                     type="text"
                     placeholder="Find a repository"
+                    v-model="searchedTerm"
                   />
                 </div>
                 <div class="control">
-                  <a class="button is-light is-medium search">Chercher</a>
+                  <a class="button is-light is-medium search" @click="performSearch"
+                    >Chercher</a
+                  >
                 </div>
               </div>
               <div
@@ -247,6 +250,7 @@
 // @ is an alias to /src
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
+import { searchDocument } from "@/api/elasticsearch";
 
 export default {
   name: "Home",
@@ -256,7 +260,16 @@ export default {
   data() {
     return {
       year: 1999,
+      searchedTerm: null,
     };
+  },
+  methods: {
+    async performSearch() {
+      if (this.searchedTerm) {
+        const result = await searchDocument(this.searchedTerm);
+        console.log(result.data);
+      }
+    },
   },
 };
 </script>
