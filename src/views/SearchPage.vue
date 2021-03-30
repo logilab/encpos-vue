@@ -141,7 +141,7 @@ export default {
   },
   data() {
     return {
-      year: 1999,
+      year: [1849, 1999],
       date_sujet: [-500, 2000],
       listPosition:[{id: 'ENCPOS_1972_18', nom:'Pastoureau',prenom:'Michel',titre:'Le bestiaire héraldique au Moyen Âge',promotion:"1972", de:"1000", a:"1499"},
       {id: 'ENCPOS_1999_35', nom:'Marguin',prenom:'Elsa',titre:'"L<i>Ars lectoria Ecclesie</i> de Jean de Garlande. Étude, édition et traduction"',promotion:"1999", de:"1200", a:"1255"},
@@ -155,15 +155,14 @@ export default {
         const result = await searchDocument(
           this.searchedTerm,
           "-metadata.promotion_year",
-          [],
-          2,
-          3
+          [{field : 'metadata.promotion_year', ops: 'gte:'+this.year[0]+',lte:'+this.year[1] }],
+          1,
+          10
         );
-        console.log(result.data);
+        console.log(this.year[0]);
         this.listPosition = []
         for (var position of result.data){
           var temppos = {};
-          console.log(position);
           temppos["id"] = position.id;
           temppos["nom"] = position.fields.metadata.author_name;
           temppos["prenom"] = position.fields.metadata.author_firstname;
@@ -172,7 +171,6 @@ export default {
           temppos["de"] = position.fields.metadata.topic_notAfter;
           temppos["a"] = position.fields.metadata.topic_notBefore;
           this.listPosition.push(temppos)
-          console.log(temppos);
         }
       }
     },
