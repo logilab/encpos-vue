@@ -1,4 +1,5 @@
 <template>
+
   <section class="tiles-section">
     <div class="tiles">
       <div class="tile is-ancestor">
@@ -38,177 +39,58 @@
                   />
                 </div>
                 <div class="control">
-                  <a class="button is-light is-medium search" @click="performSearch"
-                    >Chercher</a
-                  >
+                  <a class="button is-light is-medium search" @click="performSearch">Chercher</a>
                 </div>
-              </div>
-              <div
-                class="is-flex is-flex-direction-row"
-                style="justify-content: space-between"
-              >
-                <div class="field">
-                  <div class="control">
-                    <label class="radio">
-                      <input type="radio" name="question" />
-                      Yes
-                    </label>
-                    <label class="radio">
-                      <input type="radio" name="question" />
-                      No
-                    </label>
-                  </div>
+              </div >
+              <div class="block">
+                <div class="field vue-slider is-left">
+                    <div class="control">
+                      <span>Promotions :</span>
+                      <vue-slider
+                        v-model="year"
+                        :min="1849"
+                        :max="2017"
+                        :lazy="true"
+                        :tooltip="'active'"
+                      ></vue-slider>
+                    </div>
                 </div>
-                <div class="field vue-slider">
+                <div class="field vue-slider is-right">
                   <div class="control">
+                    <span>Période du sujet :</span>
                     <vue-slider
-                      v-model="year"
-                      :min="1849"
-                      :max="2017"
+                      v-model="date_sujet"
+                      :min="-500"
+                      :max="2000"
                       :lazy="true"
                       :tooltip="'active'"
                     ></vue-slider>
                   </div>
-                </div>
+              </div>
               </div>
             </div>
             <div class="table-container">
               <table class="table is-hoverable is-narrow is-fulldwidth">
                 <thead>
                   <tr>
-                    <th><abbr title="Position">Pos</abbr></th>
-                    <th>Team</th>
-                    <th><abbr title="Played">Pld</abbr></th>
-                    <th><abbr title="Won">W</abbr></th>
-                    <th><abbr title="Drawn">D</abbr></th>
-                    <th><abbr title="Lost">L</abbr></th>
-                    <th><abbr title="Goals for">GF</abbr></th>
-                    <th><abbr title="Goals against">GA</abbr></th>
-                    <th><abbr title="Goal difference">GD</abbr></th>
-                    <th><abbr title="Points">Pts</abbr></th>
-                    <th>Qualification or relegation</th>
+                    <th @click="'sort(nom)'">Nom</th>
+                    <th @click="'sort(prenom)'">Prénom</th>
+                    <th @click="'sort(titre)'">Titre</th>
+                    <th @click="'sort(promotion)'"><abbr title="Promotion">Prom</abbr></th>
+                    <th @click="'sort(de)'"><abbr title="Période du sujet">De</abbr></th>
+                    <th @click="'sort(a)'"><abbr title="Période du sujet">A</abbr></th>
                   </tr>
                 </thead>
-                <tfoot>
-                  <tr>
-                    <th><abbr title="Position">Pos</abbr></th>
-                    <th>Team</th>
-                    <th><abbr title="Played">Pld</abbr></th>
-                    <th><abbr title="Won">W</abbr></th>
-                    <th><abbr title="Drawn">D</abbr></th>
-                    <th><abbr title="Lost">L</abbr></th>
-                    <th><abbr title="Goals for">GF</abbr></th>
-                    <th><abbr title="Goals against">GA</abbr></th>
-                    <th><abbr title="Goal difference">GD</abbr></th>
-                    <th><abbr title="Points">Pts</abbr></th>
-                    <th>Qualification or relegation</th>
-                  </tr>
-                </tfoot>
                 <tbody>
-                  <tr>
-                    <th>1</th>
-                    <td>
-                      <a
-                        href="https://en.wikipedia.org/wiki/Leicester_City_F.C."
-                        title="Leicester City F.C."
-                        >Leicester City</a
-                      >
-                      <strong>(C)</strong>
-                    </td>
-                    <td>38</td>
-                    <td>23</td>
-                    <td>12</td>
-                    <td>3</td>
-                    <td>68</td>
-                    <td>36</td>
-                    <td>+32</td>
-                    <td>81</td>
-                    <td>
-                      Qualification for the
-                      <a
-                        href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage"
-                        title="2016–17 UEFA Champions League"
-                        >Champions League group stage</a
-                      >
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>2</th>
-                    <td>
-                      <a
-                        href="https://en.wikipedia.org/wiki/Arsenal_F.C."
-                        title="Arsenal F.C."
-                        >Arsenal</a
-                      >
-                    </td>
-                    <td>38</td>
-                    <td>20</td>
-                    <td>11</td>
-                    <td>7</td>
-                    <td>65</td>
-                    <td>36</td>
-                    <td>+29</td>
-                    <td>71</td>
-                    <td>
-                      Qualification for the
-                      <a
-                        href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage"
-                        title="2016–17 UEFA Champions League"
-                        >Champions League group stage</a
-                      >
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>3</th>
-                    <td>
-                      <a
-                        href="https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C."
-                        title="Tottenham Hotspur F.C."
-                        >Tottenham Hotspur</a
-                      >
-                    </td>
-                    <td>38</td>
-                    <td>19</td>
-                    <td>13</td>
-                    <td>6</td>
-                    <td>69</td>
-                    <td>35</td>
-                    <td>+34</td>
-                    <td>70</td>
-                    <td>
-                      Qualification for the
-                      <a
-                        href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage"
-                        title="2016–17 UEFA Champions League"
-                        >Champions League group stage</a
-                      >
-                    </td>
-                  </tr>
-                  <tr class="is-selected">
-                    <th>4</th>
-                    <td>
-                      <a
-                        href="https://en.wikipedia.org/wiki/Manchester_City_F.C."
-                        title="Manchester City F.C."
-                        >Manchester City</a
-                      >
-                    </td>
-                    <td>38</td>
-                    <td>19</td>
-                    <td>9</td>
-                    <td>10</td>
-                    <td>71</td>
-                    <td>41</td>
-                    <td>+30</td>
-                    <td>66</td>
-                    <td>
-                      Qualification for the
-                      <a
-                        href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Play-off_round"
-                        title="2016–17 UEFA Champions League"
-                        >Champions League play-off round</a
-                      >
-                    </td>
+                  <tr v-for="position in listPosition" :key="position.id">
+                    <td>{{position.nom}}</td>
+                    <td>{{position.prenom}}</td>
+                    <td>                      <router-link
+                  :to="{ name: 'DocumentPage', params: { docId: position.id } }">
+                     <span v-html="position.titre"></span></router-link></td>
+                    <td>{{position.promotion}}</td>
+                    <td>{{position.de}}</td>
+                    <td>{{position.a}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -260,6 +142,10 @@ export default {
   data() {
     return {
       year: 1999,
+      date_sujet: [-500, 2000],
+      listPosition:[{id: 'ENCPOS_1972_18', nom:'Pastoureau',prenom:'Michel',titre:'Le bestiaire héraldique au Moyen Âge',promotion:"1972", de:"1000", a:"1499"},
+      {id: 'ENCPOS_1999_35', nom:'Marguin',prenom:'Elsa',titre:'"L<i>Ars lectoria Ecclesie</i> de Jean de Garlande. Étude, édition et traduction"',promotion:"1999", de:"1200", a:"1255"},
+      {id: 'ENCPOS_1994_04', nom:'Bubenicek',prenom:'Michelle',titre:'Le pouvoir au féminin. Une princesse en politique et son entourage : Yolande de Flandre, comtesse de Bar et dame de Cassel (1326-1395)',promotion:"1994", de:"1326", a:"1395"}],
       searchedTerm: null,
     };
   },
@@ -268,6 +154,20 @@ export default {
       if (this.searchedTerm) {
         const result = await searchDocument(this.searchedTerm);
         console.log(result.data);
+        this.listPosition = []
+        for (var position of result.data){
+          var temppos = {};
+          console.log(position);
+          temppos["id"] = position.id;
+          temppos["nom"] = position.fields.metadata.author_name;
+          temppos["prenom"] = position.fields.metadata.author_firstname;
+          temppos["titre"] = position.fields.metadata.title_rich;
+          temppos["promotion"] = position.fields.metadata.promotion_year;
+          temppos["de"] = position.fields.metadata.topic_notAfter;
+          temppos["a"] = position.fields.metadata.topic_notBefore;
+          this.listPosition.push(temppos)
+          console.log(temppos);
+        }
       }
     },
   },
