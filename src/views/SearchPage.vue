@@ -152,7 +152,7 @@ export default {
   },
   data() {
     return {
-      year: 1999,
+      year: [1849, 1999],
       date_sujet: [-500, 2000],
       listPosition: [],
       searchedTerm: null,
@@ -164,6 +164,7 @@ export default {
         const result = await searchDocument(
           this.searchedTerm,
           "-metadata.promotion_year",
+<<<<<<< HEAD
           [
             { field: "metadata.promotion_year", ops: "gte:1930,lte:1940" },
             { field: "metadata.topic_notBefore", ops: "gte:1400" },
@@ -175,8 +176,16 @@ export default {
         console.log(result.data);
         this.listPosition = [];
         for (var position of result.data) {
+=======
+          [{field : 'metadata.promotion_year', ops: 'gte:'+this.year[0]+',lte:'+this.year[1] }],
+          1,
+          10
+        );
+        console.log(this.year[0]);
+        this.listPosition = []
+        for (var position of result.data){
+>>>>>>> 7faff9deb7b6bb52d797b31070f7a1c09c3358f4
           var temppos = {};
-          console.log(position);
           temppos["id"] = position.id;
           temppos["nom"] = position.fields.metadata.author_name;
           temppos["prenom"] = position.fields.metadata.author_firstname;
@@ -184,8 +193,12 @@ export default {
           temppos["promotion"] = position.fields.metadata.promotion_year;
           temppos["de"] = position.fields.metadata.topic_notAfter;
           temppos["a"] = position.fields.metadata.topic_notBefore;
+<<<<<<< HEAD
           this.listPosition.push(temppos);
           console.log(temppos);
+=======
+          this.listPosition.push(temppos)
+>>>>>>> 7faff9deb7b6bb52d797b31070f7a1c09c3358f4
         }
       }
     },
