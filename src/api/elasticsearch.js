@@ -7,7 +7,6 @@ async function searchDocument(query, sorts, ranges, pageNum=1, pageSize=200) {
     for (let range of ranges){
         rangesArg += `&range[${range.field}]=${range.ops}`
     }
-    console.log("range", rangesArg)
 
     let sortArg = ''
     if (sorts) {

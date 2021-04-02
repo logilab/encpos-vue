@@ -27,7 +27,6 @@ import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
 
 
-
 export default {
   name: "ListeTheseAnnee",
 
@@ -45,6 +44,7 @@ export default {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
       var namespacedt;
+
 
       for (const namespace in data["@context"]){
         if (data["@context"][namespace]==="http://purl.org/dc/elements/1.1/"){
@@ -64,7 +64,6 @@ export default {
           console.log("no dct:extend");
         }
       }
-
       state.metadata = metadata;
     };
 

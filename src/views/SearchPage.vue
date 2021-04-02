@@ -25,7 +25,8 @@
       </div>
 
       <div class="tile is-ancestor">
-        <div class="tile is-parent">
+        <div class="tile is-parent is-8">
+          
           <article class="tile is-child box">
             <div class="search-form">
               <div class="field has-addons">
@@ -34,11 +35,11 @@
                     class="input is-medium"
                     type="text"
                     placeholder="Find a repository"
-                    v-model="searchedTerm"
+                    v-model="inputTerm"
                   />
                 </div>
                 <div class="control">
-                  <a class="button is-light is-medium search" @click="performSearch"
+                  <a class="button is-light is-medium search" @click="search"
                     >Chercher</a
                   >
                 </div>
@@ -46,25 +47,23 @@
               <div class="block">
                 <div class="field vue-slider is-left">
                   <div class="control">
-                    <span>Promotions :</span>
+                    <span>Promotions : {{inputYear[0]}} - {{inputYear[1]}}</span>
                     <vue-slider
-                      v-model="year"
+                      v-model="inputYear"
                       :min="1849"
                       :max="2017"
-                      :lazy="true"
-                      :tooltip="'active'"
+                      :tooltip="'none'"
                     ></vue-slider>
                   </div>
                 </div>
                 <div class="field vue-slider is-right">
                   <div class="control">
-                    <span>Période du sujet :</span>
+                    <span>Période du sujet : {{inputDateSujet[0]}} - {{inputDateSujet[1]}}</span>
                     <vue-slider
-                      v-model="date_sujet"
+                      v-model="inputDateSujet"
                       :min="-500"
                       :max="2000"
-                      :lazy="true"
-                      :tooltip="'active'"
+                      :tooltip="'none'"
                     ></vue-slider>
                   </div>
                 </div>
@@ -76,10 +75,10 @@
                   <tr>
                     <th>Nom</th>
                     <th>Prénom</th>
-                    <th>Titre</th>
                     <th>
                       <abbr title="Promotion">Prom</abbr>
                     </th>
+                    <th>Titre</th>
                     <th>
                       <abbr title="Période du sujet">De</abbr>
                     </th>
@@ -90,21 +89,24 @@
                 </thead>
                 <tbody>
                   <tr v-for="position in listPosition" :key="position.id">
-                    <td>{{ position.nom }}</td>
-                    <td>{{ position.prenom }}</td>
+                    <td>{{ position.fields.metadata.author_name }}</td>
+                    <td>{{ position.fields.metadata.author_firstname }}</td>
+                    <td>{{ position.fields.metadata.promotion_year }}</td>
                     <td>
                       <router-link
                         :to="{ name: 'DocumentPage', params: { docId: position.id } }"
                       >
-                        <span v-html="position.titre"></span
+                        <span v-html="position.fields.metadata.title_rich"></span
                       ></router-link>
                     </td>
-                    <td>{{ position.promotion }}</td>
-                    <td>{{ position.de }}</td>
-                    <td>{{ position.a }}</td>
+                    <td>{{ position.fields.metadata.topic_notBefore }}</td>
+                    <td>{{ position.fields.metadata.topic_notAfter }}</td>
                   </tr>
                 </tbody>
               </table>
+              <div class="has-text-centered">
+                <pagination />
+              </div>
             </div>
           </article>
         </div>
@@ -143,50 +145,46 @@
 // @ is an alias to /src
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
-import { searchDocument } from "@/api/elasticsearch";
+import {mapState, mapActions} from "vuex";
+import Pagination from "@/components/Pagination";
+
 
 export default {
   name: "Home",
   components: {
     VueSlider,
+    Pagination
   },
   data() {
     return {
-      year: [1849, 1999],
-      date_sujet: [-500, 2000],
-      listPosition: [],
-      searchedTerm: null,
+      inputDateSujet: [-500, 2000],
+      inputTerm: null,
+      inputYear:[1849, 2017]
     };
   },
+  computed: {
+    ...mapState('search', ['searchTerm','listPosition', 'year', 'date_sujet'])
+  },
+  watch: {
+    inputTerm() {
+      this.setSearchTerm(this.inputTerm);
+    },
+    inputYear(){
+      this.setSelectedYear(this.inputYear);
+    },
+    inputDateSujet(){
+      this.setSelecteDateSujet(this.inputDateSujet);
+    },
+  },
+  created() {
+    this.inputTerm = this.searchTerm;
+    this.inputYear = this.year;
+    this.inputDateSujet = this.date_sujet;
+  },
   methods: {
-    async performSearch() {
-      if (this.searchedTerm) {
-        const result = await searchDocument(
-          this.searchedTerm,
-          "-metadata.promotion_year",
-          [
-            {
-              field: "metadata.promotion_year",
-              ops: "gte:" + this.year[0] + ",lte:" + this.year[1],
-            },
-          ],
-          1,
-          10
-        );
-        console.log(this.year[0]);
-        this.listPosition = [];
-        for (var position of result.data) {
-          var temppos = {};
-          temppos["id"] = position.id;
-          temppos["nom"] = position.fields.metadata.author_name;
-          temppos["prenom"] = position.fields.metadata.author_firstname;
-          temppos["titre"] = position.fields.metadata.title_rich;
-          temppos["promotion"] = position.fields.metadata.promotion_year;
-          temppos["de"] = position.fields.metadata.topic_notAfter;
-          temppos["a"] = position.fields.metadata.topic_notBefore;
-          this.listPosition.push(temppos);
-        }
-      }
+    ...mapActions('search', ['performSearch', 'setSearchTerm', 'setSelectedYear', 'setSelecteDateSujet']),
+    search(){
+      this.performSearch()
     },
   },
 };
@@ -208,9 +206,9 @@ export default {
   padding-bottom: 100px;
 }
 .tile.box {
-  border: 1px solid #e4e5df;
-  box-shadow: none;
-  background-color: #fbf7fa;
+  border: 1px solid #ffffff;
+  box-shadow: yes;
+  background-color: #ffffff;
 }
 .tile.is-parent {
   padding: 8px;
