@@ -26,7 +26,7 @@
 
       <div class="tile is-ancestor">
         <div class="tile is-parent is-8">
-          
+
           <article class="tile is-child box">
             <div class="search-form">
               <div class="field has-addons">
@@ -45,7 +45,7 @@
                 </div>
               </div>
               <div class="block">
-                <div class="field vue-slider is-left">
+                <div class="field vue-slider is-inline-block">
                   <div class="control">
                     <span>Promotions : {{inputYear[0]}} - {{inputYear[1]}}</span>
                     <vue-slider
@@ -56,7 +56,7 @@
                     ></vue-slider>
                   </div>
                 </div>
-                <div class="field vue-slider is-right">
+                <div class="field vue-slider is-inline-block">
                   <div class="control">
                     <span>Période du sujet : {{inputDateSujet[0]}} - {{inputDateSujet[1]}}</span>
                     <vue-slider
@@ -233,6 +233,7 @@ export default {
 }
 .vue-slider {
   width: 375px;
+  padding: 15px;
 }
 /* 
   search table

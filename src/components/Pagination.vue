@@ -17,7 +17,7 @@
         <span class="pagination__button__input-box">
             <input
             v-model="currentInput"
-            class="input"
+            class="input is-medium"
             :disabled="documentLoading"
             >
             <span> / {{ totalPageNum }}</span>
@@ -86,3 +86,21 @@ export default {
 };
 </script>
 
+<style>
+
+span.button {
+  height: 26px;
+  width: 40px;
+  margin: 4px;
+}
+.pagination__button__input-box{
+  margin-right: 16px;
+  margin-left: 16px;
+  line-height: 2.15;
+}
+.pagination__button__input-box .input {
+    margin: 4px;
+    width: 50px;
+    height: 26px;
+}
+</style>
