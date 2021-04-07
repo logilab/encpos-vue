@@ -5,6 +5,7 @@ const state = {
   year: [1849, 2017],
   date_sujet: [-500, 2000],
   listPosition: [],
+  sorts: "-metadata.promotion_year",
   numPage: 1,
   pageSize: 15,
   totalPageNum: 1
@@ -26,7 +27,10 @@ const mutations = {
   },
   SET_DATE_SUJET(state, dateSujet){
     state.date_sujet = dateSujet;
-  }
+  },
+  SET_RANGE_SUJET(state, rangeSorts){
+    state.sorts = rangeSorts;
+  },
 };
 
 const actions = {
@@ -48,11 +52,14 @@ const actions = {
   setSelecteDateSujet({commit}, dateSujet){
     commit('SET_DATE_SUJET', dateSujet)
   },
+  setSelecteRangeSujet({commit}, rangeSorts){
+    commit('SET_RANGE_SUJET', rangeSorts)
+  },
   async performSearch ({state}) {
     if (state.searchTerm) {
       const result = await searchDocument(
         state.searchTerm,
-        "-metadata.promotion_year",
+        state.sorts,
         [
           {
             field: "metadata.promotion_year",

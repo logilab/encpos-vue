@@ -5,14 +5,14 @@
             :disabled="documentLoading"
             @click="performAction(1)"
         >
-            <i class="fas fa-arrow-left" />
+            <i class="fas fa-angle-double-left" />
         </span>
         <span
             class="icon button"
             :disabled="documentLoading"
             @click="performAction(parseInt(numPage)-1)"
         >
-            <i class="fas fa-angle-double-left"></i>
+            <i class="fas fa-arrow-left"></i>
         </span>
         <span class="pagination__button__input-box">
             <input

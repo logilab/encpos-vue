@@ -15,8 +15,8 @@
                   />
                 </div>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare
-                  magna eros, eu pellentesque tortor vestibulum ut.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+                  ornare magna eros, eu pellentesque tortor vestibulum ut.
                 </p>
               </article>
             </div>
@@ -26,7 +26,6 @@
 
       <div class="tile is-ancestor">
         <div class="tile is-parent is-8">
-
           <article class="tile is-child box">
             <div class="search-form">
               <div class="field has-addons">
@@ -47,7 +46,10 @@
               <div class="block">
                 <div class="field vue-slider is-inline-block">
                   <div class="control">
-                    <span>Promotions : {{inputYear[0]}} - {{inputYear[1]}}</span>
+                    <span
+                      >Promotions : {{ inputYear[0] }} -
+                      {{ inputYear[1] }}</span
+                    >
                     <vue-slider
                       v-model="inputYear"
                       :min="1849"
@@ -58,7 +60,10 @@
                 </div>
                 <div class="field vue-slider is-inline-block">
                   <div class="control">
-                    <span>Période du sujet : {{inputDateSujet[0]}} - {{inputDateSujet[1]}}</span>
+                    <span
+                      >Période du sujet : {{ inputDateSujet[0] }} -
+                      {{ inputDateSujet[1] }}</span
+                    >
                     <vue-slider
                       v-model="inputDateSujet"
                       :min="-500"
@@ -73,35 +78,99 @@
               <table class="table is-hoverable is-narrow is-fulldwidth">
                 <thead>
                   <tr>
+                    <th>+</th>
                     <th>Nom</th>
                     <th>Prénom</th>
-                    <th>
-                      <abbr title="Promotion">Prom</abbr>
+                    <th @click="performSort('metadata.promotion_year')" class="largerTab">
+                      <abbr title="Promotion" class="is-inline-block"
+                        >Prom  </abbr>
+                      <i
+                        v-if="
+                          (activeColumn.name === 'metadata.promotion_year') &
+                          (activeColumn.order === 'asc')
+                        "
+                        class="fas fa-sort-numeric-down is-inline-block"
+                      ></i>
+                      <i
+                        v-else-if="
+                          (activeColumn.name === 'metadata.promotion_year') &
+                          (activeColumn.order === 'dsc')
+                        "
+                        class="fas fa-sort-numeric-up is-inline-block"
+                      ></i>
+                      <i v-else class="fas fa-sort is-inline-block"></i>
                     </th>
                     <th>Titre</th>
-                    <th>
-                      <abbr title="Période du sujet">De</abbr>
+                    <th @click="performSort('metadata.topic_notBefore')" class="largerTab">
+                      <abbr title="Période du sujet">De </abbr>
+                      <i
+                        v-if="
+                          (activeColumn.name === 'metadata.topic_notBefore') &
+                          (activeColumn.order === 'asc')
+                        "
+                        class="fas fa-sort-numeric-down"
+                      ></i>
+                      <i
+                        v-else-if="
+                          (activeColumn.name === 'metadata.topic_notBefore') &
+                          (activeColumn.order === 'dsc')
+                        "
+                        class="fas fa-sort-numeric-up"
+                      ></i>
+                      <i v-else class="fas fa-sort"></i>
                     </th>
-                    <th>
-                      <abbr title="Période du sujet">A</abbr>
+                    <th @click="performSort('metadata.topic_notAfter')" class="inline">
+                      <abbr title="Période du sujet">A </abbr>
+                      <i
+                        v-if="
+                          (activeColumn.name === 'metadata.topic_notAfter') &
+                          (activeColumn.order === 'asc')
+                        "
+                        class="fas fa-sort-numeric-down"
+                      ></i>
+                      <i
+                        v-else-if="
+                          (activeColumn.name === 'metadata.topic_notAfter') &
+                          (activeColumn.order === 'dsc')
+                        "
+                        class="fas fa-sort-numeric-up"
+                      ></i>
+                      <i v-else class="fas fa-sort"></i>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="position in listPosition" :key="position.id">
-                    <td>{{ position.fields.metadata.author_name }}</td>
-                    <td>{{ position.fields.metadata.author_firstname }}</td>
-                    <td>{{ position.fields.metadata.promotion_year }}</td>
-                    <td>
-                      <router-link
-                        :to="{ name: 'DocumentPage', params: { docId: position.id } }"
-                      >
-                        <span v-html="position.fields.metadata.title_rich"></span
-                      ></router-link>
-                    </td>
-                    <td>{{ position.fields.metadata.topic_notBefore }}</td>
-                    <td>{{ position.fields.metadata.topic_notAfter }}</td>
-                  </tr>
+                  <template v-for="position in listPosition" :key="position.id">
+                    <tr>
+                      <span @click="position.id = !position.id"><i  class="fas fa-chevron-down"></i></span>
+                      <td>{{ position.fields.metadata.author_name }}</td>
+                      <td>{{ position.fields.metadata.author_firstname }}</td>
+                      <td>{{ position.fields.metadata.promotion_year }}</td>
+                      <td>
+                        <router-link
+                          :to="{
+                            name: 'DocumentPage',
+                            params: { docId: position.id },
+                          }"
+                        >
+                          <span
+                            v-html="position.fields.metadata.title_rich"
+                          ></span
+                        ></router-link>
+                      </td>
+                      <td>{{ position.fields.metadata.topic_notBefore }}</td>
+                      <td>{{ position.fields.metadata.topic_notAfter }}</td>
+                    </tr>
+                      <tr v-if="position.id === false">
+                        <td colspan="7">
+                          <ul>
+                            <li v-for="phrase in position.highlight.content" :key="phrase">
+                              <span v-html="phrase"></span>
+                            </li>
+                          </ul>
+                        </td>
+                      </tr>
+                  </template>
                 </tbody>
               </table>
               <div class="has-text-centered">
@@ -116,11 +185,15 @@
             <p class="subtitle">With some content</p>
             <div class="content">
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare
-                magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem.
-                Etiam finibus odio quis feugiat facilisis.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+                ornare magna eros, eu pellentesque tortor vestibulum ut.
+                Maecenas non massa sem. Etiam finibus odio quis feugiat
+                facilisis.
                 <router-link
-                  :to="{ name: 'DocumentPage', params: { docId: 'ENCPOS_1999_35' } }"
+                  :to="{
+                    name: 'DocumentPage',
+                    params: { docId: 'ENCPOS_1999_35' },
+                  }"
                 >
                   Visiter le document
                 </router-link>
@@ -145,34 +218,40 @@
 // @ is an alias to /src
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import Pagination from "@/components/Pagination";
-
 
 export default {
   name: "Home",
   components: {
     VueSlider,
-    Pagination
+    Pagination,
   },
   data() {
     return {
       inputDateSujet: [-500, 2000],
       inputTerm: null,
-      inputYear:[1849, 2017]
+      inputYear: [1849, 2017],
+      activeColumn: {},
     };
   },
   computed: {
-    ...mapState('search', ['searchTerm','listPosition', 'year', 'date_sujet'])
+    ...mapState("search", [
+      "searchTerm",
+      "listPosition",
+      "year",
+      "date_sujet",
+      "sorts",
+    ]),
   },
   watch: {
     inputTerm() {
       this.setSearchTerm(this.inputTerm);
     },
-    inputYear(){
+    inputYear() {
       this.setSelectedYear(this.inputYear);
     },
-    inputDateSujet(){
+    inputDateSujet() {
       this.setSelecteDateSujet(this.inputDateSujet);
     },
   },
@@ -182,15 +261,36 @@ export default {
     this.inputDateSujet = this.date_sujet;
   },
   methods: {
-    ...mapActions('search', ['performSearch', 'setSearchTerm', 'setSelectedYear', 'setSelecteDateSujet']),
-    search(){
-      this.performSearch()
+    ...mapActions("search", [
+      "performSearch",
+      "setSearchTerm",
+      "setSelectedYear",
+      "setSelecteDateSujet",
+      "setSelecteRangeSujet",
+    ]),
+    search() {
+      this.performSearch();
+    },
+    performSort(inputSort) {
+      this.activeColumn["name"] = inputSort;
+      if (inputSort === this.sorts) {
+        inputSort = "-" + inputSort;
+        this.activeColumn["order"] = "dsc";
+      } else {
+        this.activeColumn["order"] = "asc";
+      }
+      console.log(this.activeColumn);
+      this.setSelecteRangeSujet(inputSort);
+      this.performSearch();
     },
   },
 };
 </script>
 
 <style scoped>
+th{
+  white-space: nowrap;
+}
 .description {
   text-align: center;
 }

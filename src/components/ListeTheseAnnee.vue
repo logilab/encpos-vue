@@ -51,7 +51,7 @@ export default {
           namespacedt = namespace;
         }
       }
-
+      console.log(data)
       for (var these of data["member"]) {
         try {
           const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
