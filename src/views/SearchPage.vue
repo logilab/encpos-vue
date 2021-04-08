@@ -227,6 +227,7 @@ import "vue-slider-component/theme/antd.css";
 import { mapState, mapActions } from "vuex";
 import Pagination from "@/components/Pagination";
 
+
 export default {
   name: "Home",
   components: {
@@ -257,9 +258,11 @@ export default {
     },
     inputYear() {
       this.setSelectedYear(this.inputYear);
+      this.performSearch();
     },
     inputDateSujet() {
       this.setSelecteDateSujet(this.inputDateSujet);
+      this.performSearch();
     },
   },
   created() {
@@ -274,7 +277,7 @@ export default {
       "setSelectedYear",
       "setSelecteDateSujet",
       "setSelecteRangeSujet",
-      "setNumPage"
+      "setNumPage",
     ]),
     search() {
       this.performSearch();
@@ -295,7 +298,7 @@ export default {
       if (e.keyCode ===13){
         this.performSearch();
       }
-    }
+    },
   },
 };
 </script>

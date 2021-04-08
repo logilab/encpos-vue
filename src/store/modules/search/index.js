@@ -1,4 +1,5 @@
 import { searchDocument } from "@/api/elasticsearch";
+import {debounce} from "lodash";
 
 const state = {
   searchTerm: null,
@@ -56,7 +57,8 @@ const actions = {
   setSelecteRangeSujet({commit}, rangeSorts){
     commit('SET_RANGE_SUJET', rangeSorts)
   },
-  async performSearch ({state}) {
+
+  performSearch: debounce(async ({state}) =>  {
     if (state.searchTerm) {
       const result = await searchDocument(
         state.searchTerm,
@@ -85,7 +87,7 @@ const actions = {
         state.listPosition.push(position);
       }
     }
-  }
+  },500)
 };
 
 
