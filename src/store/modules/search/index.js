@@ -8,7 +8,8 @@ const state = {
   sorts: "-metadata.promotion_year",
   numPage: 1,
   pageSize: 15,
-  totalPageNum: 1
+  totalPageNum: 1,
+  resultSearch: 0
 };
 
 
@@ -79,6 +80,7 @@ const actions = {
       );
       state.totalPageNum = Math.ceil(result["total-count"] / 100);
       state.listPosition = [];
+      state.resultSearch = result["total-count"];
       for (var position of result.data) {
         state.listPosition.push(position);
       }

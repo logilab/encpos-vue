@@ -35,6 +35,7 @@
                     type="text"
                     placeholder="Find a repository"
                     v-model="inputTerm"
+                    v-on:keyup="launchSearch"
                   />
                 </div>
                 <div class="control">
@@ -42,6 +43,9 @@
                     >Chercher</a
                   >
                 </div>
+              </div>
+              <div v-if="resultSearch != 0">
+                <span>Résultat de votre recherche : {{resultSearch}}</span>
               </div>
               <div class="block">
                 <div class="field vue-slider is-inline-block">
@@ -73,6 +77,9 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="has-text-centered">
+              <pagination />
             </div>
             <div class="table-container">
               <table class="table is-hoverable is-narrow is-fulldwidth">
@@ -175,9 +182,6 @@
                   </template>
                 </tbody>
               </table>
-              <div class="has-text-centered">
-                <pagination />
-              </div>
             </div>
           </article>
         </div>
@@ -244,6 +248,7 @@ export default {
       "year",
       "date_sujet",
       "sorts",
+      "resultSearch"
     ]),
   },
   watch: {
@@ -282,11 +287,15 @@ export default {
       } else {
         this.activeColumn["order"] = "asc";
       }
-      console.log(this.activeColumn);
       this.setSelecteRangeSujet(inputSort);
       this.setNumPage(1);
       this.performSearch();
     },
+    launchSearch: function(e){
+      if (e.keyCode ===13){
+        this.performSearch();
+      }
+    }
   },
 };
 </script>
