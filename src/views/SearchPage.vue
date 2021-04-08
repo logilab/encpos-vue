@@ -142,7 +142,9 @@
                 <tbody>
                   <template v-for="position in listPosition" :key="position.id">
                     <tr>
-                      <span @click="position.id = !position.id"><i  class="fas fa-chevron-down"></i></span>
+                      <span @click="position.fields.metadata.enc_teacher = !position.fields.metadata.enc_teacher">
+                      <i v-if="position.fields.metadata.enc_teacher === true" class="fas fa-chevron-down"></i>
+                      <i v-else class="fas fa-chevron-up"></i></span>
                       <td>{{ position.fields.metadata.author_name }}</td>
                       <td>{{ position.fields.metadata.author_firstname }}</td>
                       <td>{{ position.fields.metadata.promotion_year }}</td>
@@ -161,7 +163,7 @@
                       <td>{{ position.fields.metadata.topic_notBefore }}</td>
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     </tr>
-                      <tr v-if="position.id === false">
+                      <tr v-if="position.fields.metadata.enc_teacher === true">
                         <td colspan="7">
                           <ul>
                             <li v-for="phrase in position.highlight.content" :key="phrase">
@@ -267,6 +269,7 @@ export default {
       "setSelectedYear",
       "setSelecteDateSujet",
       "setSelecteRangeSujet",
+      "setNumPage"
     ]),
     search() {
       this.performSearch();
@@ -281,6 +284,7 @@ export default {
       }
       console.log(this.activeColumn);
       this.setSelecteRangeSujet(inputSort);
+      this.setNumPage(1);
       this.performSearch();
     },
   },

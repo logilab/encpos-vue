@@ -61,7 +61,11 @@ export default {
             these["title"],
           ];
         } catch {
-          console.log("no dct:extend");
+          metadata[these["@id"].split("_")[2]] = [
+            these["@id"],
+            these["dts:extensions"][namespacedt+":creator"],
+            these["title"],
+          ];
         }
       }
       state.metadata = metadata;
