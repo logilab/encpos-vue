@@ -13,6 +13,7 @@ const state = reactive({
     totalPageNum: 1,
     resultSearch: 0,
 
+    //TODO: add currentPage
     loading: false
 });
 
@@ -78,7 +79,7 @@ const performSearch = debounce(async function() {
 
       state.loading = false
     }
-  },500)
+  },250)
 
 export default { 
     state: readonly(state),

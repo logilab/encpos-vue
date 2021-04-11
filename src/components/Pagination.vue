@@ -25,43 +25,47 @@
   </div>
 </template>
 <script>
+import { ref, inject, watch } from "vue";
+
 export default {
   name: "Pagination",
-  inject: ["searchModule"],
-  data() {
-    return {
-      currentInput: 1,
+  setup() {
+    const start = 1;
+    let currentInput = ref(start);
+    const searchModule = inject("searchModule");
+
+    const performAction = function (num) {
+      if (!parseInt(num)) {
+        num = start;
+      }
+      if (num > searchModule.state.totalPageNum) {
+        num = searchModule.state.totalPageNum;
+      } else if (num < start) {
+        num = start;
+      }
+      searchModule.setNumPage(num);
+      if (!searchModule.state.loading) {
+        searchModule.performSearch();
+      }
     };
-  },
-  watch: {
-    numPage: function () {
-      this.currentInput = this.searchModule.state.numPage;
-    },
-    currentInput: function () {
-      this.performAction(this.currentInput);
-    },
+
+    watch(searchModule.state, () => {
+      if (searchModule.state.numPage != currentInput.value) {
+        currentInput.value = searchModule.state.numPage;
+      }
+    });
+
+    watch(
+      () => currentInput,
+      () => {
+        performAction(currentInput);
+      }
+    );
+
+    return { searchModule, currentInput, performAction };
   },
   created() {
     this.currentInput = this.searchModule.state.numPage;
-  },
-  methods: {
-    search() {
-      if (!this.searchModule.state.loading) {
-        this.searchModule.performSearch();
-      }
-    },
-    performAction(num) {
-      if (!parseInt(num)) {
-        num = 1;
-      }
-      if (num > this.searchModule.state.totalPageNum) {
-        num = this.searchModule.state.totalPageNum;
-      } else if (num < this.start) {
-        num = this.start;
-      }
-      this.searchModule.setNumPage(num);
-      this.search();
-    },
   },
 };
 </script>
