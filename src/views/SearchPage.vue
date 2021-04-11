@@ -15,8 +15,8 @@
                   />
                 </div>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-                  ornare magna eros, eu pellentesque tortor vestibulum ut.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare
+                  magna eros, eu pellentesque tortor vestibulum ut.
                 </p>
               </article>
             </div>
@@ -39,26 +39,31 @@
                   />
                 </div>
                 <div class="control">
-                  <a class="button is-light is-medium search" @click="search"
-                    >Chercher</a
+                  <button
+                    class="button is-light is-medium search"
+                    @click="search"
+                    :disabled="searchModule.state.loading"
                   >
+                    Chercher
+                  </button>
                 </div>
               </div>
-              <div v-if="resultSearch != 0">
-                <span>Résultat de votre recherche : {{resultSearch}}</span>
+              <div v-if="searchModule.state.resultSearch != 0">
+                <span
+                  >Résultat de votre recherche :
+                  {{ searchModule.state.resultSearch }}</span
+                >
               </div>
               <div class="block">
                 <div class="field vue-slider is-inline-block">
                   <div class="control">
-                    <span
-                      >Promotions : {{ inputYear[0] }} -
-                      {{ inputYear[1] }}</span
-                    >
+                    <span>Promotions : {{ inputYear[0] }} - {{ inputYear[1] }}</span>
                     <vue-slider
                       v-model="inputYear"
                       :min="1849"
                       :max="2017"
                       :tooltip="'none'"
+                      :disabled="searchModule.state.loading"
                     ></vue-slider>
                   </div>
                 </div>
@@ -73,6 +78,7 @@
                       :min="-500"
                       :max="2000"
                       :tooltip="'none'"
+                      :disabled="searchModule.state.loading"
                     ></vue-slider>
                   </div>
                 </div>
@@ -89,8 +95,7 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th @click="performSort('metadata.promotion_year')" class="largerTab">
-                      <abbr title="Promotion" class="is-inline-block"
-                        >Prom  </abbr>
+                      <abbr title="Promotion" class="is-inline-block">Prom </abbr>
                       <i
                         v-if="
                           (activeColumn.name === 'metadata.promotion_year') &
@@ -108,7 +113,10 @@
                       <i v-else class="fas fa-sort is-inline-block"></i>
                     </th>
                     <th>Titre</th>
-                    <th @click="performSort('metadata.topic_notBefore')" class="largerTab">
+                    <th
+                      @click="performSort('metadata.topic_notBefore')"
+                      class="largerTab"
+                    >
                       <abbr title="Période du sujet">De </abbr>
                       <i
                         v-if="
@@ -147,11 +155,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <template v-for="position in listPosition" :key="position.id">
+                  <template
+                    v-for="position in searchModule.state.listPosition"
+                    :key="position.id"
+                  >
                     <tr>
-                      <span @click="position.fields.metadata.enc_teacher = !position.fields.metadata.enc_teacher">
-                      <i v-if="position.fields.metadata.enc_teacher === true" class="fas fa-chevron-down"></i>
-                      <i v-else class="fas fa-chevron-up"></i></span>
+                      <span
+                        @click="
+                          position.fields.metadata.enc_teacher = !position.fields.metadata
+                            .enc_teacher
+                        "
+                      >
+                        <i
+                          v-if="position.fields.metadata.enc_teacher === true"
+                          class="fas fa-chevron-down"
+                        ></i>
+                        <i v-else class="fas fa-chevron-up"></i
+                      ></span>
                       <td>{{ position.fields.metadata.author_name }}</td>
                       <td>{{ position.fields.metadata.author_firstname }}</td>
                       <td>{{ position.fields.metadata.promotion_year }}</td>
@@ -162,23 +182,21 @@
                             params: { docId: position.id },
                           }"
                         >
-                          <span
-                            v-html="position.fields.metadata.title_rich"
-                          ></span
+                          <span v-html="position.fields.metadata.title_rich"></span
                         ></router-link>
                       </td>
                       <td>{{ position.fields.metadata.topic_notBefore }}</td>
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     </tr>
-                      <tr v-if="position.fields.metadata.enc_teacher === true">
-                        <td colspan="7">
-                          <ul>
-                            <li v-for="phrase in position.highlight.content" :key="phrase">
-                              <span v-html="phrase"></span>
-                            </li>
-                          </ul>
-                        </td>
-                      </tr>
+                    <tr v-if="position.fields.metadata.enc_teacher === true">
+                      <td colspan="7">
+                        <ul>
+                          <li v-for="phrase in position.highlight.content" :key="phrase">
+                            <span v-html="phrase"></span>
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
                   </template>
                 </tbody>
               </table>
@@ -191,10 +209,9 @@
             <p class="subtitle">With some content</p>
             <div class="content">
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-                ornare magna eros, eu pellentesque tortor vestibulum ut.
-                Maecenas non massa sem. Etiam finibus odio quis feugiat
-                facilisis.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare
+                magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem.
+                Etiam finibus odio quis feugiat facilisis.
                 <router-link
                   :to="{
                     name: 'DocumentPage',
@@ -224,12 +241,11 @@
 // @ is an alias to /src
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
-import { mapState, mapActions } from "vuex";
 import Pagination from "@/components/Pagination";
-
 
 export default {
   name: "Home",
+  inject: ["searchModule"],
   components: {
     VueSlider,
     Pagination,
@@ -242,45 +258,27 @@ export default {
       activeColumn: {},
     };
   },
-  computed: {
-    ...mapState("search", [
-      "searchTerm",
-      "listPosition",
-      "year",
-      "date_sujet",
-      "sorts",
-      "resultSearch"
-    ]),
-  },
   watch: {
     inputTerm() {
-      this.setSearchTerm(this.inputTerm);
+      this.searchModule.setSearchTerm(this.inputTerm);
     },
     inputYear() {
-      this.setSelectedYear(this.inputYear);
-      this.performSearch();
+      this.searchModule.setSelectedYear(this.inputYear);
+      this.searchModule.performSearch();
     },
     inputDateSujet() {
-      this.setSelecteDateSujet(this.inputDateSujet);
-      this.performSearch();
+      this.searchModule.setSelecteDateSujet(this.inputDateSujet);
+      this.searchModule.performSearch();
     },
   },
   created() {
-    this.inputTerm = this.searchTerm;
-    this.inputYear = this.year;
-    this.inputDateSujet = this.date_sujet;
+    this.inputTerm = this.searchModule.state.searchTerm;
+    this.inputYear = this.searchModule.state.year;
+    this.inputDateSujet = this.searchModule.state.date_sujet;
   },
   methods: {
-    ...mapActions("search", [
-      "performSearch",
-      "setSearchTerm",
-      "setSelectedYear",
-      "setSelecteDateSujet",
-      "setSelecteRangeSujet",
-      "setNumPage",
-    ]),
     search() {
-      this.performSearch();
+      this.searchModule.performSearch();
     },
     performSort(inputSort) {
       this.activeColumn["name"] = inputSort;
@@ -290,13 +288,13 @@ export default {
       } else {
         this.activeColumn["order"] = "asc";
       }
-      this.setSelecteRangeSujet(inputSort);
-      this.setNumPage(1);
-      this.performSearch();
+      this.searchModule.setSelecteRangeSujet(inputSort);
+      this.searchModule.setNumPage(1);
+      this.searchModule.performSearch();
     },
-    launchSearch: function(e){
-      if (e.keyCode ===13){
-        this.performSearch();
+    launchSearch: function (e) {
+      if (e.keyCode === 13) {
+        this.searchModule.performSearch();
       }
     },
   },
@@ -304,7 +302,7 @@ export default {
 </script>
 
 <style scoped>
-th{
+th {
   white-space: nowrap;
 }
 .description {
@@ -358,8 +356,6 @@ th{
   margin-top: 12px;
   overflow-y: auto;
   min-height: 600px;
-}
-table {
 }
 tr:hover {
   cursor: pointer;
