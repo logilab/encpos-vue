@@ -159,19 +159,14 @@
                     v-for="position in searchModule.state.listPosition"
                     :key="position.id"
                   >
-                    <tr>
-                      <span
-                        @click="
-                          position.fields.metadata.enc_teacher = !position.fields.metadata
-                            .enc_teacher
-                        "
-                      >
+                    <tr  @click="
+                          rollActive(position.id)
+                        ">
                         <i
-                          v-if="position.fields.metadata.enc_teacher === true"
+                          v-if="onrollActive.includes(position.id) === true"
                           class="fas fa-chevron-down"
                         ></i>
-                        <i v-else class="fas fa-chevron-up"></i
-                      ></span>
+                        <i v-else class="fas fa-chevron-up"></i>
                       <td>{{ position.fields.metadata.author_name }}</td>
                       <td>{{ position.fields.metadata.author_firstname }}</td>
                       <td>{{ position.fields.metadata.promotion_year }}</td>
@@ -188,7 +183,7 @@
                       <td>{{ position.fields.metadata.topic_notBefore }}</td>
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     </tr>
-                    <tr v-if="position.fields.metadata.enc_teacher === true">
+                    <tr v-if="onrollActive.includes(position.id) === true">
                       <td colspan="7">
                         <ul>
                           <li v-for="phrase in position.highlight.content" :key="phrase">
@@ -256,6 +251,7 @@ export default {
       inputTerm: null,
       inputYear: [1849, 2017],
       activeColumn: {},
+      onrollActive: [],
     };
   },
   watch: {
@@ -297,6 +293,16 @@ export default {
         this.searchModule.performSearch();
       }
     },
+    rollActive: function(event){
+      if (this.onrollActive.includes(event) === false){
+        this.onrollActive.push(event)
+      } else {
+        const index = this.onrollActive.indexOf(event);
+        if (index > -1) {
+          this.onrollActive.splice(index, 1);
+        }
+      }
+    }
   },
 };
 </script>
@@ -359,5 +365,8 @@ th {
 }
 tr:hover {
   cursor: pointer;
+}
+tr /deep/ em{
+  background-color: yellow;
 }
 </style>
