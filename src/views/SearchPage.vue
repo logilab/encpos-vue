@@ -159,11 +159,9 @@
                             .enc_teacher
                         "
                       >
-                        <i
-                          v-if="onrollActive.includes(position.id) === true"
-                          class="fas fa-chevron-down"
-                        ></i>
-                        <i v-else class="fas fa-chevron-up"></i>
+                        <i class="fas fa-chevron-down"></i>
+                        <i class="fas fa-chevron-up"></i>
+                      </span>
                       <td>{{ position.fields.metadata.author_name }}</td>
                       <td>{{ position.fields.metadata.author_firstname }}</td>
                       <td>{{ position.fields.metadata.promotion_year }}</td>
@@ -300,16 +298,16 @@ export default {
         this.search.execute();
       }
     },
-    rollActive: function(event){
-      if (this.onrollActive.includes(event) === false){
-        this.onrollActive.push(event)
+    rollActive: function (event) {
+      if (this.onrollActive.includes(event) === false) {
+        this.onrollActive.push(event);
       } else {
         const index = this.onrollActive.indexOf(event);
         if (index > -1) {
           this.onrollActive.splice(index, 1);
         }
       }
-    }
+    },
   },
 };
 </script>
@@ -373,7 +371,7 @@ th {
 tr:hover {
   cursor: pointer;
 }
-tr /deep/ em{
+tr /deep/ em {
   background-color: yellow;
 }
 </style>

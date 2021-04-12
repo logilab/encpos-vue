@@ -1,4 +1,4 @@
-import {reactive, readonly, ref, watch} from "vue"
+import {reactive, readonly, ref, watch, computed} from "vue"
 import { debounce } from "lodash";
 import useApi from "@/composables/use-api"
 
@@ -12,9 +12,13 @@ export default function useSimpleSearch() {
     const sorts = ref("")
     const pageNum = ref(1)
     const pageSize = ref(40)
+    const pageCount = computed(() => {
+        return Math.ceil(totalCount.value / 100)
+    })
 
     const result = ref()
     const totalCount = ref(0)
+
 
     const setTerm = function(t) {
         term.value = t  
@@ -66,6 +70,7 @@ export default function useSimpleSearch() {
         sorts: readonly(sorts),
         pageNum: readonly(pageNum),
         pageSize: readonly(pageSize),
+        pageCount: pageCount,
         setTerm,
         setRange,
         setSorts,
