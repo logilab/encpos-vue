@@ -35,24 +35,20 @@
                     type="text"
                     placeholder="Find a repository"
                     v-model="inputTerm"
-                    v-on:keyup="launchSearch"
                   />
                 </div>
                 <div class="control">
                   <button
                     class="button is-light is-medium search"
-                    @click="search"
-                    :disabled="searchModule.state.loading"
+                    @click="search.execute"
+                    :disabled="search.loading.value"
                   >
                     Chercher
                   </button>
                 </div>
               </div>
-              <div v-if="searchModule.state.resultSearch != 0">
-                <span
-                  >Résultat de votre recherche :
-                  {{ searchModule.state.resultSearch }}</span
-                >
+              <div v-if="search.result.value">
+                <span>Résultat de votre recherche : {{ search.totalCount.value }}</span>
               </div>
               <div class="block">
                 <div class="field vue-slider is-inline-block">
@@ -63,7 +59,7 @@
                       :min="1849"
                       :max="2017"
                       :tooltip="'none'"
-                      :disabled="searchModule.state.loading"
+                      :disabled="search.loading.value"
                     ></vue-slider>
                   </div>
                 </div>
@@ -78,7 +74,7 @@
                       :min="-500"
                       :max="2000"
                       :tooltip="'none'"
-                      :disabled="searchModule.state.loading"
+                      :disabled="search.loading.value"
                     ></vue-slider>
                   </div>
                 </div>
@@ -155,10 +151,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <template
-                    v-for="position in searchModule.state.listPosition"
-                    :key="position.id"
-                  >
+                  <template v-for="position in search.result.value" :key="position.id">
                     <tr>
                       <span
                         @click="
@@ -189,6 +182,7 @@
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     </tr>
                     <tr v-if="position.fields.metadata.enc_teacher === true">
+                      key
                       <td colspan="7">
                         <ul>
                           <li v-for="phrase in position.highlight.content" :key="phrase">
@@ -239,62 +233,73 @@
 
 <script>
 // @ is an alias to /src
+import { inject, ref, watch } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 import Pagination from "@/components/Pagination";
 
 export default {
   name: "Home",
-  inject: ["searchModule"],
+  inject: ["search"],
   components: {
     VueSlider,
     Pagination,
   },
-  data() {
-    return {
-      inputDateSujet: [-500, 2000],
-      inputTerm: null,
-      inputYear: [1849, 2017],
-      activeColumn: {},
-    };
-  },
-  watch: {
-    inputTerm() {
-      this.searchModule.setSearchTerm(this.inputTerm);
-    },
-    inputYear() {
-      this.searchModule.setSelectedYear(this.inputYear);
-      this.searchModule.performSearch();
-    },
-    inputDateSujet() {
-      this.searchModule.setSelecteDateSujet(this.inputDateSujet);
-      this.searchModule.performSearch();
-    },
-  },
-  created() {
-    this.inputTerm = this.searchModule.state.searchTerm;
-    this.inputYear = this.searchModule.state.year;
-    this.inputDateSujet = this.searchModule.state.date_sujet;
+  setup() {
+    const search = inject("search");
+
+    const inputDateSujet = ref([-500, 2000]);
+    const inputTerm = ref("Diplomatie");
+    const inputYear = ref([1849, 2017]);
+    const activeColumn = {};
+
+    search.setTerm(inputTerm.value);
+    search.setRange(
+      "metadata.promotion_year",
+      `gte:${inputYear.value[0]},lte:${inputYear.value[1]}`
+    );
+
+    search.setRange("metadata.topic_notBefore", "gte:" + inputDateSujet.value[0]);
+    search.setRange("metadata.topic_notAfter", "lte:" + inputDateSujet.value[1]);
+
+    search.execute();
+
+    watch(inputTerm, () => {
+      search.setTerm(inputTerm.value);
+    });
+
+    watch(inputYear, () => {
+      search.setRange(
+        "metadata.promotion_year",
+        `gte:${inputYear.value[0]},lte:${inputYear.value[1]}`
+      );
+      search.execute();
+    });
+
+    watch(inputDateSujet, () => {
+      search.setRange("metadata.topic_notBefore", "gte:" + inputDateSujet.value[0]);
+      search.setRange("metadata.topic_notAfter", "lte:" + inputDateSujet.value[1]);
+      search.execute();
+    });
+
+    return { search, inputDateSujet, inputTerm, inputYear, activeColumn };
   },
   methods: {
-    search() {
-      this.searchModule.performSearch();
-    },
-    performSort(inputSort) {
-      this.activeColumn["name"] = inputSort;
-      if (inputSort === this.sorts) {
-        inputSort = "-" + inputSort;
+    performSort(sort) {
+      this.activeColumn["name"] = sort;
+      if (sort === this.search.sorts.value) {
+        sort = "-" + sort;
         this.activeColumn["order"] = "dsc";
       } else {
         this.activeColumn["order"] = "asc";
       }
-      this.searchModule.setSelecteRangeSujet(inputSort);
-      this.searchModule.setNumPage(1);
-      this.searchModule.performSearch();
+      this.search.setSorts(sort);
+      this.search.setPageNum(1);
+      this.search.execute();
     },
     launchSearch: function (e) {
       if (e.keyCode === 13) {
-        this.searchModule.performSearch();
+        this.search.execute();
       }
     },
   },

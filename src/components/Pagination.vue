@@ -1,25 +1,19 @@
 <template>
-  <div v-show="searchModule.state.totalPageNum > 1">
+  <div v-show="search.totalPageNum > 1">
     <span class="icon button" @click="performAction(1)">
       <i class="fas fa-angle-double-left" />
     </span>
-    <span
-      class="icon button"
-      @click="performAction(parseInt(searchModule.state.numPage) - 1)"
-    >
+    <span class="icon button" @click="performAction(parseInt(search.numPage) - 1)">
       <i class="fas fa-arrow-left"></i>
     </span>
     <span class="pagination__button__input-box">
       <input v-model="currentInput" class="input is-medium" />
-      <span> / {{ searchModule.state.totalPageNum }}</span>
+      <span> / {{ search.totalPageNum }}</span>
     </span>
-    <span
-      class="icon button"
-      @click="performAction(parseInt(searchModule.state.numPage) + 1)"
-    >
+    <span class="icon button" @click="performAction(parseInt(search.numPage) + 1)">
       <i class="fas fa-arrow-right" />
     </span>
-    <span class="icon button" @click="performAction(searchModule.state.totalPageNum)">
+    <span class="icon button" @click="performAction(search.totalPageNum)">
       <i class="fas fa-angle-double-right"></i>
     </span>
   </div>
@@ -32,26 +26,26 @@ export default {
   setup() {
     const start = 1;
     let currentInput = ref(start);
-    const searchModule = inject("searchModule");
+    const search = inject("search");
 
     const performAction = function (num) {
       if (!parseInt(num)) {
         num = start;
       }
-      if (num > searchModule.state.totalPageNum) {
-        num = searchModule.state.totalPageNum;
+      if (num > search.totalPageNum) {
+        num = search.totalPageNum;
       } else if (num < start) {
         num = start;
       }
-      searchModule.setNumPage(num);
-      if (!searchModule.state.loading) {
-        searchModule.performSearch();
+      search.setPageNum(num);
+      if (!search.loading) {
+        search.execute();
       }
     };
 
-    watch(searchModule.state, () => {
-      if (searchModule.state.numPage != currentInput.value) {
-        currentInput.value = searchModule.state.numPage;
+    watch(search.pageNum, () => {
+      if (search.pageNum != currentInput.value) {
+        currentInput.value = search.numPage;
       }
     });
 
@@ -62,10 +56,10 @@ export default {
       }
     );
 
-    return { searchModule, currentInput, performAction };
+    return { search, currentInput, performAction };
   },
   created() {
-    this.currentInput = this.searchModule.state.numPage;
+    this.currentInput = this.search.numPage;
   },
 };
 </script>

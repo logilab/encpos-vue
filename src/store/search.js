@@ -1,5 +1,5 @@
 import { reactive, readonly } from "vue";
-import { searchDocument } from "@/api/elasticsearch";
+import { searchDocument, searchDocumentWithAgg } from "@/api/elasticsearch";
 import { debounce } from "lodash";
 
 const state = reactive({
@@ -13,8 +13,11 @@ const state = reactive({
     totalPageNum: 1,
     resultSearch: 0,
 
-    //TODO: add currentPage
-    loading: false
+    loading: false,
+
+    //TODO add agg result 
+    groupbyField: 'metadata.promotion_year',
+    groupbyAfterKey: null
 });
 
 const setSearchTerm = function(term) {
@@ -70,6 +73,7 @@ const performSearch = debounce(async function() {
         state.numPage,
         100
       );
+
       state.totalPageNum = Math.ceil(result["total-count"] / 100);
       state.resultSearch = result["total-count"];
       state.listPosition = [];
@@ -81,9 +85,44 @@ const performSearch = debounce(async function() {
     }
   },250)
 
+
+const performAggSearch = debounce(async function() {
+  if (state.searchTerm) {
+    state.loading = true
+    // todo: le paramètre ranges peut devenir un champ computed du state
+    const ranges = [
+      {
+        field: "metadata.promotion_year",
+        ops: "gte:" + state.year[0] + ",lte:" + state.year[1],
+      },
+      {
+        field: "metadata.topic_notAfter",
+        ops: "lte:" + state.date_sujet[1]
+      },
+      {
+        field: "metadata.topic_notBefore",
+        ops: "gte:" + state.date_sujet[0]
+      }
+    ]
+    const result = await searchDocumentWithAgg(
+      state.searchTerm,
+      state.sorts,
+      ranges,
+      state.groupbyField,
+      state.groupbyAfterKey,
+      100
+    );
+
+    console.log("search with agg:", result)
+  
+    state.loading = false
+  }
+},250)
+
 export default { 
     state: readonly(state),
     performSearch,
+    performAggSearch,
     clearSearchTerm,
     setSearchTerm,
     setSelecteDateSujet,

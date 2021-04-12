@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import search from "@/store/search";
+import useSimpleSearch from "@/composables/use-simple-search";
 
-createApp(App).provide("searchModule", search).use(router).mount('#app')
+createApp(App).provide("search", useSimpleSearch()).use(router).mount('#app')
