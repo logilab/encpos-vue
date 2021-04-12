@@ -16,6 +16,10 @@ export default function useApi() {
         state.query = ""
     }
 
+    const setQuery = function(q) {
+        state.query = q
+    }
+
     const runQuery = async function(json=true){
         state.loading = true
         state.error = null
@@ -32,7 +36,8 @@ export default function useApi() {
 
     return {
         ...toRefs(state),
+        clear,
+        setQuery,
         runQuery,
-        clear
     }
 }

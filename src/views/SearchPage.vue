@@ -240,7 +240,6 @@ import Pagination from "@/components/Pagination";
 
 export default {
   name: "Home",
-  inject: ["search"],
   components: {
     VueSlider,
     Pagination,

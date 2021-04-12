@@ -40,7 +40,7 @@ export default function useSimpleSearch() {
             sortArg = '&sort=' + sorts.value
         }
 
-        api.query.value = `${_baseApiURL}/search?query=${term.value}${sortArg}${rangesArg}&page[number]=${pageNum.value || 1}&page[size]=${pageSize.value}`
+        api.setQuery(`${_baseApiURL}/search?query=${term.value}${sortArg}${rangesArg}&page[number]=${pageNum.value || 1}&page[size]=${pageSize.value}`)
     }
 
     watch([term, ranges, sorts, pageNum, pageSize], updateQuery)
