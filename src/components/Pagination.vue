@@ -1,19 +1,19 @@
 <template>
-  <div v-show="search.totalPageNum > 1">
-    <span class="icon button" @click="performAction(1)">
+  <div v-show="search.pageCount.value > 1">
+    <span class="icon button" @click="goToPage(1)">
       <i class="fas fa-angle-double-left" />
     </span>
-    <span class="icon button" @click="performAction(parseInt(search.numPage) - 1)">
+    <span class="icon button" @click="goToPage(currentInput - 1)">
       <i class="fas fa-arrow-left"></i>
     </span>
     <span class="pagination__button__input-box">
       <input v-model="currentInput" class="input is-medium" />
-      <span> / {{ search.totalPageNum }}</span>
+      <span> / {{ search.pageCount.value }}</span>
     </span>
-    <span class="icon button" @click="performAction(parseInt(search.numPage) + 1)">
+    <span class="icon button" @click="goToPage(currentInput + 1)">
       <i class="fas fa-arrow-right" />
     </span>
-    <span class="icon button" @click="performAction(search.totalPageNum)">
+    <span class="icon button" @click="goToPage(search.pageCount.value)">
       <i class="fas fa-angle-double-right"></i>
     </span>
   </div>
@@ -24,42 +24,42 @@ import { ref, inject, watch } from "vue";
 export default {
   name: "Pagination",
   setup() {
-    const start = 1;
-    let currentInput = ref(start);
     const search = inject("search");
 
-    const performAction = function (num) {
+    const start = 1;
+    let currentInput = ref(start);
+
+    const goToPage = function (num) {
       if (!parseInt(num)) {
         num = start;
       }
-      if (num > search.totalPageNum) {
-        num = search.totalPageNum;
+
+      if (num > search.pageCount.value) {
+        num = search.pageCount.value;
       } else if (num < start) {
         num = start;
       }
-      search.setPageNum(num);
-      if (!search.loading) {
+      currentInput.value = num;
+
+      if (search.pageNum !== num) {
+        search.setPageNum(num);
         search.execute();
       }
     };
 
     watch(search.pageNum, () => {
-      if (search.pageNum != currentInput.value) {
-        currentInput.value = search.numPage;
+      if (search.pageNum.value != currentInput.value) {
+        currentInput.value = search.numPage.value;
       }
     });
 
-    watch(
-      () => currentInput,
-      () => {
-        performAction(currentInput);
-      }
-    );
+    watch(currentInput, () => {
+      goToPage(currentInput.value);
+    });
 
-    return { search, currentInput, performAction };
-  },
-  created() {
-    this.currentInput = this.search.numPage;
+    //currentInput.value = search.numPage.value || start;
+
+    return { search, currentInput, goToPage };
   },
 };
 </script>
