@@ -94,13 +94,13 @@
                     <th>Nom
                         <i @click="inputSort='-metadata.author_name'"
                         v-if="
-                          (activeColumn.name === 'metadata.author_name')
+                          (inputSort === 'metadata.author_name')
                         "
                         class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
                       <i @click="inputSort=''"
                         v-else-if="
-                          (activeColumn.name === '-metadata.author_name')
+                          (inputSort === '-metadata.author_name')
                         "
                         class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
@@ -111,13 +111,13 @@
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
                         <i @click="inputSort='-metadata.promotion_year'"
                         v-if="
-                          (activeColumn.name === 'metadata.promotion_year')
+                          (inputSort === 'metadata.promotion_year')
                         "
                         class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
                       <i @click="inputSort=''"
                         v-else-if="
-                          (activeColumn.name === '-metadata.promotion_year')
+                          (inputSort === '-metadata.promotion_year')
                         "
                         class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
@@ -130,13 +130,13 @@
                       <abbr title="Période du sujet">De </abbr>
                       <i @click="inputSort='-metadata.topic_notBefore'"
                         v-if="
-                          (activeColumn.name === 'metadata.topic_notBefore')
+                          (inputSort === 'metadata.topic_notBefore')
                         "
                         class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
                       <i @click="inputSort=''"
                         v-else-if="
-                          (activeColumn.name === '-metadata.topic_notBefore')
+                          (inputSort === '-metadata.topic_notBefore')
                         "
                         class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
@@ -146,13 +146,13 @@
                       <abbr title="Période du sujet">A </abbr>
                       <i @click="inputSort='-metadata.topic_notAfter'"
                         v-if="
-                          (activeColumn.name === 'metadata.topic_notAfter')
+                          (inputSort === 'metadata.topic_notAfter')
                         "
                         class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
                       <i @click="inputSort=''"
                         v-else-if="
-                          (activeColumn.name === '-metadata.topic_notAfter')
+                          (inputSort === '-metadata.topic_notAfter')
                         "
                         class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
@@ -256,7 +256,6 @@ export default {
       const initialTopicRange = [-500, 2000];
       const initialPromotionYearRange = [1849, 2017];
       const initialSort = "";
-      const initialActiveColumn = {};
 
       const notBefore = search.ranges["metadata.topic_notBefore"];
       const notAfter = search.ranges["metadata.topic_notAfter"];
@@ -268,7 +267,6 @@ export default {
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
             : initialTopicRange,
         sort: search.term.sorts || initialSort,
-        activateColumn : initialActiveColumn,
         promotionYearRange: promotionYear
           ? promotionYear.replace("lte:", "").replace("gte:", "").split(",")
           : initialPromotionYearRange,
@@ -282,7 +280,6 @@ export default {
     const inputTopicRange = ref(initialState.topicRange);
     const inputPromotionYearRange = ref(initialState.promotionYearRange);
     const inputSort = ref(initialState.initialSort);
-    const activeColumn = ref(initialState.activateColumn);
     const onrollActive = ref([]);
 
     search.setTerm(inputTerm.value);
@@ -314,7 +311,6 @@ export default {
     });
 
     watch (inputSort, () => {
-      activeColumn.value["name"] = inputSort.value;
       search.setSorts(inputSort.value);
       search.setPageNum(1);
       search.execute();
@@ -323,7 +319,7 @@ export default {
     // run the initial search
     search.execute();
 
-    return { search, inputTopicRange, inputTerm, inputPromotionYearRange, inputSort, activeColumn, onrollActive };
+    return { search, inputTopicRange, inputTerm, inputPromotionYearRange, inputSort, onrollActive };
   },
   methods: {
     launchSearch: function (e) {
