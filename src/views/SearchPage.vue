@@ -261,8 +261,6 @@ export default {
     search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
     search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
 
-    search.execute();
-
     watch(inputTerm, () => {
       search.setTerm(inputTerm.value);
     });
@@ -280,6 +278,8 @@ export default {
       search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
       search.execute();
     });
+
+    search.execute();
 
     return { search, inputTopicRange, inputTerm, inputPromotionYear, activeColumn };
   },

@@ -1,4 +1,4 @@
-import {reactive, readonly, ref, watch, computed} from "vue"
+import {reactive, readonly, ref, watchEffect, computed} from "vue"
 import { debounce } from "lodash";
 import useApi from "@/composables/use-api"
 
@@ -47,11 +47,10 @@ export default function useSimpleSearch() {
         api.setQuery(`${_baseApiURL}/search?query=${term.value}${sortArg}${rangesArg}&page[number]=${pageNum.value || 1}&page[size]=${pageSize.value}`)
     }
 
-    watch([term, ranges, sorts, pageNum, pageSize], updateQuery)
+    watchEffect(updateQuery, {flush: 'post' })
 
     const execute = debounce(async function() {
         if (term.value.length >= 2 && api.query.value){
-            console.log("simple search execution", api.query.value)
             await api.runQuery()
             if (api.error.value) {
                 console.log("api error", api.error.value)
@@ -59,7 +58,6 @@ export default function useSimpleSearch() {
                 const _res = api.result.value
                 result.value = _res.data
                 totalCount.value =  _res['total-count']
-                console.log("result:", result.value, totalCount.value)
             }
         }
     }, 150)
