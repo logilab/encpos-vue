@@ -91,79 +91,84 @@
                 <thead>
                   <tr>
                     <th>+</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th @click="performSort('metadata.promotion_year')" class="largerTab">
-                      <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i
+                    <th>Nom
+                        <i @click="inputSort='-metadata.author_name'"
                         v-if="
-                          activeColumn.name === 'metadata.promotion_year' &&
-                          activeColumn.order === 'asc'
+                          (activeColumn.name === 'metadata.author_name')
                         "
                         class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
-                      <i
+                      <i @click="inputSort=''"
                         v-else-if="
-                          activeColumn.name === 'metadata.promotion_year' &&
-                          activeColumn.order === 'dsc'
+                          (activeColumn.name === '-metadata.author_name')
                         "
                         class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
-                      <i v-else class="fas fa-sort is-inline-block"></i>
+                      <i @click="inputSort='metadata.author_name'" v-else class="fas fa-sort is-inline-block"></i>
+                    </th>
+                    <th>Prénom</th>
+                    <th class="largerTab">
+                      <abbr title="Promotion" class="is-inline-block">Prom </abbr>
+                        <i @click="inputSort='-metadata.promotion_year'"
+                        v-if="
+                          (activeColumn.name === 'metadata.promotion_year')
+                        "
+                        class="fas fa-sort-numeric-down is-inline-block"
+                      ></i>
+                      <i @click="inputSort=''"
+                        v-else-if="
+                          (activeColumn.name === '-metadata.promotion_year')
+                        "
+                        class="fas fa-sort-numeric-up is-inline-block"
+                      ></i>
+                      <i @click="inputSort='metadata.promotion_year'" v-else class="fas fa-sort is-inline-block"></i>
                     </th>
                     <th>Titre</th>
                     <th
-                      @click="performSort('metadata.topic_notBefore')"
                       class="largerTab"
                     >
                       <abbr title="Période du sujet">De </abbr>
-                      <i
+                      <i @click="inputSort='-metadata.topic_notBefore'"
                         v-if="
-                          activeColumn.name === 'metadata.topic_notBefore' &&
-                          activeColumn.order === 'asc'
+                          (activeColumn.name === 'metadata.topic_notBefore')
                         "
-                        class="fas fa-sort-numeric-down"
+                        class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
-                      <i
+                      <i @click="inputSort=''"
                         v-else-if="
-                          activeColumn.name === 'metadata.topic_notBefore' &&
-                          activeColumn.order === 'dsc'
+                          (activeColumn.name === '-metadata.topic_notBefore')
                         "
-                        class="fas fa-sort-numeric-up"
+                        class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
-                      <i v-else class="fas fa-sort"></i>
+                      <i @click="inputSort='metadata.topic_notBefore'" v-else class="fas fa-sort is-inline-block"></i>
                     </th>
-                    <th @click="performSort('metadata.topic_notAfter')" class="inline">
+                    <th class="inline">
                       <abbr title="Période du sujet">A </abbr>
-                      <i
+                      <i @click="inputSort='-metadata.topic_notAfter'"
                         v-if="
-                          activeColumn.name === 'metadata.topic_notAfter' &&
-                          activeColumn.order === 'asc'
+                          (activeColumn.name === 'metadata.topic_notAfter')
                         "
-                        class="fas fa-sort-numeric-down"
+                        class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
-                      <i
+                      <i @click="inputSort=''"
                         v-else-if="
-                          activeColumn.name === 'metadata.topic_notAfter' &&
-                          activeColumn.order === 'dsc'
+                          (activeColumn.name === '-metadata.topic_notAfter')
                         "
-                        class="fas fa-sort-numeric-up"
+                        class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
-                      <i v-else class="fas fa-sort"></i>
+                      <i @click="inputSort='metadata.topic_notAfter'" v-else class="fas fa-sort is-inline-block"></i>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <template v-for="position in search.result.value" :key="position.id">
-                    <tr>
-                      <span
-                        @click="
-                          position.fields.metadata.enc_teacher = !position.fields.metadata
-                            .enc_teacher
-                        "
-                      >
-                        <i class="fas fa-chevron-down"></i>
-                        <i class="fas fa-chevron-up"></i>
+                    <tr @click="rollActive(position.id)">
+                      <span>
+                        <i
+                          v-if="onrollActive.includes(position.id)"
+                          class="fas fa-chevron-down"
+                        ></i>
+                        <i v-else class="fas fa-chevron-up"></i>
                       </span>
                       <td>{{ position.fields.metadata.author_name }}</td>
                       <td>{{ position.fields.metadata.author_firstname }}</td>
@@ -181,8 +186,7 @@
                       <td>{{ position.fields.metadata.topic_notBefore }}</td>
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     </tr>
-                    <tr v-if="position.fields.metadata.enc_teacher === true">
-                      key
+                    <tr v-if="onrollActive.includes(position.id)">
                       <td colspan="7">
                         <ul>
                           <li v-for="phrase in position.highlight.content" :key="phrase">
@@ -251,6 +255,8 @@ export default {
       const initialTerm = "Diplomatie";
       const initialTopicRange = [-500, 2000];
       const initialPromotionYearRange = [1849, 2017];
+      const initialSort = "";
+      const initialActiveColumn = {};
 
       const notBefore = search.ranges["metadata.topic_notBefore"];
       const notAfter = search.ranges["metadata.topic_notAfter"];
@@ -261,6 +267,8 @@ export default {
           notBefore && notAfter
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
             : initialTopicRange,
+        sort: search.term.sorts || initialSort,
+        activateColumn : initialActiveColumn,
         promotionYearRange: promotionYear
           ? promotionYear.replace("lte:", "").replace("gte:", "").split(",")
           : initialPromotionYearRange,
@@ -273,7 +281,9 @@ export default {
     const inputTerm = ref(initialState.term);
     const inputTopicRange = ref(initialState.topicRange);
     const inputPromotionYearRange = ref(initialState.promotionYearRange);
-    const activeColumn = {};
+    const inputSort = ref(initialState.initialSort);
+    const activeColumn = ref(initialState.activateColumn);
+    const onrollActive = ref([]);
 
     search.setTerm(inputTerm.value);
     search.setRange(
@@ -283,6 +293,7 @@ export default {
 
     search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
     search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
+    search.setSorts(inputSort.value);
 
     watch(inputTerm, () => {
       search.setTerm(inputTerm.value);
@@ -302,24 +313,19 @@ export default {
       search.execute();
     });
 
+    watch (inputSort, () => {
+      activeColumn.value["name"] = inputSort.value;
+      search.setSorts(inputSort.value);
+      search.setPageNum(1);
+      search.execute();
+    });
+
     // run the initial search
     search.execute();
 
-    return { search, inputTopicRange, inputTerm, inputPromotionYearRange, activeColumn };
+    return { search, inputTopicRange, inputTerm, inputPromotionYearRange, inputSort, activeColumn, onrollActive };
   },
   methods: {
-    performSort(sort) {
-      this.activeColumn["name"] = sort;
-      if (sort === this.search.sorts.value) {
-        sort = "-" + sort;
-        this.activeColumn["order"] = "dsc";
-      } else {
-        this.activeColumn["order"] = "asc";
-      }
-      this.search.setSorts(sort);
-      this.search.setPageNum(1);
-      this.search.execute();
-    },
     launchSearch: function (e) {
       if (e.keyCode === 13) {
         this.search.execute();
