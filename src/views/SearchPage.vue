@@ -53,9 +53,12 @@
               <div class="block">
                 <div class="field vue-slider is-inline-block">
                   <div class="control">
-                    <span>Promotions : {{ inputYear[0] }} - {{ inputYear[1] }}</span>
+                    <span
+                      >Promotions : {{ inputPromotionYear[0] }} -
+                      {{ inputPromotionYear[1] }}</span
+                    >
                     <vue-slider
-                      v-model="inputYear"
+                      v-model="inputPromotionYear"
                       :min="1849"
                       :max="2017"
                       :tooltip="'none'"
@@ -66,11 +69,11 @@
                 <div class="field vue-slider is-inline-block">
                   <div class="control">
                     <span
-                      >Période du sujet : {{ inputDateSujet[0] }} -
-                      {{ inputDateSujet[1] }}</span
+                      >Période du sujet : {{ inputTopicRange[0] }} -
+                      {{ inputTopicRange[1] }}</span
                     >
                     <vue-slider
-                      v-model="inputDateSujet"
+                      v-model="inputTopicRange"
                       :min="-500"
                       :max="2000"
                       :tooltip="'none'"
@@ -244,19 +247,19 @@ export default {
   setup() {
     const search = inject("search");
 
-    const inputDateSujet = ref([-500, 2000]);
     const inputTerm = ref("Diplomatie");
-    const inputYear = ref([1849, 2017]);
+    const inputTopicRange = ref([-500, 2000]);
+    const inputPromotionYear = ref([1849, 2017]);
     const activeColumn = {};
 
     search.setTerm(inputTerm.value);
     search.setRange(
       "metadata.promotion_year",
-      `gte:${inputYear.value[0]},lte:${inputYear.value[1]}`
+      `gte:${inputPromotionYear.value[0]},lte:${inputPromotionYear.value[1]}`
     );
 
-    search.setRange("metadata.topic_notBefore", "gte:" + inputDateSujet.value[0]);
-    search.setRange("metadata.topic_notAfter", "lte:" + inputDateSujet.value[1]);
+    search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
+    search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
 
     search.execute();
 
@@ -264,21 +267,21 @@ export default {
       search.setTerm(inputTerm.value);
     });
 
-    watch(inputYear, () => {
+    watch(inputPromotionYear, () => {
       search.setRange(
         "metadata.promotion_year",
-        `gte:${inputYear.value[0]},lte:${inputYear.value[1]}`
+        `gte:${inputPromotionYear.value[0]},lte:${inputPromotionYear.value[1]}`
       );
       search.execute();
     });
 
-    watch(inputDateSujet, () => {
-      search.setRange("metadata.topic_notBefore", "gte:" + inputDateSujet.value[0]);
-      search.setRange("metadata.topic_notAfter", "lte:" + inputDateSujet.value[1]);
+    watch(inputTopicRange, () => {
+      search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
+      search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
       search.execute();
     });
 
-    return { search, inputDateSujet, inputTerm, inputYear, activeColumn };
+    return { search, inputTopicRange, inputTerm, inputPromotionYear, activeColumn };
   },
   methods: {
     performSort(sort) {
