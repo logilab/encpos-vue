@@ -97,15 +97,15 @@
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
                       <i
                         v-if="
-                          (activeColumn.name === 'metadata.promotion_year') &
-                          (activeColumn.order === 'asc')
+                          activeColumn.name === 'metadata.promotion_year' &&
+                          activeColumn.order === 'asc'
                         "
                         class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
                       <i
                         v-else-if="
-                          (activeColumn.name === 'metadata.promotion_year') &
-                          (activeColumn.order === 'dsc')
+                          activeColumn.name === 'metadata.promotion_year' &&
+                          activeColumn.order === 'dsc'
                         "
                         class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
@@ -119,15 +119,15 @@
                       <abbr title="Période du sujet">De </abbr>
                       <i
                         v-if="
-                          (activeColumn.name === 'metadata.topic_notBefore') &
-                          (activeColumn.order === 'asc')
+                          activeColumn.name === 'metadata.topic_notBefore' &&
+                          activeColumn.order === 'asc'
                         "
                         class="fas fa-sort-numeric-down"
                       ></i>
                       <i
                         v-else-if="
-                          (activeColumn.name === 'metadata.topic_notBefore') &
-                          (activeColumn.order === 'dsc')
+                          activeColumn.name === 'metadata.topic_notBefore' &&
+                          activeColumn.order === 'dsc'
                         "
                         class="fas fa-sort-numeric-up"
                       ></i>
@@ -137,15 +137,15 @@
                       <abbr title="Période du sujet">A </abbr>
                       <i
                         v-if="
-                          (activeColumn.name === 'metadata.topic_notAfter') &
-                          (activeColumn.order === 'asc')
+                          activeColumn.name === 'metadata.topic_notAfter' &&
+                          activeColumn.order === 'asc'
                         "
                         class="fas fa-sort-numeric-down"
                       ></i>
                       <i
                         v-else-if="
-                          (activeColumn.name === 'metadata.topic_notAfter') &
-                          (activeColumn.order === 'dsc')
+                          activeColumn.name === 'metadata.topic_notAfter' &&
+                          activeColumn.order === 'dsc'
                         "
                         class="fas fa-sort-numeric-up"
                       ></i>
