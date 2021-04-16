@@ -27,7 +27,7 @@ export default {
     const search = inject("search");
 
     const start = 1;
-    let currentInput = ref(start);
+    let currentInput = ref(search.pageNum.value || start);
 
     const goToPage = function (num) {
       if (!parseInt(num)) {
@@ -49,7 +49,7 @@ export default {
 
     watch(search.pageNum, () => {
       if (search.pageNum.value != currentInput.value) {
-        currentInput.value = search.numPage.value;
+        currentInput.value = search.pageNum.value;
       }
     });
 

@@ -279,7 +279,7 @@ export default {
           notBefore && notAfter
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
             : initialTopicRange,
-        sort: search.term.sorts || initialSort,
+        sort: search.sorts.value || initialSort,
         promotionYearRange: promotionYear
           ? promotionYear.replace("lte:", "").replace("gte:", "").split(",")
           : initialPromotionYearRange,
@@ -288,11 +288,10 @@ export default {
 
     // restore the state if any
     const initialState = getInitialState();
-
     const inputTerm = ref(initialState.term);
     const inputTopicRange = ref(initialState.topicRange);
     const inputPromotionYearRange = ref(initialState.promotionYearRange);
-    const inputSort = ref(initialState.initialSort);
+    const inputSort = ref(initialState.sort);
     const onrollActive = ref([]);
 
     search.setTerm(inputTerm.value);
