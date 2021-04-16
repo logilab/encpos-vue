@@ -18,8 +18,6 @@
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare
                   magna eros, eu pellentesque tortor vestibulum ut.
                 </p>
-                <button @click="aggSearch.execute">run agg search</button>
-                <p>result: {{ aggSearch }}</p>
               </article>
             </div>
           </div>
@@ -37,12 +35,13 @@
                     type="text"
                     placeholder="Find a repository"
                     v-model="inputTerm"
+                    @keyup.enter="executeSearches"
                   />
                 </div>
                 <div class="control">
                   <button
                     class="button is-light is-medium search"
-                    @click="search.execute"
+                    @click="executeSearches"
                     :disabled="search.loading.value"
                   >
                     Chercher
@@ -89,10 +88,12 @@
               <pagination />
             </div>
             <div class="table-container">
-              <table class="table is-hoverable is-narrow is-fulldwidth">
+              <table
+                class="table is-hoverable is-narrow is-fulldwidth"
+                v-if="search.result.value && search.result.value.length"
+              >
                 <thead>
                   <tr>
-                    <th>+</th>
                     <th>
                       Nom
                       <i
@@ -172,13 +173,6 @@
                 <tbody>
                   <template v-for="position in search.result.value" :key="position.id">
                     <tr @click="rollActive(position.id)">
-                      <span>
-                        <i
-                          v-if="onrollActive.includes(position.id)"
-                          class="fas fa-chevron-down"
-                        ></i>
-                        <i v-else class="fas fa-chevron-up"></i>
-                      </span>
                       <td>{{ position.fields.metadata.author_name }}</td>
                       <td>{{ position.fields.metadata.author_firstname }}</td>
                       <td>{{ position.fields.metadata.promotion_year }}</td>
@@ -196,7 +190,7 @@
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     </tr>
                     <tr v-if="onrollActive.includes(position.id)">
-                      <td colspan="7">
+                      <td colspan="6">
                         <ul>
                           <li v-for="phrase in position.highlight.content" :key="phrase">
                             <span v-html="phrase"></span>
@@ -228,6 +222,7 @@
                   Visiter le document
                 </router-link>
               </p>
+              <histogram />
             </div>
           </article>
           <article class="tile is-child box">
@@ -250,19 +245,24 @@ import { inject, ref, watch } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 import Pagination from "@/components/Pagination";
-import useApi from "@/composables/use-api";
+
+import Histogram from "@/components/charts/Histogram";
 
 export default {
   name: "Home",
   components: {
     VueSlider,
     Pagination,
+    Histogram,
   },
   setup() {
     const search = inject("search");
     const aggSearch = inject("agg-search");
 
-    const api = useApi();
+    function executeSearches() {
+      search.execute();
+      aggSearch.execute();
+    }
 
     function getInitialState() {
       const initialTerm = "Diplomatie";
@@ -304,15 +304,8 @@ export default {
     search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
     search.setSorts(inputSort.value);
 
-    // test the agg search
-    aggSearch.setTerm(inputTerm.value);
-    aggSearch.setGroupbyField("metadata.promotion_year");
-    aggSearch.setWithIds(true);
-    aggSearch.execute();
-
     watch(inputTerm, () => {
       search.setTerm(inputTerm.value);
-      aggSearch.setTerm(inputTerm.value);
     });
 
     watch(inputPromotionYearRange, () => {
@@ -320,13 +313,13 @@ export default {
         "metadata.promotion_year",
         `gte:${inputPromotionYearRange.value[0]},lte:${inputPromotionYearRange.value[1]}`
       );
-      search.execute();
+      executeSearches();
     });
 
     watch(inputTopicRange, () => {
       search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
       search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
-      search.execute();
+      executeSearches();
     });
 
     watch(inputSort, () => {
@@ -335,13 +328,34 @@ export default {
       search.execute();
     });
 
-    // run the initial search
-    search.execute();
+    // set up the agg search
+    aggSearch.setTerm(search.term.value);
+    aggSearch.setSorts(search.sorts.value);
+    Object.keys(search.ranges).map((k) => {
+      aggSearch.setRange(k, search.ranges[k]);
+    });
+
+    watch(search.term, () => {
+      aggSearch.setTerm(search.term.value);
+    });
+    watch(search.sorts, () => {
+      aggSearch.setSorts(search.sorts.value);
+    });
+    watch(search.ranges, () => {
+      Object.keys(search.ranges).map((k) => {
+        aggSearch.setRange(k, search.ranges[k]);
+      });
+    });
+    aggSearch.setGroupbyField("metadata.promotion_year");
+    aggSearch.setWithIds(true);
+
+    // run the initial searches
+    executeSearches();
 
     return {
       search,
       aggSearch,
-      api,
+      executeSearches,
       inputTopicRange,
       inputTerm,
       inputPromotionYearRange,
@@ -350,11 +364,6 @@ export default {
     };
   },
   methods: {
-    launchSearch: function (e) {
-      if (e.keyCode === 13) {
-        this.search.execute();
-      }
-    },
     rollActive: function (event) {
       if (this.onrollActive.includes(event) === false) {
         this.onrollActive.push(event);

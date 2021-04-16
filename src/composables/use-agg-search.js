@@ -62,9 +62,10 @@ export default function useAggSearch() {
                 console.log("api error", api.error.value)
             } else {
                 const _res = api.result.value
-                result.value = _res.buckets
+                result.value = _res['buckets']
                 totalCount.value =  _res['total-count']
                 bucketCount.value =  _res['bucket-count']
+                afterKey.value = _res["after-key"]
             }
         }
     }, 150)
