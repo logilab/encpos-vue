@@ -1,41 +1,43 @@
 
-import {reactive, toRefs} from "vue"
+import {ref, readonly} from "vue"
 
 export default function useApi() {
-    const state = reactive({
-        result: null,
-        error: null,
-        loading: false,
-        query: ""
-    })
+
+    const result = ref(null)
+    const error = ref(null)
+    const loading = ref(false)
+    const query = ref("")
 
     const clear = function(){
-        state.result = null
-        state.error = null
-        state.loading = false
-        state.query = ""
+        result.value = null
+        error.value = null
+        loading.value = false
+        query.value = ""
     }
 
     const setQuery = function(q) {
-        state.query = q
+        query.value = q
     }
 
     const runQuery = async function(json=true){
-        state.loading = true
-        state.error = null
-        console.log("runQuery", state.query)
+        loading.value = true
+        error.value = null
+        console.log("runQuery", query.value)
         try {
-            const response = await fetch(state.query, {mode: 'cors'})
-            state.result = json ? await response.json() : await response.text()
+            const response = await fetch(query.value, {mode: 'cors'})
+            result.value = json ? await response.json() : await response.text()
         } catch (e) {
-            state.error = e
+            error.value = e
         } finally {
-            state.loading = false
+            loading.value = false
         }
     }
 
     return {
-        ...toRefs(state),
+        query: readonly(query),
+        loading: readonly(loading),
+        result: readonly(result),
+        error: readonly(error),
         clear,
         setQuery,
         runQuery,
