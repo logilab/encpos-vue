@@ -313,12 +313,14 @@ export default {
         "metadata.promotion_year",
         `gte:${inputPromotionYearRange.value[0]},lte:${inputPromotionYearRange.value[1]}`
       );
+      search.setPageNum(1);
       executeSearches();
     });
 
     watch(inputTopicRange, () => {
       search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
       search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
+      search.setPageNum(1);
       executeSearches();
     });
 
