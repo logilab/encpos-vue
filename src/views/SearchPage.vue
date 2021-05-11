@@ -444,6 +444,9 @@ tr:hover {
   cursor: pointer;
 }
 tr /deep/ em {
-  background-color: yellow;
+  background-color: rgb(253, 229, 9);
+  border-radius: 3px;
+  font-style: normal;
+  padding: 4px 5px;
 }
 </style>
