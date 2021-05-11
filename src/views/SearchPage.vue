@@ -265,14 +265,19 @@ export default {
     }
 
     function getInitialState() {
+      // initial values
       const initialTerm = "Diplomatie";
       const initialTopicRange = [-500, 2000];
+      //TODO: should fetch the upper bound
       const initialPromotionYearRange = [1849, 2017];
       const initialSort = "";
 
+      // restore content
       const notBefore = search.ranges["metadata.topic_notBefore"];
       const notAfter = search.ranges["metadata.topic_notAfter"];
       const promotionYear = search.ranges["metadata.promotion_year"];
+
+      // try to restore else get the initial values
       return {
         term: search.term.value || initialTerm,
         topicRange:
@@ -286,7 +291,6 @@ export default {
       };
     }
 
-    // restore the state if any
     const initialState = getInitialState();
     const inputTerm = ref(initialState.term);
     const inputTopicRange = ref(initialState.topicRange);
@@ -330,9 +334,11 @@ export default {
       search.execute();
     });
 
-    // set up the agg search
+    // set up the agg search and bind it to the search inputs changes
     aggSearch.setTerm(search.term.value);
     aggSearch.setSorts(search.sorts.value);
+    aggSearch.setGroupbyField("metadata.promotion_year");
+    aggSearch.setWithIds(true);
     Object.keys(search.ranges).map((k) => {
       aggSearch.setRange(k, search.ranges[k]);
     });
@@ -348,8 +354,6 @@ export default {
         aggSearch.setRange(k, search.ranges[k]);
       });
     });
-    aggSearch.setGroupbyField("metadata.promotion_year");
-    aggSearch.setWithIds(true);
 
     // run the initial searches
     executeSearches();

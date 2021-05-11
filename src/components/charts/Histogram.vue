@@ -41,7 +41,7 @@ export default {
         plugins: {
           title: {
             display: true,
-            text: "Custom Chart Title",
+            text: "Nombre de positions par année",
             position: "bottom",
           },
           legend: {
@@ -70,10 +70,20 @@ export default {
     const updateChart = () => {
       let labels = [];
       let data = [];
-      for (let bucket of aggSearch.result.value) {
-        labels.push(bucket["key"]["metadata.promotion_year"]);
-        data.push(parseInt(bucket["doc_count"]));
+
+      //TODO: should fetch the upper bound
+      for (let i = 1849; i <= 2017; i++) {
+        labels.push(i);
+        let found = aggSearch.result.value.find(
+          (bucket) => bucket["key"]["metadata.promotion_year"] === i
+        );
+        if (found) {
+          data.push(parseInt(found["doc_count"]));
+        } else {
+          data.push(0);
+        }
       }
+
       histoChart.data.labels = labels;
       histoChart.data.datasets = [
         {
