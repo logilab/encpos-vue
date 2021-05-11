@@ -1,9 +1,11 @@
 <template>
-  <div v-html="document" id="card-content"></div>
+  <div>
+    <div v-if="document" v-html="document" id="card-content"></div>
+  </div>
 </template>
 
 <script>
-import { ref, toRefs, onMounted, watch } from "vue";
+import { ref, toRefs, watch } from "vue";
 import { getDocumentFromApi } from "@/api/document";
 
 export default {
@@ -13,13 +15,13 @@ export default {
 
   setup(props) {
     const { id } = toRefs(props);
-    const document = ref({});
+    const document = ref("");
 
     const getDocument = async () => {
       document.value = await getDocumentFromApi(id.value);
     };
 
-    onMounted(getDocument);
+    getDocument();
 
     watch(id, getDocument);
 

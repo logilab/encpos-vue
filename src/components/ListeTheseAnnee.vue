@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { ref, reactive, toRefs, onMounted, watch } from "vue";
+import { ref, reactive, toRefs, watch } from "vue";
 import { getPositionAnneeFromApi } from "@/api/document";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
@@ -78,7 +78,7 @@ export default {
       state.metadata = metadata;
     };
 
-    onMounted(getPositionThese);
+    getPositionThese();
 
     watch(getPositionThese);
 
@@ -118,3 +118,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+ol,
+ul {
+  list-style: none;
+}
+</style>

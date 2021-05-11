@@ -19,25 +19,17 @@
 </template>
 
 <script>
-import { reactive, onMounted } from "vue";
-//import theseAnnee from "@/components/ListeTheseAnnee.vue";
+import { reactive } from "vue";
 
 export default {
   name: "DocumentMetadata",
 
-  components: {
-    //   theseAnnee,
-  },
+  components: {},
 
   props: ["metadata"],
 
   setup() {
-    //let state = reactive({});
     let encpos = reactive({});
-
-
-    onMounted(() => {
-    });
 
     return {
       encpos,
@@ -45,3 +37,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+ol,
+ul {
+  list-style: none;
+}
+</style>
