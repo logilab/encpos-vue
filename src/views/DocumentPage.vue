@@ -11,14 +11,20 @@
       </div>
     </div>
     <div class="column">
-      <document :id="docId" />
+      <document :id="docId"/>
     </div>
+      <div class="column is-4 Mirador">
+        <mirador-viewer
+        :textid="docId"
+        />
+      </div>
   </div>
 </template>
 
 <script>
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
+import MiradorViewer from "@/components/MiradorView.vue";
 import { getMetadataFromApi } from "@/api/document";
 import { toRefs, onMounted, watch, reactive } from "vue";
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
@@ -29,6 +35,7 @@ export default {
     Document,
     DocumentMetadata,
     ListeTheseAnnee,
+    MiradorViewer
   },
   props: ["docId"],
   setup(props) {
@@ -88,7 +95,7 @@ export default {
     });
 
     return {
-      state,
+      state
     };
   },
 };

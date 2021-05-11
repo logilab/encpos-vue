@@ -10,9 +10,10 @@
 }
 
 #aside {
-    resize: none;
+    resize: yes;
     padding: 0em 1em 1em 0;
     border: none;
+    width: 230px;
 
     margin-top: 3em;
 
@@ -63,7 +64,14 @@
 .ListeData::-webkit-scrollbar {
     display: none;
 }
-
+.Mirador{
+    position: sticky;
+    vertical-align: top;
+    max-height: 100vh;
+    overflow-y: auto;
+    top: 0;
+    bottom: 0;
+}
 #body-1 {
     padding-top: 0;
 }
