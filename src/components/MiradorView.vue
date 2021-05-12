@@ -1,27 +1,29 @@
 <template>
-    <div    
-    id="vue-mirador-container"/>
+  <div id="vue-mirador-container" />
 </template>
 
 <script>
-import { ref, toRefs, onMounted} from "vue";
+import { toRefs, computed, watch, onMounted } from "vue";
 import Mirador from "mirador";
 
 export default {
-  name: 'MiradorViewer',
+  name: "MiradorViewer",
   components: {},
   props: ["textid"],
-  setup(props){
-      const  {textid} = toRefs(props);
-      console.log(textid.value);
-      var manifestid = ref(textid.value);
-      const viewer = async () => {Mirador.viewer({
+  setup(props) {
+    const { textid } = toRefs(props);
+
+    const config = computed(() => {
+      return {
         id: "vue-mirador-container",
         windows: [
           {
-            loadedManifest: 'https://iiif.chartes.psl.eu/encpos/'+ manifestid.value.toLowerCase() +'/manifest',
-            canvasIndex: 0
-          }
+            loadedManifest:
+              "https://iiif.chartes.psl.eu/encpos/" +
+              textid.value.toLowerCase() +
+              "/manifest",
+            canvasIndex: 0,
+          },
         ],
         window: {
           allowClose: false,
@@ -29,24 +31,26 @@ export default {
           defaultSideBarPanel: "info",
           sideBarOpenByDefault: false,
           hideWindowTitle: true,
-          maximizedByDefault: true
+          maximizedByDefault: true,
         },
         workspace: {
           showZoomControls: true,
           type: "mosaic", // Which workspace type to load by default. Other possible values are "elastic"
         },
         workspaceControlPanel: {
-          enabled: false
-        }
-      });
-    }
-    onMounted(viewer);
-    return{
-      viewer
-    }
-  }
-}
+          enabled: false,
+        },
+      };
+    });
 
+    onMounted(() => {
+      Mirador.viewer(config.value);
+      watch(config, () => {
+        Mirador.viewer(config.value);
+      });
+    });
+  },
+};
 </script>
 
 <style scoped>

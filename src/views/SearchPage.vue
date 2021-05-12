@@ -443,7 +443,10 @@ th {
 tr:hover {
   cursor: pointer;
 }
-tr em {
-  background-color: yellow;
+tr :deep(em) {
+  background-color: rgba(251, 232, 65, 0.555);
+  border-radius: 3px;
+  font-style: normal;
+  padding: 4px 5px;
 }
 </style>
