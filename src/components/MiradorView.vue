@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { toRefs, computed, watch, onMounted } from "vue";
+import { computed, watch, onMounted } from "vue";
 import Mirador from "mirador";
 
 export default {
@@ -11,8 +11,6 @@ export default {
   components: {},
   props: ["textid"],
   setup(props) {
-    const { textid } = toRefs(props);
-
     const config = computed(() => {
       return {
         id: "vue-mirador-container",
@@ -20,7 +18,7 @@ export default {
           {
             loadedManifest:
               "https://iiif.chartes.psl.eu/encpos/" +
-              textid.value.toLowerCase() +
+              props.textid.toLowerCase() +
               "/manifest",
             canvasIndex: 0,
           },
