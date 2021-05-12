@@ -443,7 +443,7 @@ th {
 tr:hover {
   cursor: pointer;
 }
-tr /deep/ em {
+tr em {
   background-color: yellow;
 }
 </style>
