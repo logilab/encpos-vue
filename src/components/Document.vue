@@ -1,33 +1,46 @@
 <template>
-  <div>
-    <div v-if="document" v-html="document" id="card-content"></div>
-  </div>
+  <custom-document />
 </template>
-
 <script>
-import { ref, toRefs, watch } from "vue";
 import { getDocumentFromApi } from "@/api/document";
+import { defineAsyncComponent } from "vue/dist/vue.esm-bundler.js";
 
 export default {
   name: "Document",
 
   props: ["id"],
 
-  setup(props) {
-    const { id } = toRefs(props);
-    const document = ref("");
+  async setup(props) {
+    /*
+      Dynamically build a component 
+    */
+    const customDocument = defineAsyncComponent(async () => {
+      // fetch the initial template
+      const data = await getDocumentFromApi(props.id);
+      // build a temporary dom just to ease the navigation inside the document
+      let tmpDom = document.createElement("div");
+      tmpDom.innerHTML = data;
 
-    const getDocument = async () => {
-      document.value = await getDocumentFromApi(id.value);
-    };
+      // customize the template with some vue components and code
+      tmpDom.querySelectorAll("p").forEach((e) => {
+        e.innerHTML += `<button @click='injected'>INJECTED</button>`;
+      });
 
-    getDocument();
-
-    watch(id, getDocument);
-
+      // return what will make the async component
+      return new Promise((resolve) => {
+        resolve({
+          template: tmpDom.innerHTML, // inject the html here
+          components: {},
+          methods: {
+            injected() {
+              console.log("clock click");
+            },
+          },
+        });
+      });
+    });
     return {
-      document,
-      getDocument,
+      customDocument,
     };
   },
 };

@@ -11,13 +11,13 @@
       </div>
     </div>
     <div class="column">
-      <document :id="docId"/>
+      <Suspense>
+        <document :id="docId" :key="docId" />
+      </Suspense>
     </div>
-      <div class="column is-4 Mirador">
-        <mirador-viewer
-        :textid="docId"
-        />
-      </div>
+    <div class="column is-4 Mirador">
+      <mirador-viewer :textid="docId" />
+    </div>
   </div>
 </template>
 
@@ -35,7 +35,7 @@ export default {
     Document,
     DocumentMetadata,
     ListeTheseAnnee,
-    MiradorViewer
+    MiradorViewer,
   },
   props: ["docId"],
   setup(props) {
@@ -95,7 +95,7 @@ export default {
     });
 
     return {
-      state
+      state,
     };
   },
 };
