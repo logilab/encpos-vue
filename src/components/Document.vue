@@ -2,6 +2,7 @@
   <custom-document />
 </template>
 <script>
+import { inject } from "vue";
 import { getDocumentFromApi } from "@/api/document";
 import { defineAsyncComponent } from "vue/dist/vue.esm-bundler.js";
 
@@ -11,6 +12,8 @@ export default {
   props: ["id"],
 
   async setup(props) {
+    const mirador = inject("mirador");
+
     /*
       Dynamically build a component 
     */
@@ -34,6 +37,9 @@ export default {
           methods: {
             injected() {
               console.log("clock click");
+              mirador.setCanvasId(
+                "https://iiif.chartes.psl.eu/encpos/encpos_1908_01/canvas/f3"
+              );
             },
           },
         });

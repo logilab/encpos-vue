@@ -16,18 +16,22 @@
       </Suspense>
     </div>
     <div class="column is-4 Mirador">
-      <mirador-viewer :textid="docId" />
+      <div id="vue-mirador-container" />
+      <!-- <mirador-viewer :textid="docId" /> -->
     </div>
   </div>
 </template>
 
 <script>
+import { provide } from "vue";
+
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
-import MiradorViewer from "@/components/MiradorView.vue";
 import { getMetadataFromApi } from "@/api/document";
 import { toRefs, onMounted, watch, reactive } from "vue";
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
+
+import useMirador from "@/composables/use-mirador";
 
 export default {
   name: "DocumentPage",
@@ -35,12 +39,14 @@ export default {
     Document,
     DocumentMetadata,
     ListeTheseAnnee,
-    MiradorViewer,
   },
   props: ["docId"],
   setup(props) {
     const { docId } = toRefs(props);
     let state = reactive({});
+
+    const miradorInstance = useMirador("vue-mirador-container", docId.value, 0);
+    provide("mirador", miradorInstance);
 
     const getMetadata = async () => {
       let metadata = {};
@@ -88,6 +94,7 @@ export default {
 
     onMounted(() => {
       getMetadata();
+      miradorInstance.initialize();
     });
 
     watch(docId, () => {
