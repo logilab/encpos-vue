@@ -28,6 +28,10 @@
         <div class="tile is-parent is-8">
           <article class="tile is-child box">
             <div class="search-form">
+              <div class="field">
+                  <input id="switchColorDefault" type="checkbox" name="switchColorDefault" class="switch is-rtl" v-model="inputCheckedMetadata">
+                  <label for="switchColorDefault"> Notice</label>
+              </div>
               <div class="field has-addons">
                 <div class="control is-expanded">
                   <input
@@ -260,8 +264,17 @@ export default {
     const aggSearch = inject("agg-search");
 
     function executeSearches() {
+      if (inputCheckedMetadata.value === true ){
+        console.log("TestMetadata");
+      search.setTerm(`metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`);
       search.execute();
       aggSearch.execute();
+      } else {
+        console.log("TestMetadata");
+        search.setTerm(inputTerm.value);
+        search.execute();
+        aggSearch.execute();
+      }
     }
 
     function getInitialState() {
@@ -271,6 +284,7 @@ export default {
       //TODO: should fetch the upper bound
       const initialPromotionYearRange = [1849, 2017];
       const initialSort = "";
+      const initialCheckedMetadata = false;
 
       // restore content
       const notBefore = search.ranges["metadata.topic_notBefore"];
@@ -280,6 +294,7 @@ export default {
       // try to restore else get the initial values
       return {
         term: search.term.value || initialTerm,
+        checkedMetadata : search.checkedMetadata.value||initialCheckedMetadata,
         topicRange:
           notBefore && notAfter
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
@@ -297,6 +312,7 @@ export default {
     const inputPromotionYearRange = ref(initialState.promotionYearRange);
     const inputSort = ref(initialState.sort);
     const onrollActive = ref([]);
+    const inputCheckedMetadata = ref(initialState.checkedMetadata);
 
     search.setTerm(inputTerm.value);
     search.setRange(
@@ -307,10 +323,23 @@ export default {
     search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
     search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
     search.setSorts(inputSort.value);
+    search.setCheckedMetadata(inputCheckedMetadata);
 
     watch(inputTerm, () => {
       search.setTerm(inputTerm.value);
     });
+
+    watch(inputCheckedMetadata, () => {
+        if (inputCheckedMetadata.value === true ){
+          console.log("TestMetadata")
+          search.setTerm(`metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`);
+          executeSearches();
+        } else {
+          console.log("Test")
+          search.setTerm(inputTerm.value);
+          executeSearches();
+        }
+    } )
 
     watch(inputPromotionYearRange, () => {
       search.setRange(
@@ -363,6 +392,7 @@ export default {
       aggSearch,
       executeSearches,
       inputTopicRange,
+      inputCheckedMetadata,
       inputTerm,
       inputPromotionYearRange,
       inputSort,
@@ -443,8 +473,8 @@ th {
 tr:hover {
   cursor: pointer;
 }
-tr /deep/ em {
-  background-color: rgb(253, 229, 9);
+tr :deep(em) {
+  background-color: rgba(251, 232, 65, 0.555);
   border-radius: 3px;
   font-style: normal;
   padding: 4px 5px;

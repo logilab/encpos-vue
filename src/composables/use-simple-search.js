@@ -13,11 +13,13 @@ export default function useSimpleSearch() {
     const pageNum = ref(1)
     const pageSize = ref(40)
     const pageCount = computed(() => {
-        return Math.ceil(totalCount.value / 100)
+        return Math.ceil(totalCount.value / pageSize.value)
     })
+    const checkedMetadata = ref(false)
 
     const result = ref()
     const totalCount = ref(0)
+
 
 
     const setTerm = function(t) {
@@ -32,6 +34,9 @@ export default function useSimpleSearch() {
     const setPageNum = function(num) {
         pageNum.value = num  
     }
+    const setCheckedMetadata = function(cm){
+        checkedMetadata.value = cm
+    }
 
     function updateQuery() {
         let rangesArg = ''
@@ -43,6 +48,7 @@ export default function useSimpleSearch() {
         if (sorts.value) {
             sortArg = '&sort=' + sorts.value
         }
+        console.log(term.value);
 
         api.setQuery(`${_baseApiURL}/search?query=${term.value}${sortArg}${rangesArg}&page[number]=${pageNum.value || 1}&page[size]=${pageSize.value}`)
     }
@@ -68,11 +74,13 @@ export default function useSimpleSearch() {
         sorts: readonly(sorts),
         pageNum: readonly(pageNum),
         pageSize: readonly(pageSize),
+        checkedMetadata : readonly(checkedMetadata),
         pageCount: pageCount,
         setTerm,
         setRange,
         setSorts,
         setPageNum,
+        setCheckedMetadata,
         execute,
         loading: readonly(api.loading),
         result: readonly(result),
