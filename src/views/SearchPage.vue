@@ -29,8 +29,7 @@
           <article class="tile is-child box">
             <div class="search-form">
               <div class="field">
-                  <input id="switchColorDefault" type="checkbox" name="switchColorDefault" class="switch is-rtl" v-model="inputCheckedMetadata">
-                  <label for="switchColorDefault"> Notice</label>
+                <Toggle id="ToggleSwitch" on-label="Notice" off-label="Plein-text" v-model="inputCheckedMetadata" :width="100"/>
               </div>
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -249,6 +248,7 @@ import { inject, ref, watch } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 import Pagination from "@/components/Pagination";
+import Toggle from "@vueform/toggle"
 
 import Histogram from "@/components/charts/Histogram";
 
@@ -258,6 +258,7 @@ export default {
     VueSlider,
     Pagination,
     Histogram,
+    Toggle
   },
   setup() {
     const search = inject("search");
@@ -414,6 +415,7 @@ export default {
 };
 </script>
 
+<style src="@vueform/toggle/themes/default.css"></style>
 <style scoped>
 th {
   white-space: nowrap;
