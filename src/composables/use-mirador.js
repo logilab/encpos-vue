@@ -1,10 +1,12 @@
-import {computed, watch} from "vue";
+import {computed,  readonly, ref} from "vue";
 import Mirador from "mirador";
 
-export default function useMirador(containerId = "vue-mirador-container", _manifestId, _canvasIndex = 0) {
+export default function useMirador(containerId = "vue-mirador-container", _manifestUrl, _canvasIndex = 0) {
 
     const _windowId = "document"
     let mirador = null
+
+    const manifestUrl = ref(_manifestUrl)
 
     const config = computed(() => {
         return {
@@ -12,8 +14,8 @@ export default function useMirador(containerId = "vue-mirador-container", _manif
           windows: [
             {
               id: _windowId,
-              loadedManifest: `https://iiif.chartes.psl.eu/encpos/${_manifestId.toLowerCase()}/manifest`,
-              canvasIndex: _canvasIndex.value,
+              loadedManifest: manifestUrl.value,
+              canvasIndex: _canvasIndex,
             },
           ],
           window: {
@@ -36,38 +38,38 @@ export default function useMirador(containerId = "vue-mirador-container", _manif
 
     
     const initialize = function() {
+        console.log("mirador init")
         mirador = Mirador.viewer(config.value);
     }
 
     const dispatchAction = function(action) {
+        if (mirador === null) {
+            initialize()
+        }
         mirador.store.dispatch(action);
     }
 
-    const setManifestId = function(manifestId) {
-        const action = Mirador.actions.fetchManifest(manifestId)
+    const setManifestUrl = function(newUrl) {
+        console.log("setManifestUrl", newUrl)
+        manifestUrl.value = newUrl
+        const action = Mirador.actions.updateWindow(_windowId, {
+            manifestId: manifestUrl.value
+        })
         dispatchAction(action)
     }
 
     const setCanvasId = function(canvasId) {
-        console.log("set canvas index", _windowId, canvasId)
+        console.log("setCanvasId", canvasId)
         const action = Mirador.actions.setCanvas(_windowId, canvasId)
         dispatchAction(action)
     }
 
-    const updateConfig = function() {
-        const action = Mirador.actions.updateConfig(config.value)
-        dispatchAction(action)
-    }
-
-    watch(config, updateConfig);
-  
-
     return {
-        mirador,
+        manifestUrl: readonly(manifestUrl),
         initialize,
-        setManifestId,
+        setManifestUrl,
         setCanvasId,
         dispatchAction,
-        config
+        config: readonly(config)
     }
 }

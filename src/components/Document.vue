@@ -2,9 +2,11 @@
   <custom-document />
 </template>
 <script>
-import { inject } from "vue";
-import { getDocumentFromApi } from "@/api/document";
 import { defineAsyncComponent } from "vue/dist/vue.esm-bundler.js";
+import { getDocumentFromApi } from "@/api/document";
+
+const VUE_APP_IIIF_URL = `${process.env.VUE_APP_IIIF_URL}`;
+const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`;
 
 export default {
   name: "Document",
@@ -12,11 +14,6 @@ export default {
   props: ["id"],
 
   async setup(props) {
-    const mirador = inject("mirador");
-
-    /*
-      Dynamically build a component 
-    */
     const customDocument = defineAsyncComponent(async () => {
       // fetch the initial template
       const data = await getDocumentFromApi(props.id);
@@ -25,23 +22,24 @@ export default {
       tmpDom.innerHTML = data;
 
       // customize the template with some vue components and code
-      tmpDom.querySelectorAll("p").forEach((e) => {
-        e.innerHTML += `<button @click='injected'>INJECTED</button>`;
+      let frameNum = 1;
+      tmpDom.querySelectorAll("a.pb.facs").forEach((a) => {
+        const container = document.createElement("div");
+        // TODO: gérer ce lowercase un peu gênant
+        const canvadId = `${VUE_APP_IIIF_URL}/${props.id.toLowerCase()}/canvas/f${frameNum}`;
+        const imageName = a.href.split("/").pop();
+        const imageUrl = `${VUE_APP_IIIF_IMAGES_URL}/${props.id}/${imageName}`;
+        //console.log(a.href, imageUrl);
+        container.innerHTML = `<page-break canvas-id="${canvadId}" canvas-num="${frameNum}" image="${imageUrl}"/>`;
+        frameNum += 1;
+        // replace the link with a PageBreak component
+        a.parentNode.replaceChild(container.firstChild, a);
       });
 
       // return what will make the async component
       return new Promise((resolve) => {
         resolve({
-          template: tmpDom.innerHTML, // inject the html here
-          components: {},
-          methods: {
-            injected() {
-              console.log("clock click");
-              mirador.setCanvasId(
-                "https://iiif.chartes.psl.eu/encpos/encpos_1908_01/canvas/f3"
-              );
-            },
-          },
+          template: tmpDom.innerHTML,
         });
       });
     });

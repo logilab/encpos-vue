@@ -46,7 +46,6 @@ export default {
     let state = reactive({});
     const { id } = toRefs(props);
     var annee = ref(id.value);
-    console.log(annee.value);
 
     const getPositionThese = async () => {
       let metadata = {};
@@ -58,7 +57,7 @@ export default {
           namespacedt = namespace;
         }
       }
-      console.log(data);
+
       for (var these of data["member"]) {
         try {
           const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
@@ -80,7 +79,7 @@ export default {
 
     getPositionThese();
 
-    watch(getPositionThese);
+    watch(annee, getPositionThese);
 
     const downOneAnne = function () {
       let anneedown = parseInt(annee.value);
@@ -90,7 +89,6 @@ export default {
     };
 
     const reinitalise = function () {
-      console.log(id.value);
       annee.value = id.value;
       return annee;
     };

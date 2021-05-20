@@ -19,7 +19,6 @@ export default function useSimpleSearch() {
     const result = ref()
     const totalCount = ref(0)
 
-
     const setTerm = function(t) {
         term.value = t  
     }
