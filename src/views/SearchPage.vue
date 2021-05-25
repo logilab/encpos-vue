@@ -90,7 +90,7 @@
             <div class="has-text-centered">
               <pagination />
             </div>
-            <div class="table-container">
+            <div v-if="inputCheckedMetadata === true" class="table-container">
               <table
                 class="table is-hoverable is-narrow is-fulldwidth"
                 v-if="search.result.value && search.result.value.length"
@@ -181,6 +181,7 @@
                       <td>{{ position.fields.metadata.promotion_year }}</td>
                       <td>
                         <router-link
+                        style="text-decoration: none; color: inherit;"
                           :to="{
                             name: 'DocumentPage',
                             params: { docId: position.id },
@@ -204,6 +205,40 @@
                   </template>
                 </tbody>
               </table>
+            </div>
+            <div v-else class="table-container">
+              <tbody>
+                <template v-for="position in search.result.value" :key="position.id">
+                    
+                      <router-link
+                      class="routerlinkPleinText"
+                          :to="{
+                            name: 'DocumentPage',
+                            params: { docId: position.id },
+                          }"
+                          tag="tr"
+                        >
+                      <div class="columns" @click="rollActive(position.id)">
+                      <div class="column is-2">
+                        <img class="pb-thumnbail" onerror="this.onerror=null; this.src='https://iiif.chartes.psl.eu/images/enc/logo-enc.png/full/180,/0/default.png'" :src="`${VUE_APP_IIIF_IMAGES_URL}/${position.id}/${position.id}_01.TIF/full/180,/0/default.jpg`">
+                      </div>
+                      <div class="block column is-10">
+                        <div class="has-text-left is-italic" v-html="position.fields.metadata.title_rich"></div>
+                        <div class="has-text-left has-text-weight-bold">{{ position.fields.metadata.author_name }} {{ position.fields.metadata.author_firstname }}</div>
+                        <div class="has-text-right is-inline-block">
+                          <span class="year">Promotion : {{ position.fields.metadata.promotion_year }}</span>
+                        / Période du sujet : {{ position.fields.metadata.topic_notBefore }} - {{ position.fields.metadata.topic_notAfter }}</div>
+                        <div>
+                          <span v-for="(phrase, index) in position.highlight.content" :key="phrase">
+                            <span v-html="phrase"></span><span v-if="index !== position.highlight.content.length - 1"> - </span>
+                          </span>
+                        </div>
+                      </div>
+                      </div> 
+                      </router-link>  
+                                  
+                </template>
+              </tbody>
             </div>
           </article>
         </div>
@@ -251,6 +286,8 @@ import Pagination from "@/components/Pagination";
 import Toggle from "@vueform/toggle"
 
 import Histogram from "@/components/charts/Histogram";
+
+const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`;
 
 export default {
   name: "Home",
@@ -398,6 +435,7 @@ export default {
       inputPromotionYearRange,
       inputSort,
       onrollActive,
+      VUE_APP_IIIF_IMAGES_URL
     };
   },
   methods: {
@@ -480,5 +518,21 @@ tr :deep(em) {
   border-radius: 3px;
   font-style: normal;
   padding: 4px 5px;
+}
+.routerlinkPleinText{
+  text-decoration: none;
+}
+div :deep(em) {
+  background-color: rgba(251, 232, 65, 0.555);
+  border-radius: 3px;
+  font-style: normal;
+  padding: 4px 5px;
+}
+
+.pb-label {
+  font-size: large;
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 </style>

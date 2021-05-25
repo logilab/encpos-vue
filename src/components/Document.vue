@@ -35,7 +35,7 @@ export default {
         // replace the link with a PageBreak component
         a.parentNode.replaceChild(container.firstChild, a);
       });
-
+      console.log(tmpDom);
       // return what will make the async component
       return new Promise((resolve) => {
         resolve({
