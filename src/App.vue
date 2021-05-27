@@ -1,12 +1,8 @@
 <template>
-  <div>
-    <div class="content">
-      <app-navbar />
-      <router-view />
-    </div>
-    <div class="footer">
-      <app-footer />
-    </div>
+  <div class="grid-container">
+    <app-navbar class="navbar" />
+    <router-view class="main" />
+    <app-footer class="footer" />
   </div>
 </template>
 
@@ -29,8 +25,6 @@ body,
   height: 100%;
 }
 body {
-  display: flex;
-  flex-direction: column;
   background-color: #ffffff;
 }
 
@@ -41,5 +35,25 @@ body {
 
 #nav {
   padding: 30px;
+}
+
+.navbar {
+  grid-area: "header";
+}
+.main {
+  grid-area: "main";
+}
+.footer {
+  grid-area: "footer";
+}
+.grid-container {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 100%;
+  grid-template-rows: 50px auto 100px;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
 }
 </style>
