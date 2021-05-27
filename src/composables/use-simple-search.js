@@ -15,8 +15,6 @@ export default function useSimpleSearch() {
     const pageCount = computed(() => {
         return Math.ceil(totalCount.value / pageSize.value)
     })
-    const checkedMetadata = ref(false)
-
     const result = ref()
     const totalCount = ref(0)
 
@@ -33,9 +31,6 @@ export default function useSimpleSearch() {
     }
     const setPageNum = function(num) {
         pageNum.value = num  
-    }
-    const setCheckedMetadata = function(cm){
-        checkedMetadata.value = cm
     }
 
     function updateQuery() {
@@ -74,13 +69,11 @@ export default function useSimpleSearch() {
         sorts: readonly(sorts),
         pageNum: readonly(pageNum),
         pageSize: readonly(pageSize),
-        checkedMetadata : readonly(checkedMetadata),
         pageCount: pageCount,
         setTerm,
         setRange,
         setSorts,
         setPageNum,
-        setCheckedMetadata,
         execute,
         loading: readonly(api.loading),
         result: readonly(result),

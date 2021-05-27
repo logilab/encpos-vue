@@ -28,9 +28,6 @@
         <div class="tile is-parent is-8">
           <article class="tile is-child box">
             <div class="search-form">
-              <div class="field">
-                <Toggle id="ToggleSwitch" on-label="Notice" off-label="Plein-text" v-model="inputCheckedMetadata" :width="100"/>
-              </div>
               <div class="field has-addons">
                 <div class="control is-expanded">
                   <input
@@ -52,7 +49,7 @@
                 </div>
               </div>
               <div v-if="search.result.value">
-                <span>Résultat de votre recherche : {{ search.totalCount.value }}</span>
+                <span>{{ search.totalCount.value }} résultat(s)</span>
               </div>
               <div class="block">
                 <div class="field vue-slider is-inline-block">
@@ -85,12 +82,23 @@
                     ></vue-slider>
                   </div>
                 </div>
+                <div class="field is-inline-block is-pulled-right">
+                  <div class="control">
+                    <Toggle
+                      id="ToggleSwitch"
+                      on-label="Plein texte"
+                      off-label="Notice"
+                      v-model="isFulltextSearch"
+                      :width="120"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             <div class="has-text-centered">
               <pagination />
             </div>
-            <div v-if="inputCheckedMetadata === true" class="table-container">
+            <div v-if="isFulltextSearch" class="table-container">
               <table
                 class="table is-hoverable is-narrow is-fulldwidth"
                 v-if="search.result.value && search.result.value.length"
@@ -181,7 +189,7 @@
                       <td>{{ position.fields.metadata.promotion_year }}</td>
                       <td>
                         <router-link
-                        style="text-decoration: none; color: inherit;"
+                          style="text-decoration: none; color: inherit"
                           :to="{
                             name: 'DocumentPage',
                             params: { docId: position.id },
@@ -207,38 +215,65 @@
               </table>
             </div>
             <div v-else class="table-container">
-              <tbody>
-                <template v-for="position in search.result.value" :key="position.id">
-                    
-                      <router-link
+              <table
+                class="table is-hoverable is-narrow is-fulldwidth"
+                v-if="search.result.value && search.result.value.length"
+              >
+                <tbody>
+                  <template v-for="position in search.result.value" :key="position.id">
+                    <router-link
                       class="routerlinkPleinText"
-                          :to="{
-                            name: 'DocumentPage',
-                            params: { docId: position.id },
-                          }"
-                          tag="tr"
-                        >
+                      :to="{
+                        name: 'DocumentPage',
+                        params: { docId: position.id },
+                      }"
+                      tag="tr"
+                    >
                       <div class="columns" @click="rollActive(position.id)">
-                      <div class="column is-2">
-                        <img class="pb-thumnbail" onerror="this.onerror=null; this.src='https://iiif.chartes.psl.eu/images/enc/logo-enc.png/full/180,/0/default.png'" :src="`${VUE_APP_IIIF_IMAGES_URL}/${position.id}/${position.id}_01.TIF/full/180,/0/default.jpg`">
-                      </div>
-                      <div class="block column is-10">
-                        <div class="has-text-left is-italic" v-html="position.fields.metadata.title_rich"></div>
-                        <div class="has-text-left has-text-weight-bold">{{ position.fields.metadata.author_name }} {{ position.fields.metadata.author_firstname }}</div>
-                        <div class="has-text-right is-inline-block">
-                          <span class="year">Promotion : {{ position.fields.metadata.promotion_year }}</span>
-                        / Période du sujet : {{ position.fields.metadata.topic_notBefore }} - {{ position.fields.metadata.topic_notAfter }}</div>
-                        <div>
-                          <span v-for="(phrase, index) in position.highlight.content" :key="phrase">
-                            <span v-html="phrase"></span><span v-if="index !== position.highlight.content.length - 1"> - </span>
-                          </span>
+                        <div class="column is-2">
+                          <img
+                            class="pb-thumnbail"
+                            onerror="this.onerror=null; this.src='https://iiif.chartes.psl.eu/images/enc/logo-enc.png/full/120,/0/default.png'"
+                            :src="`${VUE_APP_IIIF_IMAGES_URL}/${position.id}/${position.id}_01.TIF/full/120,/0/default.jpg`"
+                          />
+                        </div>
+                        <div class="block column is-10">
+                          <div
+                            class="has-text-left is-italic"
+                            v-html="position.fields.metadata.title_rich"
+                          ></div>
+                          <div class="has-text-left has-text-weight-bold">
+                            {{ position.fields.metadata.author_name }}
+                            {{ position.fields.metadata.author_firstname }}
+                          </div>
+                          <div class="has-text-right is-inline-block">
+                            <span class="year"
+                              >Promotion :
+                              {{ position.fields.metadata.promotion_year }}</span
+                            >
+                            / Période du sujet :
+                            {{ position.fields.metadata.topic_notBefore }} -
+                            {{ position.fields.metadata.topic_notAfter }}
+                          </div>
+                          <div v-if="position.highlight">
+                            <span
+                              v-for="(phrase, index) in position.highlight.content"
+                              :key="phrase"
+                            >
+                              <span v-html="phrase"></span
+                              ><span
+                                v-if="index !== position.highlight.content.length - 1"
+                              >
+                                -
+                              </span>
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      </div> 
-                      </router-link>  
-                                  
-                </template>
-              </tbody>
+                    </router-link>
+                  </template>
+                </tbody>
+              </table>
             </div>
           </article>
         </div>
@@ -283,7 +318,7 @@ import { inject, ref, watch } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 import Pagination from "@/components/Pagination";
-import Toggle from "@vueform/toggle"
+import Toggle from "@vueform/toggle";
 
 import Histogram from "@/components/charts/Histogram";
 
@@ -295,24 +330,22 @@ export default {
     VueSlider,
     Pagination,
     Histogram,
-    Toggle
+    Toggle,
   },
   setup() {
     const search = inject("search");
     const aggSearch = inject("agg-search");
 
     function executeSearches() {
-      if (inputCheckedMetadata.value === true ){
-        console.log("TestMetadata");
-      search.setTerm(`metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`);
+      if (isFulltextSearch.value) {
+        search.setTerm(inputTerm.value);
+      } else {
+        search.setTerm(
+          `metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`
+        );
+      }
       search.execute();
       aggSearch.execute();
-      } else {
-        console.log("TestMetadata");
-        search.setTerm(inputTerm.value);
-        search.execute();
-        aggSearch.execute();
-      }
     }
 
     function getInitialState() {
@@ -322,7 +355,7 @@ export default {
       //TODO: should fetch the upper bound
       const initialPromotionYearRange = [1849, 2017];
       const initialSort = "";
-      const initialCheckedMetadata = false;
+      const initialIsFulltextSearch = false;
 
       // restore content
       const notBefore = search.ranges["metadata.topic_notBefore"];
@@ -332,7 +365,7 @@ export default {
       // try to restore else get the initial values
       return {
         term: search.term.value || initialTerm,
-        checkedMetadata : search.checkedMetadata.value||initialCheckedMetadata,
+        isFulltextSearch: search.isFulltextSearch.value || initialIsFulltextSearch,
         topicRange:
           notBefore && notAfter
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
@@ -350,7 +383,7 @@ export default {
     const inputPromotionYearRange = ref(initialState.promotionYearRange);
     const inputSort = ref(initialState.sort);
     const onrollActive = ref([]);
-    const inputCheckedMetadata = ref(initialState.checkedMetadata);
+    const isFulltextSearch = ref(initialState.isFulltextSearch);
 
     search.setTerm(inputTerm.value);
     search.setRange(
@@ -361,23 +394,13 @@ export default {
     search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
     search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
     search.setSorts(inputSort.value);
-    search.setCheckedMetadata(inputCheckedMetadata);
+    search.setIsFulltextSearch(isFulltextSearch);
 
     watch(inputTerm, () => {
       search.setTerm(inputTerm.value);
     });
 
-    watch(inputCheckedMetadata, () => {
-        if (inputCheckedMetadata.value === true ){
-          console.log("TestMetadata")
-          search.setTerm(`metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`);
-          executeSearches();
-        } else {
-          console.log("Test")
-          search.setTerm(inputTerm.value);
-          executeSearches();
-        }
-    } )
+    watch(isFulltextSearch, executeSearches);
 
     watch(inputPromotionYearRange, () => {
       search.setRange(
@@ -430,12 +453,12 @@ export default {
       aggSearch,
       executeSearches,
       inputTopicRange,
-      inputCheckedMetadata,
+      isFulltextSearch,
       inputTerm,
       inputPromotionYearRange,
       inputSort,
       onrollActive,
-      VUE_APP_IIIF_IMAGES_URL
+      VUE_APP_IIIF_IMAGES_URL,
     };
   },
   methods: {
@@ -519,7 +542,7 @@ tr :deep(em) {
   font-style: normal;
   padding: 4px 5px;
 }
-.routerlinkPleinText{
+.routerlinkPleinText {
   text-decoration: none;
 }
 div :deep(em) {
