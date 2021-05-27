@@ -1,5 +1,5 @@
 <template>
-  <div v-show="search.pageCount.value > 1">
+  <div v-show="pageCount > 1">
     <span class="icon button" @click="goToPage(1)">
       <i class="fas fa-angle-double-left" />
     </span>
@@ -8,12 +8,12 @@
     </span>
     <span class="pagination__button__input-box">
       <input v-model="currentInput" class="input is-medium" />
-      <span> / {{ search.pageCount.value }}</span>
+      <span> / {{ pageCount }}</span>
     </span>
     <span class="icon button" @click="goToPage(currentInput + 1)">
       <i class="fas fa-arrow-right" />
     </span>
-    <span class="icon button" @click="goToPage(search.pageCount.value)">
+    <span class="icon button" @click="goToPage(pageCount)">
       <i class="fas fa-angle-double-right"></i>
     </span>
   </div>
@@ -25,6 +25,8 @@ export default {
   name: "Pagination",
   setup() {
     const search = inject("search");
+
+    console.log("pagination:", search.pageCount);
 
     const start = 1;
     let currentInput = ref(search.pageNum.value || start);
@@ -59,7 +61,7 @@ export default {
 
     //currentInput.value = search.numPage.value || start;
 
-    return { search, currentInput, goToPage };
+    return { pageCount: search.pageCount, currentInput, goToPage };
   },
 };
 </script>

@@ -13,22 +13,22 @@ export default function useEncposSimpleSearch() {
     }
 
     return {
-        term: readonly(search.term),
-        ranges: readonly(search.ranges),
-        sorts: readonly(search.sorts),
-        pageNum: readonly(search.pageNum),
-        pageSize: readonly(search.pageSize),
+        term: search.term,
+        ranges: search.ranges,
+        sorts: search.sorts,
+        pageNum: search.pageNum,
+        pageSize: search.pageSize,
         isFulltextSearch : readonly(isFulltextSearch),
-        pageCount: readonly(search.pageCount),
+        pageCount: search.pageCount,
         setTerm: search.setTerm,
         setRange: search.setRange,
         setSorts: search.setSorts,
         setPageNum: search.setPageNum,
         setIsFulltextSearch,
         execute: search.execute,
-        loading: readonly(search.loading),
-        result: readonly(search.result),
-        totalCount: readonly(search.totalCount),
-        error: readonly(search.error)
+        loading: search.loading,
+        result: search.result,
+        totalCount: search.totalCount,
+        error: search.error
     }
 }
