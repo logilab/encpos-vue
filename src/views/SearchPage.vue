@@ -82,8 +82,7 @@
                   </div>
                 </div>
 
-
-              <div class="field is-inline-block is-pulled-right px-2">
+                <div class="field is-inline-block is-pulled-right px-2">
                   <div class="control">
                     <Toggle
                       id="ToggleSwitch"
@@ -93,35 +92,47 @@
                       :width="120"
                     />
                   </div>
-              </div>
-              <div v-if="isFulltextSearch === true" class="field is-inline-block is-pulled-right px-1">
-                <div class="control">
-                  <Toggle
-                    id="ToggleTableau"
-                    on-label="Tableau"
-                    off-label="Déroulé"
-                    v-model="isTableau"
-                    :width="120"
-                  />
                 </div>
-                <div v-if="isTableau ===false" class="field is-inline-block is-pulled-right px-2">
-                  <select  name="tri"  id=tri-select v-model='inputSort'>
-                    <option value="">--Please choose an option--</option>
-                    <option value="metadata.author_name">Auteur</option>
-                    <option value="metadata.promotion_year">Promotion</option>
-                    <option value="metadata.topic_notAfter">Sujet du plus ancien au plus récent</option>
-                    <option value="metadata.topic_notBefore">Sujet du plus récent au plus ancien</option>
-                  </select>
-                  <span v-if="inputSort.includes('-')" class="icon button" @click="inputSort = inputSort.replace('-', '')">
-                    <i class="fas fa-arrow-up" />
-                  </span>
-                  <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
-                    <i class="fas fa-arrow-down" />
-                  </span>
-              </div>
-              </div>
-
-
+                <div
+                  v-if="isFulltextSearch === true"
+                  class="field is-inline-block is-pulled-right px-1"
+                >
+                  <div class="control">
+                    <Toggle
+                      id="ToggleTableau"
+                      on-label="Tableau"
+                      off-label="Déroulé"
+                      v-model="isTableau"
+                      :width="120"
+                    />
+                  </div>
+                  <div
+                    v-if="isTableau === false"
+                    class="field is-inline-block is-pulled-right px-2"
+                  >
+                    <select name="tri" id="tri-select" v-model="inputSort">
+                      <option value="">--Please choose an option--</option>
+                      <option value="metadata.author_name.keyword">Auteur</option>
+                      <option value="metadata.promotion_year">Promotion</option>
+                      <option value="metadata.topic_notAfter">
+                        Sujet du plus ancien au plus récent
+                      </option>
+                      <option value="metadata.topic_notBefore">
+                        Sujet du plus récent au plus ancien
+                      </option>
+                    </select>
+                    <span
+                      v-if="inputSort.includes('-')"
+                      class="icon button"
+                      @click="inputSort = inputSort.replace('-', '')"
+                    >
+                      <i class="fas fa-arrow-up" />
+                    </span>
+                    <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
+                      <i class="fas fa-arrow-down" />
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="has-text-centered">
@@ -135,79 +146,97 @@
               >
                 <thead>
                   <tr>
-                    <th @click="inputSort = '-metadata.author_name'" v-if="inputSort === 'metadata.author_name'">
+                    <th
+                      @click="inputSort = '-metadata.author_name.keyword'"
+                      v-if="inputSort === 'metadata.author_name.keyword'"
+                    >
                       Nom
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th @click="inputSort = ''" v-else-if="inputSort === '-metadata.author_name'">
+                    <th
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.author_name.keyword'"
+                    >
                       Nom
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th @click="inputSort = 'metadata.author_name'" v-else>
+                    <th @click="inputSort = 'metadata.author_name.keyword'" v-else>
                       Nom
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
                     <th>Prénom</th>
-                    <th class="largerTab" @click="inputSort = '-metadata.promotion_year'" v-if="inputSort === 'metadata.promotion_year'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = '-metadata.promotion_year'"
+                      v-if="inputSort === 'metadata.promotion_year'"
+                    >
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = ''" v-else-if="inputSort === '-metadata.promotion_year'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.promotion_year'"
+                    >
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = 'metadata.promotion_year'" v-else>
+                    <th
+                      class="largerTab"
+                      @click="inputSort = 'metadata.promotion_year'"
+                      v-else
+                    >
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
                     <th>Titre</th>
-                    <th class="largerTab" @click="inputSort = '-metadata.topic_notBefore'" v-if="inputSort === 'metadata.topic_notBefore'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = '-metadata.topic_notBefore'"
+                      v-if="inputSort === 'metadata.topic_notBefore'"
+                    >
                       <abbr title="Période du sujet">De </abbr>
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = ''" v-else-if="inputSort === '-metadata.topic_notBefore'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.topic_notBefore'"
+                    >
                       <abbr title="Période du sujet">De </abbr>
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = 'metadata.topic_notBefore'" v-else>
+                    <th
+                      class="largerTab"
+                      @click="inputSort = 'metadata.topic_notBefore'"
+                      v-else
+                    >
                       <abbr title="Période du sujet">De </abbr>
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
-                    <th class="inline" @click="inputSort = '-metadata.topic_notAfter'" v-if="inputSort === 'metadata.topic_notAfter'">
+                    <th
+                      class="inline"
+                      @click="inputSort = '-metadata.topic_notAfter'"
+                      v-if="inputSort === 'metadata.topic_notAfter'"
+                    >
                       <abbr title="Période du sujet">A </abbr>
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th class="inline" @click="inputSort = ''" v-else-if="inputSort === '-metadata.topic_notAfter'">
+                    <th
+                      class="inline"
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.topic_notAfter'"
+                    >
                       <abbr title="Période du sujet">A </abbr>
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th class="inline" @click="inputSort = 'metadata.topic_notAfter'" v-else>
+                    <th
+                      class="inline"
+                      @click="inputSort = 'metadata.topic_notAfter'"
+                      v-else
+                    >
                       <abbr title="Période du sujet">A </abbr>
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
                   </tr>
                 </thead>
@@ -235,146 +264,161 @@
                 </tbody>
               </table>
             </div>
-            <div v-if="isFulltextSearch === true & isTableau ===false">
+            <div v-if="(isFulltextSearch === true) & (isTableau === false)">
               <div
                 class="table is-hoverable is-narrow is-fulldwidth"
                 v-if="search.result.value && search.result.value.length"
               >
-                  <template v-for="position in search.result.value" :key="position.id">
-                      <router-link
-                        :to="{
-                          name: 'DocumentPage',
-                          params: { docId: position.id },
-                        }"
-                        tag="tr"
-                        style="text-decoration: none; color: inherit;"
-
-                      >
-                        <div class="columns" @click="rollActive(position.id)">
-                          <div class="column is-2">
-                            <img
-                              class="pb-thumnbail"
-                              onerror="this.onerror=null; this.src='https://iiif.chartes.psl.eu/images/enc/logo-enc.png/full/120,/0/default.png'"
-                              :src="`${VUE_APP_IIIF_IMAGES_URL}/${position.id}/${position.id}_01.TIF/full/120,/0/default.jpg`"
-                            />
-                          </div>
-                          <div class="block column is-10">
-                            <div
-                              class="has-text-left is-italic"
-                              v-html="position.fields.metadata.title_rich"
-                            ></div>
-                            <div class="has-text-left has-text-weight-bold">
-                              {{ position.fields.metadata.author_name }}
-                              {{ position.fields.metadata.author_firstname }}
-                            </div>
-                            <div class="has-text-right is-inline-block">
-                              <span class="year"
-                                >Promotion :
-                                {{ position.fields.metadata.promotion_year }}</span
-                              >
-                              / Période du sujet :
-                              {{ position.fields.metadata.topic_notBefore }} -
-                              {{ position.fields.metadata.topic_notAfter }}
-                            </div>
-                            <div v-if="position.highlight">
-                              <span
-                                v-for="(phrase, index) in position.highlight.content"
-                                :key="phrase"
-                              >
-                                <span v-html="phrase"></span
-                                ><span
-                                  v-if="index !== position.highlight.content.length - 1"
-                                >
-                                  -
-                                </span>
-                              </span>
-                            </div>
-                          </div>
+                <template v-for="position in search.result.value" :key="position.id">
+                  <router-link
+                    :to="{
+                      name: 'DocumentPage',
+                      params: { docId: position.id },
+                    }"
+                    tag="tr"
+                    style="text-decoration: none; color: inherit"
+                  >
+                    <div class="columns" @click="rollActive(position.id)">
+                      <div class="column is-2">
+                        <img
+                          class="pb-thumnbail"
+                          onerror="this.onerror=null; this.src='https://iiif.chartes.psl.eu/images/enc/logo-enc.png/full/120,/0/default.png'"
+                          :src="`${VUE_APP_IIIF_IMAGES_URL}/${position.id}/${position.id}_01.TIF/full/120,/0/default.jpg`"
+                        />
+                      </div>
+                      <div class="block column is-10">
+                        <div
+                          class="has-text-left is-italic"
+                          v-html="position.fields.metadata.title_rich"
+                        ></div>
+                        <div class="has-text-left has-text-weight-bold">
+                          {{ position.fields.metadata.author_name }}
+                          {{ position.fields.metadata.author_firstname }}
                         </div>
-                      </router-link>
-                  </template>
+                        <div class="has-text-right is-inline-block">
+                          <span class="year"
+                            >Promotion :
+                            {{ position.fields.metadata.promotion_year }}</span
+                          >
+                          / Période du sujet :
+                          {{ position.fields.metadata.topic_notBefore }} -
+                          {{ position.fields.metadata.topic_notAfter }}
+                        </div>
+                        <div v-if="position.highlight">
+                          <span
+                            v-for="(phrase, index) in position.highlight.content"
+                            :key="phrase"
+                          >
+                            <span v-html="phrase"></span
+                            ><span v-if="index !== position.highlight.content.length - 1">
+                              -
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </router-link>
+                </template>
               </div>
             </div>
-            <div v-if="isFulltextSearch === true & isTableau ===true">
-                            <table
+            <div v-if="(isFulltextSearch === true) & (isTableau === true)">
+              <table
                 class="table is-hoverable is-narrow is-fulldwidth"
                 v-if="search.result.value && search.result.value.length"
               >
-                                <thead>
+                <thead>
                   <tr>
-                    <th @click="inputSort = '-metadata.author_name'" v-if="inputSort === 'metadata.author_name'">
+                    <th
+                      @click="inputSort = '-metadata.author_name.keyword'"
+                      v-if="inputSort === 'metadata.author_name.keyword'"
+                    >
                       Nom
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th @click="inputSort = ''" v-else-if="inputSort === '-metadata.author_name'">
+                    <th
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.author_name.keyword'"
+                    >
                       Nom
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th @click="inputSort = 'metadata.author_name'" v-else>
+                    <th @click="inputSort = 'metadata.author_name.keyword'" v-else>
                       Nom
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
                     <th>Prénom</th>
-                    <th class="largerTab" @click="inputSort = '-metadata.promotion_year'" v-if="inputSort === 'metadata.promotion_year'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = '-metadata.promotion_year'"
+                      v-if="inputSort === 'metadata.promotion_year'"
+                    >
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = ''" v-else-if="inputSort === '-metadata.promotion_year'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.promotion_year'"
+                    >
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = 'metadata.promotion_year'" v-else>
+                    <th
+                      class="largerTab"
+                      @click="inputSort = 'metadata.promotion_year'"
+                      v-else
+                    >
                       <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
                     <th>Titre</th>
-                    <th class="largerTab" @click="inputSort = '-metadata.topic_notBefore'" v-if="inputSort === 'metadata.topic_notBefore'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = '-metadata.topic_notBefore'"
+                      v-if="inputSort === 'metadata.topic_notBefore'"
+                    >
                       <abbr title="Période du sujet">De </abbr>
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = ''" v-else-if="inputSort === '-metadata.topic_notBefore'">
+                    <th
+                      class="largerTab"
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.topic_notBefore'"
+                    >
                       <abbr title="Période du sujet">De </abbr>
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th class="largerTab" @click="inputSort = 'metadata.topic_notBefore'" v-else>
+                    <th
+                      class="largerTab"
+                      @click="inputSort = 'metadata.topic_notBefore'"
+                      v-else
+                    >
                       <abbr title="Période du sujet">De </abbr>
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
-                    <th class="inline" @click="inputSort = '-metadata.topic_notAfter'" v-if="inputSort === 'metadata.topic_notAfter'">
+                    <th
+                      class="inline"
+                      @click="inputSort = '-metadata.topic_notAfter'"
+                      v-if="inputSort === 'metadata.topic_notAfter'"
+                    >
                       <abbr title="Période du sujet">A </abbr>
-                      <i
-                        class="fas fa-sort-numeric-down is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
                     </th>
-                    <th class="inline" @click="inputSort = ''" v-else-if="inputSort === '-metadata.topic_notAfter'">
+                    <th
+                      class="inline"
+                      @click="inputSort = ''"
+                      v-else-if="inputSort === '-metadata.topic_notAfter'"
+                    >
                       <abbr title="Période du sujet">A </abbr>
-                      <i
-                        class="fas fa-sort-numeric-up is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
                     </th>
-                    <th class="inline" @click="inputSort = 'metadata.topic_notAfter'" v-else>
+                    <th
+                      class="inline"
+                      @click="inputSort = 'metadata.topic_notAfter'"
+                      v-else
+                    >
                       <abbr title="Période du sujet">A </abbr>
-                      <i
-                        class="fas fa-sort is-inline-block"
-                      ></i>
+                      <i class="fas fa-sort is-inline-block"></i>
                     </th>
                   </tr>
                 </thead>
@@ -478,10 +522,14 @@ export default {
         search.setTerm(inputTerm.value);
       } else {
         console.log(isNaN(inputTerm.value));
-        if (isNaN(inputTerm.value) === "false"){
-          search.setTerm(`metadata.promotion_year:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}`);
-        } else if (typeof (inputTerm.value) === "string"){
-          search.setTerm(`metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}`);
+        if (isNaN(inputTerm.value) === "false") {
+          search.setTerm(
+            `metadata.promotion_year:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}`
+          );
+        } else if (typeof inputTerm.value === "string") {
+          search.setTerm(
+            `metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}`
+          );
         }
       }
       search.execute();
