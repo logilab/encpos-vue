@@ -29,7 +29,13 @@
           <article class="tile is-child box">
             <div class="search-form">
               <div class="field">
-                <Toggle id="ToggleSwitch" on-label="Notice" off-label="Plein-text" v-model="inputCheckedMetadata" :width="100"/>
+                <Toggle
+                  id="ToggleSwitch"
+                  on-label="Notice"
+                  off-label="Plein-text"
+                  v-model="inputCheckedMetadata"
+                  :width="100"
+                />
               </div>
               <div class="field has-addons">
                 <div class="control is-expanded">
@@ -100,17 +106,17 @@
                     <th>
                       Nom
                       <i
-                        @click="inputSort = '-metadata.author_name'"
-                        v-if="inputSort === 'metadata.author_name'"
+                        @click="inputSort = '-metadata.author_name.keyword'"
+                        v-if="inputSort === 'metadata.author_name.keyword'"
                         class="fas fa-sort-numeric-down is-inline-block"
                       ></i>
                       <i
                         @click="inputSort = ''"
-                        v-else-if="inputSort === '-metadata.author_name'"
+                        v-else-if="inputSort === '-metadata.author_name.keyword'"
                         class="fas fa-sort-numeric-up is-inline-block"
                       ></i>
                       <i
-                        @click="inputSort = 'metadata.author_name'"
+                        @click="inputSort = 'metadata.author_name.keyword'"
                         v-else
                         class="fas fa-sort is-inline-block"
                       ></i>
@@ -248,7 +254,7 @@ import { inject, ref, watch } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 import Pagination from "@/components/Pagination";
-import Toggle from "@vueform/toggle"
+import Toggle from "@vueform/toggle";
 
 import Histogram from "@/components/charts/Histogram";
 
@@ -258,18 +264,20 @@ export default {
     VueSlider,
     Pagination,
     Histogram,
-    Toggle
+    Toggle,
   },
   setup() {
     const search = inject("search");
     const aggSearch = inject("agg-search");
 
     function executeSearches() {
-      if (inputCheckedMetadata.value === true ){
+      if (inputCheckedMetadata.value === true) {
         console.log("TestMetadata");
-      search.setTerm(`metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`);
-      search.execute();
-      aggSearch.execute();
+        search.setTerm(
+          `metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`
+        );
+        search.execute();
+        aggSearch.execute();
       } else {
         console.log("TestMetadata");
         search.setTerm(inputTerm.value);
@@ -295,7 +303,7 @@ export default {
       // try to restore else get the initial values
       return {
         term: search.term.value || initialTerm,
-        checkedMetadata : search.checkedMetadata.value||initialCheckedMetadata,
+        checkedMetadata: search.checkedMetadata.value || initialCheckedMetadata,
         topicRange:
           notBefore && notAfter
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
@@ -331,16 +339,18 @@ export default {
     });
 
     watch(inputCheckedMetadata, () => {
-        if (inputCheckedMetadata.value === true ){
-          console.log("TestMetadata")
-          search.setTerm(`metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`);
-          executeSearches();
-        } else {
-          console.log("Test")
-          search.setTerm(inputTerm.value);
-          executeSearches();
-        }
-    } )
+      if (inputCheckedMetadata.value === true) {
+        console.log("TestMetadata");
+        search.setTerm(
+          `metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}+OR+metadata.promotion_year:${inputTerm.value}`
+        );
+        executeSearches();
+      } else {
+        console.log("Test");
+        search.setTerm(inputTerm.value);
+        executeSearches();
+      }
+    });
 
     watch(inputPromotionYearRange, () => {
       search.setRange(
