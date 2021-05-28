@@ -3,14 +3,14 @@
     <span class="icon button" @click="goToPage(1)">
       <i class="fas fa-angle-double-left" />
     </span>
-    <span class="icon button" @click="goToPage(currentInput - 1)">
+    <span class="icon button" @click="goToPage(--currentInput)">
       <i class="fas fa-arrow-left"></i>
     </span>
     <span class="pagination__button__input-box">
       <input v-model="currentInput" class="input is-medium" />
       <span> / {{ pageCount }}</span>
     </span>
-    <span class="icon button" @click="goToPage(currentInput + 1)">
+    <span class="icon button" @click="goToPage(++currentInput)">
       <i class="fas fa-arrow-right" />
     </span>
     <span class="icon button" @click="goToPage(pageCount)">
