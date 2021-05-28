@@ -1,16 +1,43 @@
 <template>
-  <div>
-    5 av. J.-C., le rendant vieux de 2000 ans. Un professeur du Hampden-Sydney College, en
-    Virginie, s'est intéressé à un des mots latins les plus obscurs, consectetur, extrait
-    d'un passage du Lorem Ipsum, et en étudiant tous les usages de ce mot dans la
-    littérature classique, découvrit la source incontestable du Lorem Ipsum. Il provient
-    en fait des sections 1.10.32 et 1.10.33 du "De Finibus Bonorum et Malorum" (Des
-    Suprêmes
-  </div>
+  <section>
+    <h1>Titre principal</h1>
+
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+      exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+      irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+      deserunt mollit anim id est laborum.
+    </p>
+
+    <api-call-dropdown
+      method="GET"
+      description="I'm the description"
+      url="http://localhost:5003/api/1.0/search?query=Pastoureau"
+    />
+
+    <api-call-dropdown
+      method="GET"
+      description="I'm the description"
+      url="http://localhost:5003/api/1.0/search?query=metadata.author_name:Diplomatie+OR+metadata.title_rich:Diplomatie+OR+metadata.author_firstname:Diplomatie&range[metadata.promotion_year]=gte:1849,lte:2017&page[number]=1&page[size]=40"
+    />
+
+    <api-call-dropdown
+      method="GET"
+      description="I'm the description"
+      url="http://localhost:5003/api/1.0/search?query=metadata.author_name:Diplomatie+OR+metadata.title_rich:Diplomatie+OR+metadata.author_firstname:Diplomatie&range[metadata.promotion_year]=gte:1849,lte:2017&page[number]=1&page[size]=40"
+    />
+  </section>
 </template>
 <script>
+import ApiCallDropdown from "@/components/documentation/ApiCallDropdown";
+
 export default {
   name: "ApiDocumentation",
+  components: {
+    ApiCallDropdown,
+  },
 };
 </script>
 

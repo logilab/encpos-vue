@@ -2,19 +2,24 @@
   <div class="grid-container">
     <section class="toc">
       <ul>
-        <li v-for="tab in tabs" :key="tab" @click="currentTab = tab">
-          <div class="tab">{{ tab }}</div>
+        <li
+          v-for="tab in tabs"
+          :key="tab"
+          @click="currentTab = tab"
+          :class="['tab', { 'is-active': currentTab === tab }]"
+        >
+          <div>{{ tab }}</div>
         </li>
       </ul>
     </section>
-    <section class="main">
-      <section class="container">
-        <Suspense>
+    <section class="main container">
+      <Suspense>
+        <div class="content">
           <keep-alive>
             <component :is="currentTab"></component>
           </keep-alive>
-        </Suspense>
-      </section>
+        </div>
+      </Suspense>
     </section>
   </div>
 </template>
@@ -47,12 +52,23 @@ export default {
 <style scoped>
 .toc {
   grid-area: "main";
+  background-color: #eeeeee;
 }
 .main {
   grid-area: "sidebar";
 }
+.content {
+  padding-top: 75px;
+}
 .tab {
   padding: 10px;
+  margin: 20px;
+  color: #457b9d;
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+}
+.tab.is-active {
+  color: #e63946;
 }
 .tab:hover {
   cursor: pointer;
@@ -60,7 +76,7 @@ export default {
 .grid-container {
   display: grid;
   height: 100%;
-  grid-template-columns: 500px auto;
+  grid-template-columns: 320px auto;
   grid-template-rows: auto;
   grid-template-areas: "sidebar main";
 }

@@ -1,8 +1,8 @@
 <template>
-  <div class="grid-container">
-    <app-navbar class="navbar" />
-    <router-view class="main" />
-    <app-footer class="footer" />
+  <div class="layout-grid-container">
+    <app-navbar class="layout-navbar" />
+    <router-view class="layout-main" />
+    <app-footer class="layout-footer" />
   </div>
 </template>
 
@@ -37,18 +37,18 @@ body {
   padding: 30px;
 }
 
-.navbar {
+.layout-navbar {
   grid-area: "header";
 }
-.main {
+.layout-main {
   grid-area: "main";
 }
-.footer {
+.layout-footer {
   grid-area: "footer";
 }
-.grid-container {
+.layout-grid-container {
   display: grid;
-  height: 100%;
+  height: calc(100% - 50px);
   grid-template-columns: 100%;
   grid-template-rows: 50px auto 100px;
   grid-template-areas:
