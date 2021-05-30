@@ -14,10 +14,6 @@
                     src="@/assets/images/enc.png"
                   />
                 </div>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare
-                  magna eros, eu pellentesque tortor vestibulum ut.
-                </p>
               </article>
             </div>
           </div>
@@ -93,45 +89,60 @@
                     />
                   </div>
                 </div>
-                <div
-                  v-if="isFulltextSearch === true"
-                  class="field is-inline-block is-pulled-right px-1"
-                >
-                  <div class="control">
-                    <Toggle
-                      id="ToggleTableau"
-                      on-label="Tableau"
-                      off-label="Déroulé"
-                      v-model="isTableau"
-                      :width="120"
-                    />
-                  </div>
                   <div
-                    v-if="isTableau === false"
-                    class="field is-inline-block is-pulled-right px-2"
+                    v-if="isFulltextSearch === true"
+                    class="field is-inline-block is-pulled-right px-1"
                   >
-                    <select name="tri" id="tri-select" v-model="inputSort">
-                      <option value="">--Please choose an option--</option>
-                      <option value="metadata.author_name.keyword">Auteur</option>
-                      <option value="metadata.promotion_year">Promotion</option>
-                      <option value="metadata.topic_notAfter">
-                        Sujet du plus ancien au plus récent
-                      </option>
-                      <option value="metadata.topic_notBefore">
-                        Sujet du plus récent au plus ancien
-                      </option>
-                    </select>
-                    <span
-                      v-if="inputSort.includes('-')"
-                      class="icon button"
-                      @click="inputSort = inputSort.replace('-', '')"
-                    >
-                      <i class="fas fa-arrow-up" />
-                    </span>
-                    <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
-                      <i class="fas fa-arrow-down" />
-                    </span>
+                    <div class="control">
+                      <Toggle
+                        id="ToggleTableau"
+                        on-label="Tableau"
+                        off-label="Déroulé"
+                        v-model="isTableau"
+                        :width="120"
+                      />
+                    </div>
                   </div>
+                  <div class="field is-inline-block is-pulled-right  px-1">
+                    <div
+                      v-if="isTableau === false & isFulltextSearch === true"
+                      class="control"
+                    >
+                    <span>
+                      Tris
+                    </span>
+                    <div >
+                      <select name="tri" id="tri-select" v-model="inputSort">
+                        <option value="">--Please choose an option--</option>
+                        <option v-if="inputSort.includes('-')" value="-metadata.author_name.keyword">Auteur</option>
+                        <option v-else value="metadata.author_name.keyword">Auteur</option>
+                        <option v-if="inputSort.includes('-')" value="-metadata.promotion_year">Promotion</option>
+                        <option v-else value="metadata.promotion_year">Promotion</option>
+                        <option v-if="inputSort.includes('-')" value="-metadata.topic_notAfter">
+                          Sujet du plus ancien au plus récent
+                        </option>
+                        <option v-else value="metadata.topic_notAfter">
+                          Sujet du plus ancien au plus récent
+                        </option>
+                        <option v-if="inputSort.includes('-')" value="-metadata.topic_notBefore">
+                          Sujet du plus récent au plus ancien
+                        </option>
+                        <option v-else value="metadata.topic_notBefore">
+                          Sujet du plus récent au plus ancien
+                        </option>
+                      </select>
+                      <span
+                        v-if="inputSort.includes('-')"
+                        class="icon button"
+                        @click="inputSort = inputSort.replace('-', '')"
+                      >
+                        <i class="fas fa-arrow-up" />
+                      </span>
+                      <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
+                        <i class="fas fa-arrow-down" />
+                      </span>
+                    </div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -278,7 +289,7 @@
                     tag="tr"
                     style="text-decoration: none; color: inherit"
                   >
-                    <div class="columns" @click="rollActive(position.id)">
+                    <div class="columns mb-6" @click="rollActive(position.id)">
                       <div class="column is-2">
                         <img
                           class="pb-thumnbail"
@@ -288,7 +299,7 @@
                       </div>
                       <div class="block column is-10">
                         <div
-                          class="has-text-left is-italic"
+                          class="has-text-left is-size-5"
                           v-html="position.fields.metadata.title_rich"
                         ></div>
                         <div class="has-text-left has-text-weight-bold">
@@ -441,6 +452,12 @@
                       </td>
                       <td>{{ position.fields.metadata.topic_notBefore }}</td>
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
+                      <td v-if="onrollActive.includes(position.id)" class="inline">
+                      <i class="fas fa-arrow-down" />
+                    </td>
+                    <td v-else class="inline">
+                      <i class="fas fa-arrow-up" />
+                    </td>
                     </tr>
                     <tr v-if="onrollActive.includes(position.id)">
                       <td colspan="6">
@@ -462,19 +479,6 @@
             <p class="title has-text-weight-light">Le saviez vous ?</p>
             <p class="subtitle">With some content</p>
             <div class="content">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare
-                magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem.
-                Etiam finibus odio quis feugiat facilisis.
-                <router-link
-                  :to="{
-                    name: 'DocumentPage',
-                    params: { docId: 'ENCPOS_1999_35' },
-                  }"
-                >
-                  Visiter le document
-                </router-link>
-              </p>
               <histogram />
             </div>
           </article>
