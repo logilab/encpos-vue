@@ -103,53 +103,52 @@
                       />
                     </div>
                   </div>
-                  <div class="field is-inline-block is-pulled-right  px-1">
-                    <div
-                      v-if="isTableau === false & isFulltextSearch === true"
-                      class="control"
-                    >
-                    <span>
-                      Tris
-                    </span>
-                    <div >
-                      <select name="tri" id="tri-select" v-model="inputSort">
-                        <option value="">--Please choose an option--</option>
-                        <option v-if="inputSort.includes('-')" value="-metadata.author_name.keyword">Auteur</option>
-                        <option v-else value="metadata.author_name.keyword">Auteur</option>
-                        <option v-if="inputSort.includes('-')" value="-metadata.promotion_year">Promotion</option>
-                        <option v-else value="metadata.promotion_year">Promotion</option>
-                        <option v-if="inputSort.includes('-')" value="-metadata.topic_notAfter">
-                          Sujet du plus ancien au plus récent
-                        </option>
-                        <option v-else value="metadata.topic_notAfter">
-                          Sujet du plus ancien au plus récent
-                        </option>
-                        <option v-if="inputSort.includes('-')" value="-metadata.topic_notBefore">
-                          Sujet du plus récent au plus ancien
-                        </option>
-                        <option v-else value="metadata.topic_notBefore">
-                          Sujet du plus récent au plus ancien
-                        </option>
-                      </select>
-                      <span
-                        v-if="inputSort.includes('-')"
-                        class="icon button"
-                        @click="inputSort = inputSort.replace('-', '')"
-                      >
-                        <i class="fas fa-arrow-up" />
-                      </span>
-                      <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
-                        <i class="fas fa-arrow-down" />
-                      </span>
-                    </div>
-                    </div>
-                </div>
               </div>
             </div>
             <div class="has-text-centered">
               <pagination />
             </div>
-
+            <div class="field block px-1">
+              <div
+                v-if="isTableau === false & isFulltextSearch === true"
+                class="control  mb-6 block"
+              >
+                <span>
+                  Tris
+                </span>
+                <div >
+                  <select name="tri" id="tri-select" v-model="inputSort">
+                    <option value="">--Please choose an option--</option>
+                    <option v-if="inputSort.includes('-')" value="-metadata.author_name.keyword">Auteur</option>
+                    <option v-else value="metadata.author_name.keyword">Auteur</option>
+                    <option v-if="inputSort.includes('-')" value="-metadata.promotion_year">Promotion</option>
+                    <option v-else value="metadata.promotion_year">Promotion</option>
+                    <option v-if="inputSort.includes('-')" value="-metadata.topic_notAfter">
+                      Sujet du plus ancien au plus récent
+                    </option>
+                    <option v-else value="metadata.topic_notAfter">
+                      Sujet du plus ancien au plus récent
+                    </option>
+                    <option v-if="inputSort.includes('-')" value="-metadata.topic_notBefore">
+                      Sujet du plus récent au plus ancien
+                    </option>
+                    <option v-else value="metadata.topic_notBefore">
+                      Sujet du plus récent au plus ancien
+                    </option>
+                  </select>
+                  <span
+                    v-if="inputSort.includes('-')"
+                    class="icon button"
+                    @click="inputSort = inputSort.replace('-', '')"
+                  >
+                    <i class="fas fa-arrow-up" />
+                  </span>
+                  <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
+                    <i class="fas fa-arrow-down" />
+                  </span>
+                </div>
+              </div>
+            </div>
             <div v-if="isFulltextSearch === false" class="table-container">
               <table
                 class="table is-hoverable is-narrow is-fulldwidth"
@@ -275,7 +274,7 @@
                 </tbody>
               </table>
             </div>
-            <div v-if="(isFulltextSearch === true) & (isTableau === false)">
+            <div class="block" v-if="(isFulltextSearch === true) & (isTableau === false)">
               <div
                 class="table is-hoverable is-narrow is-fulldwidth"
                 v-if="search.result.value && search.result.value.length"
