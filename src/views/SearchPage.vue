@@ -258,7 +258,6 @@
                       <td>{{ position.fields.metadata.promotion_year }}</td>
                       <td>
                         <router-link
-                          style="text-decoration: none; color: inherit"
                           :to="{
                             name: 'DocumentPage',
                             params: { docId: position.id },
@@ -440,7 +439,6 @@
                       <td>{{ position.fields.metadata.promotion_year }}</td>
                       <td>
                         <router-link
-                          style="text-decoration: none; color: inherit"
                           :to="{
                             name: 'DocumentPage',
                             params: { docId: position.id },
