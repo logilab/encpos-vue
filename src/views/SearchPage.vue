@@ -149,130 +149,6 @@
                 </div>
               </div>
             </div>
-            <div v-if="isFulltextSearch === false" class="table-container">
-              <table
-                class="table is-hoverable is-narrow is-fulldwidth"
-                v-if="search.result.value && search.result.value.length"
-              >
-                <thead>
-                  <tr>
-                    <th
-                      @click="inputSort = '-metadata.author_name.keyword'"
-                      v-if="inputSort === 'metadata.author_name.keyword'"
-                    >
-                      Nom
-                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
-                    </th>
-                    <th
-                      @click="inputSort = ''"
-                      v-else-if="inputSort === '-metadata.author_name.keyword'"
-                    >
-                      Nom
-                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
-                    </th>
-                    <th @click="inputSort = 'metadata.author_name.keyword'" v-else>
-                      Nom
-                      <i class="fas fa-sort is-inline-block"></i>
-                    </th>
-                    <th>Prénom</th>
-                    <th
-                      class="largerTab"
-                      @click="inputSort = '-metadata.promotion_year'"
-                      v-if="inputSort === 'metadata.promotion_year'"
-                    >
-                      <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
-                    </th>
-                    <th
-                      class="largerTab"
-                      @click="inputSort = ''"
-                      v-else-if="inputSort === '-metadata.promotion_year'"
-                    >
-                      <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
-                    </th>
-                    <th
-                      class="largerTab"
-                      @click="inputSort = 'metadata.promotion_year'"
-                      v-else
-                    >
-                      <abbr title="Promotion" class="is-inline-block">Prom </abbr>
-                      <i class="fas fa-sort is-inline-block"></i>
-                    </th>
-                    <th>Titre</th>
-                    <th
-                      class="largerTab"
-                      @click="inputSort = '-metadata.topic_notBefore'"
-                      v-if="inputSort === 'metadata.topic_notBefore'"
-                    >
-                      <abbr title="Période du sujet">De </abbr>
-                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
-                    </th>
-                    <th
-                      class="largerTab"
-                      @click="inputSort = ''"
-                      v-else-if="inputSort === '-metadata.topic_notBefore'"
-                    >
-                      <abbr title="Période du sujet">De </abbr>
-                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
-                    </th>
-                    <th
-                      class="largerTab"
-                      @click="inputSort = 'metadata.topic_notBefore'"
-                      v-else
-                    >
-                      <abbr title="Période du sujet">De </abbr>
-                      <i class="fas fa-sort is-inline-block"></i>
-                    </th>
-                    <th
-                      class="inline"
-                      @click="inputSort = '-metadata.topic_notAfter'"
-                      v-if="inputSort === 'metadata.topic_notAfter'"
-                    >
-                      <abbr title="Période du sujet">A </abbr>
-                      <i class="fas fa-sort-numeric-down is-inline-block"></i>
-                    </th>
-                    <th
-                      class="inline"
-                      @click="inputSort = ''"
-                      v-else-if="inputSort === '-metadata.topic_notAfter'"
-                    >
-                      <abbr title="Période du sujet">A </abbr>
-                      <i class="fas fa-sort-numeric-up is-inline-block"></i>
-                    </th>
-                    <th
-                      class="inline"
-                      @click="inputSort = 'metadata.topic_notAfter'"
-                      v-else
-                    >
-                      <abbr title="Période du sujet">A </abbr>
-                      <i class="fas fa-sort is-inline-block"></i>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template v-for="position in search.result.value" :key="position.id">
-                    <tr @click="rollActive(position.id)">
-                      <td>{{ position.fields.metadata.author_name }}</td>
-                      <td>{{ position.fields.metadata.author_firstname }}</td>
-                      <td>{{ position.fields.metadata.promotion_year }}</td>
-                      <td>
-                        <router-link
-                          :to="{
-                            name: 'DocumentPage',
-                            params: { docId: position.id },
-                          }"
-                        >
-                          <span v-html="position.fields.metadata.title_rich"></span
-                        ></router-link>
-                      </td>
-                      <td>{{ position.fields.metadata.topic_notBefore }}</td>
-                      <td>{{ position.fields.metadata.topic_notAfter }}</td>
-                    </tr>
-                  </template>
-                </tbody>
-              </table>
-            </div>
             <div class="block" v-if="(isFulltextSearch === true) & (isTableau === false)">
               <div
                 class="table is-hoverable is-narrow is-fulldwidth"
@@ -330,7 +206,7 @@
                 </template>
               </div>
             </div>
-            <div v-if="(isFulltextSearch === true) & (isTableau === true)">
+            <div v-else class="table-container">
               <table
                 class="table is-hoverable is-narrow is-fulldwidth"
                 v-if="search.result.value && search.result.value.length"
@@ -429,6 +305,12 @@
                       <abbr title="Période du sujet">A </abbr>
                       <i class="fas fa-sort is-inline-block"></i>
                     </th>
+                    <th
+                      class="inline"
+                    >
+                      <abbr title="Occurence">Occ </abbr>
+                      <i class="fas fa-sort is-inline-block"></i>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -449,14 +331,16 @@
                       </td>
                       <td>{{ position.fields.metadata.topic_notBefore }}</td>
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
-                      <td v-if="onrollActive.includes(position.id)" class="inline">
-                      <i class="fas fa-arrow-down" />
-                    </td>
-                    <td v-else class="inline">
-                      <i class="fas fa-arrow-up" />
-                    </td>
+                      <td v-if="position.highlight != null">{{ position.highlight.content.length }}</td>
+                      <td v-else>0</td>
+                      <td v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline">
+                        <i class="fas fa-arrow-down" />
+                      </td>
+                      <td v-else-if="(isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline">
+                        <i class="fas fa-arrow-up" />
+                      </td>
                     </tr>
-                    <tr v-if="onrollActive.includes(position.id)">
+                    <tr v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null">
                       <td colspan="6">
                         <ul>
                           <li v-for="phrase in position.highlight.content" :key="phrase">
