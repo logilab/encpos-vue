@@ -50,26 +50,27 @@ export default {
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
-      var namespacedt;
-
-      for (const namespace in data["@context"]) {
-        if (data["@context"][namespace] === "http://purl.org/dc/elements/1.1/") {
-          namespacedt = namespace;
-        }
-      }
 
       for (var these of data["member"]) {
+        for (let aut of these["dts:dublincore"]["dct:creator"]){
+          if(typeof aut == "string"){
+            var author = aut;
+          }
+        }
+        if (these["dts:dublincore"]["dct:creator"] ==''){
+          author = "None";
+        }
         try {
           const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
           metadata[page] = [
             these["@id"],
-            these["dts:extensions"][namespacedt + ":creator"],
+            author,
             these["title"],
           ];
         } catch {
           metadata[these["@id"].split("_")[2]] = [
             these["@id"],
-            these["dts:extensions"][namespacedt + ":creator"],
+            author,
             these["title"],
           ];
         }

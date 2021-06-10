@@ -15,6 +15,7 @@ export default {
 
   async setup(props) {
     const customDocument = defineAsyncComponent(async () => {
+      console.log(props.id);
       // fetch the initial template
       const data = await getDocumentFromApi(props.id);
       // build a temporary dom just to ease the navigation inside the document

@@ -59,17 +59,12 @@ export default {
     const getMetadata = async () => {
       let metadata = {};
       const listmetadata = await getMetadataFromApi(docId.value);
-      var namespacedt = "";
-      for (const namespace in listmetadata["@context"]) {
-        if (listmetadata["@context"][namespace] === "http://purl.org/dc/elements/1.1/") {
-          namespacedt = namespace;
-        }
-      }
+
       metadata["sudoc"] = null;
       metadata["benc"] = null;
       var PartOf;
       try {
-        PartOf = listmetadata["dts:dublincore"]["dct:isPartOf"];
+        PartOf = listmetadata["dts:dublincore"]["dct:isVersionOf"];
       } catch {
         PartOf = "";
       }
@@ -83,19 +78,27 @@ export default {
         }
       }
 
-      try {
-        metadata["idref"] = listmetadata["dts:dublincore"]["dct:creator"][0]["@id"];
-      } catch {
-        metadata["idref"] = null;
-      }
-
-      const extensions = listmetadata["dts:extensions"];
-      if (extensions) {
-        metadata["author"] = extensions[namespacedt + ":creator"];
-        metadata["coverage"] = extensions[namespacedt + ":coverage"];
-        metadata["date"] = extensions[namespacedt + ":date"];
-        metadata["title"] = extensions[namespacedt + ":title"][0]["@value"];
-      }
+      const dublincore = listmetadata["dts:dublincore"];
+      if (dublincore){
+        metadata["date"] = dublincore["dct:date"]
+        for (let aut of dublincore["dct:creator"]){
+            if(typeof aut == "string"){
+              metadata["author"] = aut;
+            } else if (aut["@id"].includes("data.bnf.fr")){
+              metadata["data_bnf"] = aut["@id"];
+            } else if (aut["@id"].includes("dbpedia.org")){
+              metadata["dbpedia"] = aut["@id"];
+            } else if (aut["@id"].includes("idref.fr")){
+              metadata["idref"] = aut["@id"];
+            } else if (aut["@id"].includes("catalogue.bnf.fr")){
+              metadata["catalogue_bnf"] = aut["@id"];
+            } else if (aut["@id"].includes("wikidata")){
+              metadata["wikidata"] = aut["@id"];
+            } else if (aut["@id"].includes("wikipedia")){
+              metadata["wikipedia"] = aut["@id"];
+            }
+          }
+       }
 
       state.metadata = metadata;
     };
