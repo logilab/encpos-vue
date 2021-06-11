@@ -1,5 +1,8 @@
 <template>
-  <div class="columns">
+  <div class="columns is-multiline is-mobile">
+    <div class="column is-full">
+      <document-metadata :metadata="state.metadata" />
+    </div>
     <div class="column is-2">
       <div v-if="state.metadata" class="hide-button ListeData">
         <document-metadata :metadata="state.metadata" />
@@ -23,7 +26,7 @@
 </template>
 
 <script>
-import { provide, computed, ref } from "vue";
+import { provide, ref } from "vue";
 
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
@@ -41,75 +44,70 @@ export default {
     ListeTheseAnnee,
   },
   props: ["docId"],
-  setup(props) {
+  async setup(props) {
     const { docId } = toRefs(props);
     const manifestIsAvailable = ref(false);
 
     let state = reactive({});
 
-    const manifestUrl = computed(() => {
-      return `https://iiif.chartes.psl.eu/encpos/${docId.value
-        .toString()
-        .toLowerCase()}/manifest`;
-    });
-
-    const miradorInstance = useMirador("vue-mirador-container", manifestUrl.value, 0);
-    provide("mirador", miradorInstance);
 
     const getMetadata = async () => {
-      let metadata = {};
-      const listmetadata = await getMetadataFromApi(docId.value);
+          let metadata = {};
+          const listmetadata = await getMetadataFromApi(docId.value);
 
-      metadata["sudoc"] = null;
-      metadata["benc"] = null;
-      var PartOf;
-      try {
-        PartOf = listmetadata["dts:dublincore"]["dct:isVersionOf"];
-      } catch {
-        PartOf = "";
-      }
-      if (PartOf !== undefined) {
-        for (const member of PartOf) {
-          if (typeof member === "object") {
-            metadata["sudoc"] = member["@id"];
-          } else if (member.includes("benc")) {
-            metadata["benc"] = member;
+          metadata["sudoc"] = null;
+          metadata["benc"] = null;
+          metadata["iiif_manifest_url"] = listmetadata["dts:dublincore"]["dct:source"][0]["@id"];
+          var PartOf;
+          try {
+            PartOf = listmetadata["dts:dublincore"]["dct:isVersionOf"];
+          } catch {
+            PartOf = "";
           }
-        }
-      }
-
-      const dublincore = listmetadata["dts:dublincore"];
-      if (dublincore){
-        metadata["date"] = dublincore["dct:date"]
-        for (let aut of dublincore["dct:creator"]){
-            if(typeof aut == "string"){
-              metadata["author"] = aut;
-            } else if (aut["@id"].includes("data.bnf.fr")){
-              metadata["data_bnf"] = aut["@id"];
-            } else if (aut["@id"].includes("dbpedia.org")){
-              metadata["dbpedia"] = aut["@id"];
-            } else if (aut["@id"].includes("idref.fr")){
-              metadata["idref"] = aut["@id"];
-            } else if (aut["@id"].includes("catalogue.bnf.fr")){
-              metadata["catalogue_bnf"] = aut["@id"];
-            } else if (aut["@id"].includes("wikidata")){
-              metadata["wikidata"] = aut["@id"];
-            } else if (aut["@id"].includes("wikipedia")){
-              metadata["wikipedia"] = aut["@id"];
+          if (PartOf !== undefined) {
+            for (const member of PartOf) {
+              if (typeof member === "object") {
+                metadata["sudoc"] = member["@id"];
+              } else if (member.includes("benc")) {
+                metadata["benc"] = member;
+              }
             }
           }
-       }
 
-      state.metadata = metadata;
-    };
+          const dublincore = listmetadata["dts:dublincore"];
+          if (dublincore){
+            metadata["date"] = dublincore["dct:date"]
+            for (let aut of dublincore["dct:creator"]){
+                if(typeof aut == "string"){
+                  metadata["author"] = aut;
+                } else if (aut["@id"].includes("data.bnf.fr")){
+                  metadata["data_bnf"] = aut["@id"];
+                } else if (aut["@id"].includes("dbpedia.org")){
+                  metadata["dbpedia"] = aut["@id"];
+                } else if (aut["@id"].includes("idref.fr")){
+                  metadata["idref"] = aut["@id"];
+                } else if (aut["@id"].includes("catalogue.bnf.fr")){
+                  metadata["catalogue_bnf"] = aut["@id"];
+                } else if (aut["@id"].includes("wikidata")){
+                  metadata["wikidata"] = aut["@id"];
+                } else if (aut["@id"].includes("wikipedia")){
+                  metadata["wikipedia"] = aut["@id"];
+                }
+              }
+          }
+
+          state.metadata = metadata;
+        };
+
+
 
     const setMirador = function () {
-      fetch(manifestUrl.value, {
+      fetch(state.metadata["iiif_manifest_url"], {
         method: "HEAD",
       })
         .then((r) => {
           manifestIsAvailable.value = r.ok;
-          miradorInstance.setManifestUrl(manifestUrl.value);
+          miradorInstance.setManifestUrl(state.metadata["iiif_manifest_url"]);
         })
         .catch(() => {
           manifestIsAvailable.value = false;
@@ -117,11 +115,10 @@ export default {
     };
 
     onMounted(async () => {
-      getMetadata();
       setMirador();
     });
 
-    watch(manifestUrl, async () => {
+    watch(state, async () => {
       setMirador();
     });
 
@@ -129,10 +126,15 @@ export default {
       getMetadata();
     });
 
+    await getMetadata();
+
+    const miradorInstance = useMirador("vue-mirador-container", state.metadata["iiif_manifest_url"], 0);
+    provide("mirador", miradorInstance);
+    
+
     return {
       state,
       manifestIsAvailable,
-      manifestUrl,
     };
   },
 };

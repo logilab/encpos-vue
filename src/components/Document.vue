@@ -1,5 +1,5 @@
 <template>
-  <custom-document />
+  <component :is="customDocument" />
 </template>
 <script>
 import { defineAsyncComponent } from "vue/dist/vue.esm-bundler.js";
