@@ -1,13 +1,9 @@
 <template>
   <div class="columns is-multiline is-mobile">
     <div class="column is-2">
-      <div v-if="state.metadata" class="hide-button ListeData">
-        <document-metadata :metadata="state.metadata" />
-        <liste-these-annee
-          v-if="state.metadata['date']"
-          :id="state.metadata['date']"
-          :textid="docId"
-        />
+      <div v-if="metadata" class="hide-button ListeData">
+        <document-metadata :metadata="metadata" />
+        <liste-these-annee v-if="metadata.date" :id="metadata.date" :textid="docId" />
       </div>
     </div>
     <div class="column">
@@ -17,21 +13,43 @@
     </div>
     <div v-show="manifestIsAvailable" class="column is-4 Mirador">
       <div id="vue-mirador-container" />
-      <!-- <mirador-viewer :textid="docId" /> -->
     </div>
   </div>
 </template>
 
 <script>
-import { provide, ref } from "vue";
-
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
 import { getMetadataFromApi } from "@/api/document";
-import { toRefs, onMounted, watch, reactive } from "vue";
+import { toRefs, watch, reactive, provide, ref } from "vue/dist/vue.esm-bundler.js";
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
 
 import useMirador from "@/composables/use-mirador";
+
+const sources = [
+  { name: "data_bnf", ext: "data.bnf.fr" },
+  { name: "dbpedia", ext: "dbpedia.org" },
+  { name: "idref", ext: "idref.fr" },
+  { name: "catalogue_bnf", ext: "catalogue.bnf.fr" },
+  { name: "wikidata", ext: "wikidata" },
+  { name: "wikipedia", ext: "wikipedia" },
+];
+
+function findSource(id) {
+  let i = 0;
+  let source = null;
+
+  do {
+    source = id.includes(sources[i].ext) ? sources[i] : null;
+    i++;
+  } while (i < sources.length && source === null);
+
+  if (source) {
+    return source.name;
+  }
+
+  return null;
+}
 
 export default {
   name: "DocumentPage",
@@ -45,79 +63,86 @@ export default {
     const { docId } = toRefs(props);
     const manifestIsAvailable = ref(false);
 
-    let state = reactive({});
+    const metadata = reactive({
+      sudoc: null,
+      benc: null,
+      iiifManifestUrl: null,
 
+      author: null,
+      data_bnf: null,
+      dbpedia: null,
+      idref: null,
+      catalogue_bnf: null,
+      wikidata: null,
+      wikipedia: null,
+    });
+
+    const miradorInstance = useMirador("vue-mirador-container", null, 0);
+    // provide an uninitialized instance of Mirador
+    provide("mirador", miradorInstance);
 
     const getMetadata = async () => {
-          let metadata = {};
-          const listmetadata = await getMetadataFromApi(docId.value);
+      const listmetadata = await getMetadataFromApi(docId.value);
+      const dublincore = listmetadata["dts:dublincore"];
 
-          metadata["sudoc"] = null;
-          metadata["benc"] = null;
-          metadata["iiif_manifest_url"] = listmetadata["dts:dublincore"]["dct:source"][0]["@id"];
-          var PartOf;
-          try {
-            PartOf = listmetadata["dts:dublincore"]["dct:isVersionOf"];
-          } catch {
-            PartOf = "";
-          }
-          if (PartOf !== undefined) {
-            for (const member of PartOf) {
-              if (typeof member === "object") {
-                metadata["sudoc"] = member["@id"];
-              } else if (member.includes("benc")) {
-                metadata["benc"] = member;
-              }
+      metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
+      metadata.date = dublincore["dct:date"];
+
+      if (dublincore) {
+        // benc & sudoc
+        if (dublincore["dct:isVersionOf"]) {
+          const partOf = dublincore["dct:isVersionOf"];
+          for (const member of partOf) {
+            if (typeof member === "object") {
+              metadata.sudoc = member["@id"];
+            } else if (member.includes("benc")) {
+              metadata.benc = member;
             }
           }
+        }
 
-          const dublincore = listmetadata["dts:dublincore"];
-          if (dublincore){
-            metadata["date"] = dublincore["dct:date"]
-            for (let aut of dublincore["dct:creator"]){
-                if(typeof aut == "string"){
-                  metadata["author"] = aut;
-                } else if (aut["@id"].includes("data.bnf.fr")){
-                  metadata["data_bnf"] = aut["@id"];
-                } else if (aut["@id"].includes("dbpedia.org")){
-                  metadata["dbpedia"] = aut["@id"];
-                } else if (aut["@id"].includes("idref.fr")){
-                  metadata["idref"] = aut["@id"];
-                } else if (aut["@id"].includes("catalogue.bnf.fr")){
-                  metadata["catalogue_bnf"] = aut["@id"];
-                } else if (aut["@id"].includes("wikidata")){
-                  metadata["wikidata"] = aut["@id"];
-                } else if (aut["@id"].includes("wikipedia")){
-                  metadata["wikipedia"] = aut["@id"];
-                }
-              }
+        // reset the sources
+        for (let s of sources) {
+          metadata[s.name] = null;
+        }
+
+        // creators
+        for (let aut of dublincore["dct:creator"]) {
+          if (aut["@id"]) {
+            // find the source name from its extension
+            const source = findSource(aut["@id"]);
+            if (source) {
+              metadata[source] = aut["@id"];
+              console.log("source found:", source, aut["@id"]);
+            }
+          } else {
+            metadata.author = aut;
           }
-
-          state.metadata = metadata;
-        };
-
-
-
-    const setMirador = function () {
-      fetch(state.metadata["iiif_manifest_url"], {
-        method: "HEAD",
-      })
-        .then((r) => {
-          manifestIsAvailable.value = r.ok;
-          miradorInstance.setManifestUrl(state.metadata["iiif_manifest_url"]);
-        })
-        .catch(() => {
-          manifestIsAvailable.value = false;
-        });
+        }
+      }
     };
 
-    onMounted(async () => {
-      setMirador();
-    });
+    const setMirador = function () {
+      if (metadata.iiifManifestUrl) {
+        fetch(metadata.iiifManifestUrl, {
+          method: "HEAD",
+        })
+          .then((r) => {
+            manifestIsAvailable.value = r.ok;
+            miradorInstance.setManifestUrl(metadata.iiifManifestUrl);
+          })
+          .catch(() => {
+            manifestIsAvailable.value = false;
+          });
+      }
+    };
 
-    watch(state, async () => {
-      setMirador();
-    });
+    watch(
+      () => metadata.iiifManifestUrl,
+      async () => {
+        setMirador();
+      }
+    );
 
     watch(docId, async () => {
       getMetadata();
@@ -125,12 +150,8 @@ export default {
 
     await getMetadata();
 
-    const miradorInstance = useMirador("vue-mirador-container", state.metadata["iiif_manifest_url"], 0);
-    provide("mirador", miradorInstance);
-    
-
     return {
-      state,
+      metadata,
       manifestIsAvailable,
     };
   },
