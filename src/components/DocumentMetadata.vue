@@ -8,6 +8,7 @@
             </figure>
           </div>
             <div class="column">
+              <span class="block" style="text-justify: none; line-height:4em">{{ metadata["author"] }}</span><br>
               <div class="level">
                 <div class="level-left">
                   <div class="level-item">
@@ -54,7 +55,6 @@ export default {
 
   setup(props) {
     const {metadata} = toRefs(props);
-    console.log(metadata.value);
     let encpos = reactive({});
     let link_image = ref();
     var md5 = require("md5");    
@@ -67,7 +67,7 @@ export default {
         const document = await response.json();
         let wikidata_link = "";
         let keymd5 = []
-        console.log(wikidata_link);
+        console.log("test");
         if(document.claims.P18){
           wikidata_link = document.claims.P18[0]["mainsnak"]["datavalue"]["value"].replace(" ","_").replace(" ","_");
           keymd5[0] = md5(wikidata_link)[0];
@@ -95,7 +95,7 @@ export default {
       obtain_link();
       bibliographie();
     });
-    watch(metadata, async () => {
+    watch(metadata.value, async () => {
       obtain_link();
       bibliographie();
     });

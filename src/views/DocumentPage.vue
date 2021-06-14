@@ -33,6 +33,8 @@ const sources = [
   { name: "catalogue_bnf", ext: "catalogue.bnf.fr" },
   { name: "wikidata", ext: "wikidata" },
   { name: "wikipedia", ext: "wikipedia" },
+  { name:"thenca", ext:"thenca" },
+  {}
 ];
 
 function findSource(id) {
@@ -85,30 +87,33 @@ export default {
     const getMetadata = async () => {
       const listmetadata = await getMetadataFromApi(docId.value);
       const dublincore = listmetadata["dts:dublincore"];
-
+      try{
       metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
+      }catch{
+        metadata.iiifManifestUrl =""
+      }
       metadata.date = dublincore["dct:date"];
 
       if (dublincore) {
-        // benc & sudoc & thenca
-        if (dublincore["dct:isVersionOf"]) {
-          for (const member of dublincore["dct:isVersionOf"]) {
-            if (member["@id"]) {
-              if (member["@id"].includes("bibnum")) {
-                metadata.thenca = member["@id"];
-              } else {
-                metadata.sudoc = member["@id"];
-              }
-            } else if (member.includes("benc")) {
-              metadata.benc = member;
-            }
-          }
-        }
 
         // reset the sources
         for (let s of sources) {
           metadata[s.name] = null;
         }
+
+      // benc & sudoc & thenca
+        if (dublincore["dct:isVersionOf"]) {
+          for (const member of dublincore["dct:isVersionOf"]) {
+            if (member["@id"]) {
+              const source = findSource(member["@id"])
+              if (source) {
+                metadata[source] = member["@id"];
+                console.log("source found:", source, member["@id"]);
+              } 
+            }
+          }
+        }
+
 
         // creators
         for (let aut of dublincore["dct:creator"]) {

@@ -305,12 +305,6 @@
                       <abbr title="Période du sujet">A </abbr>
                       <i class="fas fa-sort is-inline-block"></i>
                     </th>
-                    <th
-                      class="inline" v-if="(isFulltextSearch != false)"
-                    >
-                      <abbr title="Occurence">Occ </abbr>
-                      <i class="fas fa-sort is-inline-block"></i>
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -331,9 +325,6 @@
                       </td>
                       <td>{{ position.fields.metadata.topic_notBefore }}</td>
                       <td>{{ position.fields.metadata.topic_notAfter }}</td>
-                      <td v-if="(isFulltextSearch === false)"></td>
-                      <td v-else-if="position.highlight != null">{{ position.highlight.content.length }}</td>
-                      <td v-else>0</td>
                       <td v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline">
                         <i class="fas fa-chevron-down" />
                       </td>
