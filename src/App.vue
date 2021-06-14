@@ -1,7 +1,9 @@
 <template>
   <div class="layout-grid-container">
     <app-navbar class="layout-navbar" />
-    <router-view class="layout-main" />
+    <Suspense>
+      <router-view class="layout-main" />
+    </Suspense>
     <app-footer class="layout-footer" />
   </div>
 </template>

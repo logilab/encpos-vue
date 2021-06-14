@@ -13,6 +13,7 @@
     "bulma": "^0.9.2",
     "bulma-slider": "^2.0.4",
     "core-js": "^3.6.5",
+    "md5": "^2.3.0",
     "mirador": "^3.1.1",
     "mirador-image-tools": "^0.10.0",
     "vue": "^3.0.0",

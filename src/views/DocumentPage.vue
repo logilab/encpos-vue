@@ -1,8 +1,5 @@
 <template>
   <div class="columns is-multiline is-mobile">
-    <div class="column is-full">
-      <document-metadata :metadata="state.metadata" />
-    </div>
     <div class="column is-2">
       <div v-if="state.metadata" class="hide-button ListeData">
         <document-metadata :metadata="state.metadata" />
