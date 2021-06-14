@@ -2,27 +2,52 @@
   <div class="grid-container">
     <section class="toc">
       <ul class="toc-lvl1">
-        <li><a href="#">L'application Thèses</a></li>
-        <li><a href="#">Structure éditoriale</a></li>
+        <li><a href="#ids-pattern">Structure éditoriale</a></li>
         <li>
-          <a href="#">Ressources textuelles</a>
+          <a href="#dts-api">API Texte (DTS)</a>
           <ul class="toc-lvl2">
-            <li><a href="#">Collections et métadonnées des documents</a></li>
-            <li><a href="#">Documents</a></li>
+            <li><a href="#dts-collections">Collections</a></li>
+            <li><a href="#dts-document">dts-document</a></li>
           </ul>
         </li>
         <li>
-          <a href="#">Partage des images</a>
+          <a href="#iiif-api">API Image (IIIF)</a>
           <ul class="toc-lvl2">
-            <li><a href="#">Métadonnées</a></li>
-            <li><a href="#">Accès aux images et manipulations</a></li>
+            <li><a href="#iiif-presentation">Métadonnées</a></li>
+            <li><a href="#iiif-image">Images</a></li>
+            <li><a href="#dts-iiif-links">Lien texte/image</a></li>
           </ul>
         </li>
-        <li><a href="#">Service de recherche</a></li>
+        <li>
+          <a href="#search-api">API de recherche (Elastic)</a>
+          <ul class="toc-lvl2">
+            <li>
+              <a href="#search-syntax">Syntaxe des requêtes</a>
+              <ul class="toc-lvl3">
+                <li><a href="#search-pagination">Pagination</a></li>
+                <li><a href="#search-wildcards">Wildcard query</a></li>
+                <li><a href="#search-regex">Regex</a></li>
+                <li><a href="#search-fuzzy">Recherche floue</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#search-response">Format de réponse</a>
+            </li>
+            <li>
+              <a href="#search-modes">Catalogue et concordances</a>
+              <ul class="toc-lvl3">
+                <li><a href="#search-filters-sort">Filtres et tris</a></li>
+                <li><a href="#search-catalogue">Catalogue</a></li>
+                <li><a href="#search-full-text">Concordances</a></li>
+                <li><a href="#search-both-modes">Concordances filtrées</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
       </ul>
     </section>
     <section class="main container content">
-      <section class="section">
+      <section class="section" id="documentation-top">
         <h1>Thèses</h1>
         <p>
           Thèses, l’application de consultation des positions des thèses de l’École des
@@ -37,7 +62,7 @@
         </p>
         <p>
           Cette documentation met l’accent sur les requêtes <code>GET</code> : elle est
-          conçue guider les chercheurs désireux de récupérer les données brutes à des fins
+          conçue pour guider les chercheurs désireux de récupérer les données brutes à des fins
           d’analyse et les développeurs qui souhaiteraient fournir de nouveaux outils ou
           services.
         </p>
@@ -55,11 +80,14 @@
           <li>
             Favoriser le développement d'interfaces utilisateur, d'outils et de services.
           </li>
+          <li>
+            Améliorer la pérennité des développements.
+          </li>
         </ul>
       </section>
 
-      <section class="section">
-        <h2>Structure éditoriale</h2>
+      <section class="section" id="ids-pattern">
+        <h2>Structure éditoriale et identifiants</h2>
         <p>
           La structure éditoriale de la collection des positions des thèses est simple :
           une publication annuelle des positions des thèses soutenues depuis 1849. Les
@@ -76,7 +104,7 @@
         </ul>
       </section>
       <div class="divider" />
-      <section class="section">
+      <section class="section" id="dts-api">
         <h2>Ressources textuelles</h2>
         <p>
           Les ressources textuelles sont accessibles grâce à l’<a
@@ -91,7 +119,7 @@
           (<em>endpoints</em>).
         </p>
       </section>
-      <section class="section">
+      <section class="section" id="dts-collections">
         <h3>Collections et métadonnées des documents</h3>
         <p>
           Le point d’entrée
@@ -209,6 +237,8 @@
             :url="`${DTS_URL}/collections?id=ENCPOS`"
           />
 
+          <!--
+
           <api-call-dropdown
             method="GET"
             description="La liste des positions publiées en 1972, avec leurs métadonnées"
@@ -221,15 +251,23 @@
             :url="`${DTS_URL}/collections?id=ENCPOS_1972_18`"
           />
 
+          -->
+
+          <api-call-dropdown
+            method="GET"
+            description="Exemple de réponse attendue pour la liste des positions publiées en 1972, avec leurs métadonnées"
+            url="https://raw.githubusercontent.com/Corentinfaye/testgit/master/DTS_reponse/ENCPOS_1972.json"
+          />
+
           <api-call-dropdown
             method="GET"
             description="Exemple de réponse attendue pour les métadonnées d’un document (en cours d’implémentation)"
-            url="https://raw.githubusercontent.com/Corentinfaye/testgit/master/DTS_reponse/exempleDts_1972_18.json"
+            url="https://raw.githubusercontent.com/Corentinfaye/testgit/master/DTS_reponse/ENCPOS_1972_18.json"
           />
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="dts-document">
         <h3>Documents</h3>
         <p>
           Le point d’entrée
@@ -273,12 +311,12 @@
 
       <div class="divider" />
 
-      <section class="section">
+      <section class="section" id="iiif-api">
         <h2>Partage des images</h2>
         <p>Les images et leurs métadonnées sont accessibles grâce aux API IIIF.</p>
       </section>
 
-      <section class="section">
+      <section class="section" id="iiif-presentation">
         <h3>Métadonnées</h3>
         <p>
           L’API IIIF
@@ -365,7 +403,7 @@
         </ul>
       </section>
 
-      <section class="section">
+      <section class="section" id="iiif-image">
         <h3>Accès aux images et manipulations</h3>
         <p>
           L’API IIIF
@@ -397,14 +435,6 @@
             pages).
           </li>
         </ul>
-        <!-- ce serait trop beau !
-
-                        <api-call-dropdown
-                        method="GET"
-                        description="Une zone retournée de la première page de la position ENCPOS_1972_18 au format JPG, en bitonal"
-                        url="https://iiif.chartes.psl.eu/images/encpos/ENCPOS_1972_18/ENCPOS_1972_18_01.TIF/189,471,1154,98/full/!180/bitonal.jpg"
-                />
-                -->
         <p>
           EX. La première page de la position <code>ENCPOS_1972_18</code> au format JPG,
           en pleine définition :
@@ -434,7 +464,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="dts-iiif-links">
         <h3>Lien texte/image</h3>
         <p>
           Dans la réponse DTS, conformément aux recommandations du
@@ -449,7 +479,7 @@
         </p>
         <ul>
           <li>
-            <b>TODO</b>. La collection racine DTS
+            La collection racine DTS
             <code
               ><a :href="`${DTS_URL}/collections?id=ENCPOS`" target="_blank"
                 >ENCPOS</a
@@ -460,7 +490,7 @@
             IIIF.
           </li>
           <li>
-            <b>TODO</b>. Une collection annuelle DTS (par ex.
+            Une collection annuelle DTS (par ex.
             <code
               ><a :href="`${DTS_URL}/collections?id=ENCPOS_1972`" target="_blank"
                 >ENCPOS_1972</a
@@ -485,7 +515,7 @@
           </li>
         </ul>
         <p>
-          <b>TODO</b>. Dans la source XML/TEI, les images sont appelées à chaque saut de
+          Dans la source XML/TEI, les images sont appelées à chaque saut de
           page (<code
             ><a
               href="https://tei-c.org/release/doc/tei-p5-doc/fr/html/ref-pb.html"
@@ -495,29 +525,248 @@
           >).
         </p>
       </section>
+
       <div class="divider" />
-      <section class="section">
+
+      <section class="section" id="search-api">
         <h2>Service de recherche</h2>
-        <div class="api-calls">
-          <api-call-dropdown
-            method="GET"
-            description="I'm the description"
-            :url="`${API_URL}/search?query=Pastoureau`"
-          />
-
-          <api-call-dropdown
-            method="GET"
-            description="I'm the description"
-            :url="`${API_URL}/search?query=metadata.author_name:Diplomatie+OR+metadata.title_rich:Diplomatie+OR+metadata.author_firstname:Diplomatie&range[metadata.promotion_year]=gte:1849,lte:2017&page[number]=1&page[size]=40`"
-          />
-
-          <api-call-dropdown
-            method="GET"
-            description="I'm the description"
-            :url="`${API_URL}/search?query=metadata.author_name:Diplomatie+OR+metadata.title_rich:Diplomatie+OR+metadata.author_firstname:Diplomatie&range[metadata.promotion_year]=gte:1849,lte:2017&page[number]=1&page[size]=40`"
-          />
-        </div>
+        <p>
+          L’API de recherche est construite avec <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.8/index.html" target="_blank">Elasticsearch 6.8</a>.
+        </p>
+        <p>
+          La recherche peut porter sur :
+        </p>
+        <ul>
+          <li>les seules notices (catalogue) : <code>search?query=metadata.{field_name}:{search_string}</code></li>
+          <li>le corps du texte des positions (concordances) : <code>search?query={search_string}</code></li>
+        </ul>
+        <p>
+          L’objectif est de combiner les possibilités d’une recherche catalographique (retrouver un document) à celles de la recherche plein texte utiles au chercheur, à l’historiographe notamment.
+        </p>
       </section>
+      <section class="section" id="search-syntax">
+        <h3>Syntaxe des requêtes</h3>
+        <p>
+          L’API de recherche utilise les requêtes de type <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.8/query-dsl-query-string-query.html#query-string-syntax" target="_blank"><code>query_string</code></a>.
+        </p>
+        <p>
+          NB. La recherche est insensible à la casse et aux accents (diacritiques).
+        </p>
+      </section>
+      <section class="section" id="search-pagination">
+        <h4>Pagination et nombre de résultats</h4>
+        <p>
+          Pagination : les résultats sont paginés.
+        </p>
+        <p>
+          Le paramètre <code>page[size]</code> permet de définir le nombre de résultats par page, c’est-à-dire le nombre de notices retournées qui correspondent à la requête. Le paramètre <code>page[number]</code> permet d’accéder à une page spécifique du résultat. Le champ <code>total-count</code> de la réponse indique le nombre de notices total correspondant à la requête, indépendemment de la pagination.
+        </p>
+        <api-call-dropdown
+            method="GET"
+            description="La 1ère page de 2 résultats des positions dont le texte contient au moins une occurrence de 'cartulaire'"
+            :url="`${API_URL}/search?query=cartulaire&page[size]=2`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="La 10e page de 2 résultats des positions dont le texte contient au moins une occurrence de 'cartulaire'"
+            :url="`${API_URL}/search?query=cartulaire&page[size]=2&page[number]=10`"
+          />
+      </section>
+      <section class="section" id="search-wildcards">
+        <h4>Jokers (<em>Wildcard query</em>)</h4>
+        <p>
+          Dans une requête, les caractères joker (<em>wildcard operators</em>) représentent un ou plusieurs caractères :
+        </p>
+        <ul>
+          <li><code>?</code> : un caractère indéfini</li>
+          <li><code>*</code> : représente zéro à plusieurs caractères indéfinis</li>
+        </ul>
+        <api-call-dropdown
+            method="GET"
+            description="Wildcard operators, recherche 'ca?tulaire*'"
+            :url="`${API_URL}/search?query=ca?tulaire*&page[size]=2`"
+          />
+      </section>
+      <section class="section" id="search-regex">
+        <h4>Expressions régulières</h4>
+        <p>
+          Dans une requête, une <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.8/query-dsl-regexp-query.html#regexp-syntax" target="_blank">expression régulière</a> peut être intégrée entre 2 barres obliques (<code>/</code>).
+        </p>
+        <api-call-dropdown
+            method="GET"
+            description="'charte' (singulier/pluriel) et 'Chartres'…"
+            :url="`${API_URL}/search?query=/chartr?es?/&page[size]=3&page[number]=2`"
+          />
+      </section>
+      <section class="section" id="search-fuzzy">
+        <h4>Recherche floue</h4>
+        <p>
+          Pour la <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.8/common-options.html#fuzziness" target="_blank">recherche floue</a>, il est possile de passer en suffixe de la chaîne de caractère recherchée un paramètre (<em>fuzziness parameter</em>) définissant la <a href="https://fr.wikipedia.org/wiki/Distance_de_Levenshtein" target="_blank">distance d'édition Levenshtein</a> maximale autorisée (ou le nombre d'éditions) : <code>~0</code> (recherche exacte), <code>~1</code> (recherche floue), <code>~2</code> (recherche très floue).
+        </p>
+        <api-call-dropdown
+            method="GET"
+            description="La recherche floue sur 'Clacy' retourne par exemple 'Flacy' ou 'Clécy'"
+            :url="`${API_URL}/search?query=clacy~1`"
+          />
+      </section>
+      <section class="section" id="search-response">
+        <h3>Format de réponse</h3>
+        <p>
+          La réponse est le tableau des notices des positions. Pour chaque notice, les champs disponibles sont :
+        </p>
+        <ul>
+          <li><code>title_rich</code> : le titre de la position</li>
+          <li><code>author_firstname</code> : le prénom de l’auteur</li>
+          <li><code>author_name</code> : le nom de l’auteur</li>
+          <li><code>author_gender</code> : genre de l’auteur (<code>1</code>: homme ou <code>2</code>: femme)</li>
+          <li><code>enc_teacher</code> : <code>1</code> si l’auteur est enseignant à l’ENC, sinon <code>null</code></li>
+          <li><code>promotion_year</code> : l’année de publication</li>
+          <li><code>topic_notBefore</code> : borne chronologique de début du sujet</li>
+          <li><code>topic_notAfter</code> : borne chronologique de fin du sujet</li>
+        </ul>
+        <p>
+          <code>dts_url</code> : permet d’accéder à la position.
+        </p>
+      </section>
+      <section class="section" id="search-modes">
+        <h3>Catalogue et concordances</h3>
+      </section>
+      <section class="section" id="search-filters-sort">
+        <h4>Filtres et tris</h4>
+        <p>
+          Les champs de la notice sont tous disponibles comme <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.8/query-dsl-query-string-query.html?baymax=rec&rogue=pop-1&elektra=docs#_field_names" target="_blank">champ de la requête</a>.
+        </p>
+        <pre>/search?query=metadata.{field_name}:{search_string}</pre>
+        <p>
+          Par défaut, les résultats sont triés selon le score de pertinence calculé par Elastic Search. Le paramètre de requête <code>sort</code> permet de trier les résultats selon un champ choisi. Le préfixe optionnel <code>-</code> du nom du champ spécifie l’odre décroissant : par ex. <code>&sort=-metadata.promotion_year</code> pour un tri décroissant par date de publication.
+        </p>
+      </section>
+      <section class="section" id="search-catalogue">
+        <h4>Catalogue</h4>
+        <p>
+          La recherche sur le catalogue repose sur l’utilisation de ces champs.
+        </p>
+        <api-call-dropdown
+            method="GET"
+            description="Les positions dont l’auteur porte le nom 'Pastoureau'"
+            :url="`${API_URL}/search?query=metadata.author_name:Pastoureau`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les positions dont l’auteur porte le prénom 'Michelle'"
+            :url="`${API_URL}/search?query=metadata.author_firstname:Michelle`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les positions dont le titre contient le mot 'bestiaire'"
+            :url="`${API_URL}/search?query=metadata.title_rich:bestiaire`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les 5 dernières positions (ordre antéchronologique de publication) dont le titre contient 'cartulaire'"
+            :url="`${API_URL}/search?query=metadata.title_rich:cartulaire&sort=-metadata.promotion_year&page[size]=5`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les positions rédigées par de futurs enseignants de l’École"
+            :url="`${API_URL}/search?query=metadata.enc_teacher:1`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les positions publiées avant 1851"
+            :url="`${API_URL}/search?query=metadata.promotion_year:<1851`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les positions dont le sujet se déroule après 1968"
+            :url="`${API_URL}/search?query=metadata.topic_notBefore:>1968`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les positions publiées en 1850 et en 1851"
+            :url="`${API_URL}/search?query=metadata.promotion_year:(1850 OR 1851)`"
+          />
+        <p>
+          NB. Les bornes chronologiques du sujet ne sont pas toujours renseignées et sont parfois fautives.
+        </p>
+        <p>
+          Il est possible de combiner la recherche sur différents champs.
+        </p>
+        <api-call-dropdown
+            method="GET"
+            description="Les positions dont le sujet se déroule entre 1939 et 1945"
+            :url="`${API_URL}/search?query=metadata.topic_notBefore:>=1939 AND metadata.topic_notAfter:<=1945`"
+          />
+        <p>
+          Pour filtrer une requête par intervalle chronologique (bornes chronologiques sujet ou période de soutenance), il est aussi possible d’utiliser une requête de type <a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.8/query-dsl-range-query.html" target="_blank"><code>range</code></a>.
+        </p>
+        <p>
+          Pour définir l’intervalle, on utilise :
+        </p>
+        <ul>
+          <li><code>gt</code> : plus grand que</li>
+          <li><code>gte</code> : plus grand ou égal</li>
+          <li><code>lt</code> : plus petit</li>
+          <li><code>lte</code> : plus petit ou égal</li>
+        </ul>
+        <api-call-dropdown
+            method="GET"
+            description="Recherche sur les titres relatifs à la musique, pendant la période baroque"
+            :url="`${API_URL}/search?query=metadata.title_rich:musi*&range[metadata.topic_notBefore]=gte:1600&range[metadata.topic_notAfter]=lte:1750`"
+          />
+      </section>
+      <section class="section" id="search-full-text">
+        <h4>Concordances</h4>
+        <p>
+          Il est possible de lister toutes les occurrences d’un motif dans le corps de texte des positions.
+        </p>
+        <pre>/search?query={search_string}</pre>
+        <p>Dans la réponse, <code>highlight</code> liste alors les 100 premières concordances pour le motif recherché.</p>
+        <api-call-dropdown
+            method="GET"
+            description="Les positions contenant le mot 'bestaire'"
+            :url="`${API_URL}/search?query=bestiaire`"
+          />
+        <p>
+          Les requêtes de type <code>range</code> sont également possibles :
+        </p>
+        <api-call-dropdown
+            method="GET"
+            description="Recherche plein texte relative à la musique, pendant la période baroque"
+            :url="`${API_URL}/search?query=musi*&range[metadata.topic_notBefore]=gte:1600&range[metadata.topic_notAfter]=lte:1750`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Recherche plein texte relative à la musique, pendant la période baroque, pour les positions rédigées à partir de 2000"
+            :url="`${API_URL}/search?query=musi*&range[metadata.topic_notBefore]=gte:1600&range[metadata.topic_notAfter]=lte:1750&range[metadata.promotion_year]=gte:2000`"
+          />
+      </section>
+      <section class="section" id="search-both-modes">
+        <h4>Filtrer les concordances par notice</h4>
+        <p>
+          Il est possible de combiner recherche plein texte et recherche catalographique. Cela revient à filtrer le recherche plein texte grâce aux champs des notices.
+        </p>
+        <pre>/search?query={search_string} AND metadata.{field_name}:{search_string}</pre>
+        <api-call-dropdown
+            method="GET"
+            description="La position contenant le mot 'bestiaire' publiée en 1972…"
+            :url="`${API_URL}/search?query=bestiaire AND metadata.promotion_year:1972`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Les positions contenant le mot 'football' rédigées par une femme"
+            :url="`${API_URL}/search?query=football AND metadata.author_gender:2`"
+          />
+        <api-call-dropdown
+            method="GET"
+            description="Recherche des occurrences 'Pastoureau' uniquement dans le corps du texte (d’un autre auteur)"
+            :url="`${API_URL}/search?query=Pastoureau AND _exists_:metadata.author_name AND metadata.author_name:(NOT Pastoureau)`"
+          />
+        <p>
+          Dans cette requête <code>_exists_</code> permet d’exclure du résultat les documents qui n‘ont pas d’auteur (le paratexte introductif et conclusif) ; le filtre <code>metadata.author_name:(NOT Pastoureau)</code> exclut du résultat les positions rédigées par les auteurs nommés Pastoureau. On liste ainsi les seules occurrences de 'Pastoureau' citées par d’autres auteurs.
+        </p>
+      </section>
+
     </section>
   </div>
 </template>
