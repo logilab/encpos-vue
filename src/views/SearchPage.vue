@@ -335,10 +335,10 @@
                       <td v-else-if="position.highlight != null">{{ position.highlight.content.length }}</td>
                       <td v-else>0</td>
                       <td v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline">
-                        <i class="fas fa-arrow-down" />
+                        <i class="fas fa-chevron-down" />
                       </td>
                       <td v-else-if="(isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline">
-                        <i class="fas fa-arrow-up" />
+                        <i class="fas fa-chevron-up" />
                       </td>
                     </tr>
                     <tr v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null">

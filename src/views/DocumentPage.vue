@@ -54,7 +54,11 @@ export default {
 
           metadata["sudoc"] = null;
           metadata["benc"] = null;
-          metadata["iiif_manifest_url"] = listmetadata["dts:dublincore"]["dct:source"][0]["@id"];
+          try {
+           metadata["iiif_manifest_url"] = listmetadata["dts:dublincore"]["dct:source"][0]["@id"];
+          } catch{
+            metadata["iiif_manifest_url"] =""
+          }
           var PartOf;
           try {
             PartOf = listmetadata["dts:dublincore"]["dct:isVersionOf"];
@@ -64,7 +68,11 @@ export default {
           if (PartOf !== undefined) {
             for (const member of PartOf) {
               if (typeof member === "object") {
+                if(member["@id"].includes("bibnum")){
+                metadata["thenca"] = member["@id"];
+                } else if (member["@id"].includes("sudoc")){
                 metadata["sudoc"] = member["@id"];
+                } 
               } else if (member.includes("benc")) {
                 metadata["benc"] = member;
               }
