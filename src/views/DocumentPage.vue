@@ -66,6 +66,7 @@ export default {
     const metadata = reactive({
       sudoc: null,
       benc: null,
+      thenca: null,
       iiifManifestUrl: null,
 
       author: null,
@@ -89,12 +90,15 @@ export default {
       metadata.date = dublincore["dct:date"];
 
       if (dublincore) {
-        // benc & sudoc
+        // benc & sudoc & thenca
         if (dublincore["dct:isVersionOf"]) {
-          const partOf = dublincore["dct:isVersionOf"];
-          for (const member of partOf) {
-            if (typeof member === "object") {
-              metadata.sudoc = member["@id"];
+          for (const member of dublincore["dct:isVersionOf"]) {
+            if (member["@id"]) {
+              if (member["@id"].includes("bibnum")) {
+                metadata.thenca = member["@id"];
+              } else {
+                metadata.sudoc = member["@id"];
+              }
             } else if (member.includes("benc")) {
               metadata.benc = member;
             }

@@ -3,12 +3,11 @@
     <aside class="menu is-hidden-mobile">
         <div class="columns block">
           <div v-if="link_image" class="column is-5">
-            <figure class="image is-5by4">
+            <figure class="image" style='max-width:100%'>
               <img :src="link_image"/>
             </figure>
-            </div>
+          </div>
             <div class="column">
-              <span style="text-justify: none;">{{ metadata["author"] }}</span><br>
               <div class="level">
                 <div class="level-left">
                   <div class="level-item">
@@ -18,28 +17,24 @@
                     </a>
                     </figure>
                   </div>
-                  <figure v-if="metadata['catalogue_bnf']" class="image is-48x48 level-left">
-                  <a v-bind:href="metadata['catalogue_bnf']">
-                    <img :src="require('../assets/images/Logo_bnf.png')"/>
-                  </a>
-                </figure>
+                  <div class="level-item">
+                    <figure v-if="metadata['catalogue_bnf']" class="image is-48x48 level-left">
+                      <a v-bind:href="metadata['catalogue_bnf']">
+                        <img :src="require('../assets/images/Logo_bnf.png')"/>
+                      </a>
+                    </figure>
+                  </div>
+                  <div class="level-item">
+                    <figure v-if="metadata['thenca']" class="image is-48x48 level-left">
+                      <a v-bind:href="metadata['thenca']">
+                        <img :src="require('../assets/images/Logo_thenca.png')"/>
+                      </a>
+                    </figure>
+                  </div>
                 </div>
               </div>
             </div>
-
-
-            </div>
-            <div class="columns">
-              <span>Bibliographie exhaustive :</span>
-            </div>
-        
-        <ul class="menu-list" v-if="metadata['author'] !== 'None'">
-          <li v-if="metadata['title']">Titre: {{ metadata["title"] }}</li>
-          <li v-if="metadata['data_bnf']">
-            data Bnf: {{ metadata['data_bnf']}}
-          </li>
-          <li v-if="metadata['sudoc']">sudoc : {{ metadata["sudoc"] }}</li>
-        </ul>
+          </div>
     </aside>
 
     <!--  <theseAnnee v-if="state['date']" :id="state['date']" :textid="id" /> -->
@@ -90,8 +85,8 @@ export default {
     }
     const bibliographie = async()=>{
       if (metadata.value['data_bnf']){
-        const response = await fetch(`${metadata.value['data_bnf']}.json`, {method:"GET", mode:"cors"});
-        const document = await response.json();
+        const response = await fetch(`${metadata.value['data_bnf']}.json`, {method:"GET", mode:"no-cors"});
+        const document = await response;
         console.log(document);
       }
     }
