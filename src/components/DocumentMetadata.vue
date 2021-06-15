@@ -97,10 +97,12 @@ export default {
     };
     const bibliographie = async () => {
       if (metadata.value["data_bnf"]) {
-        const response = await fetch(
-          `${metadata.value["data_bnf"].replace("http:", "https:")}.json`,
-          { method: "GET", mode: "no-cors" }
-        );
+        const httpsUrl = metadata.value["data_bnf"].replace("http:", "https:");
+        console.log("extra metadata:", httpsUrl);
+        const response = await fetch(`${httpsUrl}.json`, {
+          method: "GET",
+          mode: "no-cors",
+        });
         const document = await response;
         console.log(document);
       }
