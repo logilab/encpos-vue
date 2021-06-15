@@ -8,7 +8,7 @@
             </figure>
           </div>
             <div class="column">
-              <span class="block" style="text-justify: none; line-height:4em">{{ metadata["author"] }}</span><br>
+              <span v-if="metadata['author']" class="block" style="text-justify: none; line-height:4em">{{ metadata["author"] }}</span><br>
               <div class="level">
                 <div class="level-left">
                   <div class="level-item">
