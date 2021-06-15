@@ -13,12 +13,12 @@
       </div>
       <div class="show">
         <span class="icon is-small is-pulled-right">
-          <i class="fas fa-angle-down"></i>
+          <i :class="['fas', enabled ? 'fa-angle-up' : 'fa-angle-down']"></i>
         </span>
       </div>
       <div class="result" v-if="result && enabled">
         <pre v-highlightjs="result">
-          <code class="json"></code>
+          <code :class="format ? format : 'json'"></code>
         </pre>
       </div>
     </div>
@@ -31,7 +31,7 @@ import "highlight.js/styles/tomorrow.css";
 
 export default {
   name: "ApiCallDropdown",
-  props: ["url", "description", "method"],
+  props: ["url", "description", "method", "format"],
   setup(props) {
     const enabled = ref(false);
     const result = ref(null);
