@@ -15,7 +15,6 @@ export default {
 
   async setup(props) {
     const customDocument = defineAsyncComponent(async () => {
-      console.log(props.id);
       // fetch the initial template
       const data = await getDocumentFromApi(props.id);
       // build a temporary dom just to ease the navigation inside the document
@@ -36,7 +35,6 @@ export default {
         // replace the link with a PageBreak component
         a.parentNode.replaceChild(container.firstChild, a);
       });
-      console.log(tmpDom);
       // return what will make the async component
       return new Promise((resolve) => {
         resolve({
