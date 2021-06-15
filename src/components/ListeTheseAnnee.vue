@@ -50,31 +50,25 @@ export default {
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
-
-      for (var these of data["member"]) {
-        for (let aut of these["dts:dublincore"]["dct:creator"]){
-          if(typeof aut == "string"){
-            var author = aut;
+      if (data && data["member"]) {
+        for (var these of data["member"]) {
+          for (let aut of these["dts:dublincore"]["dct:creator"]) {
+            if (typeof aut == "string") {
+              var author = aut;
+            }
+          }
+          if (these["dts:dublincore"]["dct:creator"] == "") {
+            author = "None";
+          }
+          try {
+            const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
+            metadata[page] = [these["@id"], author, these["title"]];
+          } catch {
+            metadata[these["@id"].split("_")[2]] = [these["@id"], author, these["title"]];
           }
         }
-        if (these["dts:dublincore"]["dct:creator"] ==''){
-          author = "None";
-        }
-        try {
-          const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
-          metadata[page] = [
-            these["@id"],
-            author,
-            these["title"],
-          ];
-        } catch {
-          metadata[these["@id"].split("_")[2]] = [
-            these["@id"],
-            author,
-            these["title"],
-          ];
-        }
       }
+
       state.metadata = metadata;
     };
 
