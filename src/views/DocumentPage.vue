@@ -8,7 +8,7 @@
     </div>
     <div class="column">
       <Suspense>
-        <document :id="docId" :key="docId" />
+        <document :id="$route.params.docId" :key="$route.params.docId" />
       </Suspense>
     </div>
     <div v-show="manifestIsAvailable" class="column is-4 Mirador">
@@ -21,7 +21,10 @@
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
 import { getMetadataFromApi } from "@/api/document";
-import { toRefs, watch, reactive, provide, ref } from "vue/dist/vue.esm-bundler.js";
+import { watch, reactive, provide, ref } from "vue/dist/vue.esm-bundler.js";
+
+import { onBeforeRouteUpdate, useRoute } from "vue-router";
+
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
 
 import useMirador from "@/composables/use-mirador";
@@ -33,8 +36,8 @@ const sources = [
   { name: "catalogue_bnf", ext: "catalogue.bnf.fr" },
   { name: "wikidata", ext: "wikidata" },
   { name: "wikipedia", ext: "wikipedia" },
-  { name:"thenca", ext:"thenca" },
-  {}
+  { name: "thenca", ext: "thenca" },
+  {},
 ];
 
 function findSource(id) {
@@ -60,9 +63,7 @@ export default {
     DocumentMetadata,
     ListeTheseAnnee,
   },
-  props: ["docId"],
-  async setup(props) {
-    const { docId } = toRefs(props);
+  async setup() {
     const manifestIsAvailable = ref(false);
 
     const metadata = reactive({
@@ -84,36 +85,34 @@ export default {
     // provide an uninitialized instance of Mirador
     provide("mirador", miradorInstance);
 
-    const getMetadata = async () => {
-      const listmetadata = await getMetadataFromApi(docId.value);
+    const getMetadata = async (docId) => {
+      const listmetadata = await getMetadataFromApi(docId);
       const dublincore = listmetadata["dts:dublincore"];
-      try{
-      metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
-      }catch{
-        metadata.iiifManifestUrl =""
+      try {
+        metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
+      } catch {
+        metadata.iiifManifestUrl = "";
       }
       metadata.date = dublincore["dct:date"];
 
       if (dublincore) {
-
         // reset the sources
         for (let s of sources) {
           metadata[s.name] = null;
         }
 
-      // benc & sudoc & thenca
+        // benc & sudoc & thenca
         if (dublincore["dct:isVersionOf"]) {
           for (const member of dublincore["dct:isVersionOf"]) {
             if (member["@id"]) {
-              const source = findSource(member["@id"])
+              const source = findSource(member["@id"]);
               if (source) {
                 metadata[source] = member["@id"];
                 console.log("source found:", source, member["@id"]);
-              } 
+              }
             }
           }
         }
-
 
         // creators
         for (let aut of dublincore["dct:creator"]) {
@@ -153,11 +152,12 @@ export default {
       }
     );
 
-    watch(docId, async () => {
-      getMetadata();
+    onBeforeRouteUpdate(async (to) => {
+      getMetadata(to.params.docId);
     });
 
-    await getMetadata();
+    const route = useRoute();
+    await getMetadata(route.params.docId);
 
     return {
       metadata,
