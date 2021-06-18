@@ -12,10 +12,16 @@
 import AppNavbar from "@/components/AppNavbar";
 import AppFooter from "@/components/AppFooter";
 
+import { onMounted } from "vue";
+
 export default {
   components: {
     AppNavbar,
     AppFooter,
+  },
+
+  setup() {
+    onMounted(() => {});
   },
 };
 </script>

@@ -56,7 +56,7 @@ export default {
 };
 </script>
 
-<style src="../assets/css/html.css">
+<style src="../assets/css/html.css" id="document-html-css">
 header {
   clear: both;
   padding: 1ex;
