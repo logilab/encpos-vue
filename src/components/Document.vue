@@ -1,6 +1,9 @@
 <template>
-  <component :is="customDocument" />
+  <Suspense>
+    <component :is="customDocument" />
+  </Suspense>
 </template>
+
 <script>
 import { defineAsyncComponent } from "vue/dist/vue.esm-bundler.js";
 import { getDocumentFromApi } from "@/api/document";
@@ -35,6 +38,10 @@ export default {
         // replace the link with a PageBreak component
         a.parentNode.replaceChild(container.firstChild, a);
       });
+
+      const toc = tmpDom.querySelector("#aside");
+      const tocDest = document.querySelector("#toc-area");
+      tocDest.appendChild(toc);
       // return what will make the async component
       return new Promise((resolve) => {
         resolve({
@@ -48,7 +55,15 @@ export default {
   },
 };
 </script>
-<style scoped>
-@import "../assets/css/html.css";
-@import "../assets/css/postprod.css";
+
+<style src="../assets/css/html.css">
+header {
+  clear: both;
+  padding: 1ex;
+  border: dashed #ccc 1px;
+  -webkit-border-radius: 1ex;
+  -moz-border-radius: 1ex;
+  border-radius: 1ex;
+}
 </style>
+<style src="../assets/css/postprod.css"></style>

@@ -11,12 +11,15 @@
 
 #aside {
     resize: yes;
-    padding: 0em 1em 1em 0;
-    border: none;
+    padding: 3em 1em 1em 0.5em;
     width: 230px;
+    border-left: 1px solid #DDD;
+    border-right: none;
 
     margin-top: 3em;
     scrollbar-width: none;
+    overflow: initial;
+
     color : inherit;
     font-size : 16px;
 }
@@ -57,14 +60,6 @@
 
 .ListeData::-webkit-scrollbar {
     display: none;
-}
-.Mirador{
-    position: sticky;
-    vertical-align: top;
-    max-height: 100vh;
-    overflow-y: auto;
-    top: 0;
-    bottom: 0;
 }
 #body-1 {
     padding-top: 0;

@@ -1,19 +1,19 @@
 <template>
-  <div class="columns is-multiline is-mobile">
-    <div class="column is-2">
-      <div v-if="metadata" class="hide-button ListeData">
-        <document-metadata :metadata="metadata" />
-        <liste-these-annee v-if="metadata.date" :id="metadata.date" :textid="docId" />
-      </div>
+  <div class="document-page-grid-container">
+    <div v-if="metadata">
+      <document-metadata :metadata="metadata" class="metadata-area" />
+      <liste-these-annee
+        v-if="metadata.date"
+        class="liste-theses-area"
+        :id="metadata.date"
+        :textid="$route.params.docId"
+      />
     </div>
-    <div class="column">
-      <Suspense>
-        <document :id="$route.params.docId" :key="$route.params.docId" />
-      </Suspense>
+    <div id="toc-area" class="toc-area" />
+    <div class="document-area">
+      <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
-    <div v-show="manifestIsAvailable" class="column is-4 Mirador">
-      <div id="vue-mirador-container" />
-    </div>
+    <div id="vue-mirador-container" class="mirador-container-area" />
   </div>
 </template>
 
@@ -166,3 +166,39 @@ export default {
   },
 };
 </script>
+
+<style>
+.document-area {
+  grid-area: "document";
+  margin-left: 20px;
+}
+.toc-area {
+  grid-area: "toc";
+}
+.metadata-area {
+  grid-area: "metadata";
+}
+.liste-theses-area {
+  grid-area: "liste-theses";
+}
+.mirador-container-area {
+  grid-area: "mirador-container";
+
+  position: sticky;
+  vertical-align: top;
+  max-height: 100vh;
+  overflow-y: auto;
+  top: 0;
+  bottom: 0;
+}
+.document-page-grid-container {
+  display: grid;
+  margin-bottom: 150px;
+
+  grid-template-columns: 280px 230px auto 620px;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "metadata" "toc" "document" "mirador-container-area"
+    "liste-theses" "document" "document" "mirador-container-area";
+}
+</style>

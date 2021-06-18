@@ -78,7 +78,6 @@ h1 a:hover { border-bottom-color: inherit; }
 h2 { clear: both; font-size: 130%; margin: 1em 0 1em 0; padding-top: 1em; line-height: 200%; text-align: center; }
 h3 { clear: both; font-weight: bold; margin-top: 1em; margin-bottom: 1em; padding-top: 1em; }
 h5, h6 { font-size: 100% }
-header { clear: both; padding: 1ex; border: dashed #CCC 1px; -webkit-border-radius: 1ex; -moz-border-radius: 1ex; border-radius: 1ex; }
 header ul { margin-top: 0; margin-bottom: 0; }
 hr { color: #E2DED0; border-left: none; border-top: 1px solid #E2DED0; border-bottom: 1px solid #999; }
 i i, i em, em i, em em { font-style: normal; }

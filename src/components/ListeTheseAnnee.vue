@@ -1,32 +1,37 @@
 <template>
-  <p class="menu-label">Thèses de l'année : {{ annee }}</p>
-  <vue-slider
-    v-model="annee"
-    :min="1849"
-    :max="2017"
-    :lazy="true"
-    :tooltip="'active'"
-  ></vue-slider>
-  <br />
-  <button v-on:click="downOneAnne">-</button>
-  <button v-on:click="reinitalise">Retour</button>
-  <button v-on:click="addOneAnne">+</button>
-  <ul class="menu-list" v-if="state.metadata">
-    <li v-for="these in state.metadata" :key="these">
-      <ul v-if="these[1] !== 'None'">
-        <b v-if="these[0] === textid">{{ these[1] }} - <span v-html="these[2]"></span></b>
-        <router-link :to="these[0]" v-else
-          ><div v-on:click="gotoTop">{{ these[1] }} - <span v-html="these[2]"></span></div
-        ></router-link>
-      </ul>
-      <ul v-else>
-        <b v-if="these[0] === textid">{{ these[2] }}</b>
-        <router-link :to="these[0]" v-on:click="gotoTop" v-else
-          ><span v-html="these[2]"></span
-        ></router-link>
-      </ul>
-    </li>
-  </ul>
+  <div>
+    <p class="menu-label">Thèses de l'année : {{ annee }}</p>
+    <vue-slider
+      v-model="annee"
+      :min="1849"
+      :max="2017"
+      :lazy="true"
+      :tooltip="'active'"
+    ></vue-slider>
+    <br />
+    <button v-on:click="downOneAnne">-</button>
+    <button v-on:click="reinitalise">Retour</button>
+    <button v-on:click="addOneAnne">+</button>
+    <ul class="menu-list" v-if="state.metadata">
+      <li v-for="these in state.metadata" :key="these">
+        <ul v-if="these[1] !== 'None'">
+          <b v-if="these[0] === textid"
+            >{{ these[1] }} - <span v-html="these[2]"></span
+          ></b>
+          <router-link :to="these[0]" v-else
+            ><div v-on:click="gotoTop">
+              {{ these[1] }} - <span v-html="these[2]"></span></div
+          ></router-link>
+        </ul>
+        <ul v-else>
+          <b v-if="these[0] === textid">{{ these[2] }}</b>
+          <router-link :to="these[0]" v-on:click="gotoTop" v-else
+            ><span v-html="these[2]"></span
+          ></router-link>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -52,30 +57,22 @@ export default {
       const data = await getPositionAnneeFromApi(annee.value);
       if (data && data["member"]) {
         for (var these of data["member"]) {
-          if(Array.isArray(these["dts:dublincore"]["dct:creator"]) === true){
-            for (let aut of these["dts:dublincore"]["dct:creator"]){
-              if(typeof aut == "string"){
+          if (Array.isArray(these["dts:dublincore"]["dct:creator"]) === true) {
+            for (let aut of these["dts:dublincore"]["dct:creator"]) {
+              if (typeof aut == "string") {
                 var author = aut;
-                }
+              }
             }
-          } else if(these["dts:dublincore"]["dct:creator"] =='') {
+          } else if (these["dts:dublincore"]["dct:creator"] == "") {
             author = "None";
           } else {
             author = these["dts:dublincore"]["dct:creator"];
           }
           try {
             const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
-            metadata[page] = [
-              these["@id"],
-              author,
-              these["title"],
-            ];
+            metadata[page] = [these["@id"], author, these["title"]];
           } catch {
-            metadata[these["@id"].split("_")[2]] = [
-              these["@id"],
-              author,
-              these["title"],
-            ];
+            metadata[these["@id"].split("_")[2]] = [these["@id"], author, these["title"]];
           }
         }
       }
