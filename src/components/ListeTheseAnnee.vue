@@ -55,8 +55,14 @@ export default {
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
+      for (const context in data["@context"]){
+        if(data["@context"][context].includes("html")){
+          var htmlnamespace = context;
+        }
+      }
       if (data && data["member"]) {
         for (var these of data["member"]) {
+          var title = these["dts:extensions"][htmlnamespace+":h1"];
           if (Array.isArray(these["dts:dublincore"]["dct:creator"]) === true) {
             for (let aut of these["dts:dublincore"]["dct:creator"]) {
               if (typeof aut == "string") {
@@ -70,9 +76,9 @@ export default {
           }
           try {
             const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
-            metadata[page] = [these["@id"], author, these["title"]];
+            metadata[page] = [these["@id"], author, title];
           } catch {
-            metadata[these["@id"].split("_")[2]] = [these["@id"], author, these["title"]];
+            metadata[these["@id"].split("_")[2]] = [these["@id"], author, title];
           }
         }
       }
