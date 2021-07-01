@@ -13,7 +13,8 @@
     <div class="document-area">
       <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
-    <div id="vue-mirador-container" class="mirador-container-area" />
+    <div v-if="metadata.iiifManifestUrl != ''" id="vue-mirador-container" class="mirador-container-area" />
+    <div v-else></div>
   </div>
 </template>
 
@@ -80,12 +81,12 @@ export default {
       wikidata: null,
       wikipedia: null,
     });
-
     const miradorInstance = useMirador("vue-mirador-container", null, 0);
     // provide an uninitialized instance of Mirador
     provide("mirador", miradorInstance);
 
     const getMetadata = async (docId) => {
+
       const listmetadata = await getMetadataFromApi(docId);
       const dublincore = listmetadata["dts:dublincore"];
       try {
@@ -136,12 +137,17 @@ export default {
           method: "HEAD",
         })
           .then((r) => {
+            if (manifestIsAvailable.value === false){
+              miradorInstance.initialize();
+            }
             manifestIsAvailable.value = r.ok;
             miradorInstance.setManifestUrl(metadata.iiifManifestUrl);
           })
           .catch(() => {
             manifestIsAvailable.value = false;
           });
+      } else {
+        manifestIsAvailable.value = false;
       }
     };
 
