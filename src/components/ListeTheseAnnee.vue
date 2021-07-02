@@ -55,11 +55,8 @@ export default {
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
-      for (const context in data["@context"]){
-        if(data["@context"][context].includes("html")){
-          var htmlnamespace = context;
-        }
-      }
+      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html')) 
+
       if (data && data["member"]) {
         for (var these of data["member"]) {
           var title = these["dts:extensions"][htmlnamespace+":h1"];
