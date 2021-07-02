@@ -140,8 +140,7 @@ export default {
 
         if (document.claims.P18) {
           let wikidata_link = document.claims.P18[0]["mainsnak"]["datavalue"]["value"]
-            .replace(" ", "_")
-            .replace(" ", "_");
+            .replaceAll(" ", "_");
 
           const _sum = md5(wikidata_link);
           wikidata_link = `https://upload.wikimedia.org/wikipedia/commons/${_sum[0]}/${_sum[0]}${_sum[1]}/${wikidata_link}`;
