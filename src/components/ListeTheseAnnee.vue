@@ -7,11 +7,14 @@
       :max="2017"
       :lazy="true"
       :tooltip="'active'"
+      style="margin-left: 1.1em; margin-right: 1.1em"
     ></vue-slider>
     <br />
-    <button v-on:click="downOneAnne">-</button>
-    <button v-on:click="reinitalise">Retour</button>
-    <button v-on:click="addOneAnne">+</button>
+    <div style="margin: 0 auto; width: 100px;">
+      <button v-on:click="downOneAnne">-</button>
+      <button v-on:click="reinitalise">Retour</button>
+      <button v-on:click="addOneAnne">+</button>
+    </diV>
     <ul class="menu-list" v-if="state.metadata">
       <li v-for="these in state.metadata" :key="these">
         <ul v-if="these[1] !== 'None'">

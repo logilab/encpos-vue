@@ -1,6 +1,6 @@
 <template>
   <div>
-    <aside class="menu is-hidden-mobile">
+    <aside class="menu is-hidden-mobile" style="margin-left: 1.1em; margin-right: 1.1em">
       <Suspense>
         <div class="columns is-multiline is-mobile block" >
           <div v-if="authorThumbnailUrl" class="column is-5">
@@ -10,23 +10,34 @@
           </div>
           <div class="colum">
             <span
-              v-if="metadata['author']"
+              v-if="metadata.author"
               class="block"
               style="text-justify: none; line-height: 4em"
-              >{{ metadata["author"] }}</span
+              >{{ metadata.author }}</span
             ><br />
               <span
-              v-if="metadata.date"
+              v-if="metadata.date && metadata.page"
+              class="block"
+              style="text-justify: none;"
+              >Positions des thèses soutenues par les élèves de la promotion de {{ metadata.date }} pour obtenir le diplôme d'archiviste paléographe, p.{{ metadata.page }}</span
+            ><br />
+
+              <span
+              v-if="metadata.coverage"
               class="block"
               style="text-justify: none; line-height: 4em"
-              >Promotion : {{ metadata.date }}</span
+              >Période du sujet  : {{ metadata.coverage }}</span
             ><br />
               <span
-              v-if="metadata.page"
+              v-for="link in metadata.download" :key="link"
               class="block"
-              style="text-justify: none; line-height: 4em"
-              >Page : {{ metadata.page }}</span
-            ><br />
+              style="text-justify: none;"
+              >
+                <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a><br/>
+                <a v-if="link.includes('xml')" v-bind:href="link">Voir le xml </a><br/>
+              </span>
+              <span><a v-bind:href="metadata.rights">(licence cc. BY-NC-ND 3.0)</a></span>
+              <br />
           </div>
           <div class="columns is-multiline is-mobile block" >
             <div v-if="metadata.wikipedia" class="column is-one-quarter">
@@ -113,6 +124,7 @@
 <script>
 import { ref, toRefs, watch } from "vue";
 import md5 from "md5";
+import  $rdf from "rdflib";
 
 export default {
   name: "DocumentMetadata",
@@ -159,13 +171,22 @@ export default {
       if (metadata.value.data_bnf) {
         const httpsUrl = metadata.value.data_bnf.replace("http:", "https:");
         //console.log("extra metadata:", httpsUrl);
+        console.log(decodeURIComponent(`${httpsUrl}.json`))
         const response = await fetch(`${httpsUrl}.json`, {
           method: "GET",
-          mode: "no-cors",
+          redirect: 'follow',
+          mode: "cors",
         });
         //const document = await response.text();
-        console.log("fetch biblio data", response);
+        console.log(response.uri.href)
+        console.log("fetch biblio data", response.json());
       }
+    };
+
+    const fetchRDF = async () =>{
+      const store = $rdf.graph();
+      const me = store.sym(metadata.value.idref);
+      console.log(me);
     };
 
     // when the component is created
@@ -175,6 +196,7 @@ export default {
       () => {
         fetchAuthorThumbnailUrl();
         fetchBiblioData();
+        fetchRDF();
       },
       { deep: true, immediate: true }
     );
