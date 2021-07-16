@@ -1,7 +1,7 @@
 <template>
   <div
     :class="
-      miradorPresent
+      miradorVisible
         ? 'document-page-grid-container'
         : 'document-page-grid-container-no-viewer'
     "
@@ -23,7 +23,7 @@
     <div class="document-area">
       <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
-    <div v-on:click="miradorPresent = !miradorPresent" class="separation-area">
+    <div v-on:click="miradorVisible =! miradorVisible" class="separation-area">
       <i class="fas fa-book-open"></i>
     </div>
     <div class="mirador-container-area">
@@ -82,7 +82,7 @@ export default {
   },
   async setup() {
     const manifestIsAvailable = ref(false);
-    const miradorPresent = ref(true);
+    const miradorVisible = ref(true);
 
     const metadata = reactive({
       sudoc: null,
@@ -159,15 +159,6 @@ export default {
       }
     };
 
-    const initializeMirador = function () {
-      console.log("Test3");
-      if (metadata.iiifManifestUrl === "") {
-        miradorPresent.value = false;
-      } else if (miradorPresent.value === true) {
-        setMirador();
-      }
-    };
-
     const setMirador = function () {
       fetch(metadata.iiifManifestUrl, {
         method: "HEAD",
@@ -186,13 +177,8 @@ export default {
       () => metadata.iiifManifestUrl,
       async () => {
         setMirador();
-        initializeMirador();
       }
     );
-    watch(miradorPresent, () => {
-      //setMirador();
-      //initializeMirador();
-    });
 
     onBeforeRouteUpdate(async (to) => {
       getMetadata(to.params.docId);
@@ -204,7 +190,7 @@ export default {
     return {
       metadata,
       manifestIsAvailable,
-      miradorPresent,
+      miradorVisible,
     };
   },
 };

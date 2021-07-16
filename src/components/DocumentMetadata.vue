@@ -28,14 +28,14 @@
               style="text-justify: none; line-height: 4em"
               >Période du sujet  : {{ metadata.coverage }}</span
             ><br />
-              <span
+              <template
               v-for="link in metadata.download" :key="link"
               class="block"
               style="text-justify: none;"
               >
-                <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a><br/>
+                <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a>
                 <a v-if="link.includes('xml')" v-bind:href="link">Voir le xml </a><br/>
-              </span>
+              </template>
               <span><a v-bind:href="metadata.rights">(licence cc. BY-NC-ND 3.0)</a></span>
               <br />
           </div>
