@@ -1,39 +1,33 @@
 <template>
-  <div v-if="miradorPresent === true" class="document-page-grid-container">
-    <div v-if="metadata">
-      <document-metadata :metadata="metadata" class="metadata-area" />
+  <div
+    :class="
+      miradorPresent
+        ? 'document-page-grid-container'
+        : 'document-page-grid-container-no-viewer'
+    "
+  >
+    <div class="metadata-area">
+      <document-metadata v-if="metadata" :metadata="metadata" />
+    </div>
+    <div class="liste-theses-area">
       <liste-these-annee
-        v-if="metadata.date"
-        class="liste-theses-area"
+        v-if="metadata && metadata.date"
         :id="metadata.date"
         :textid="$route.params.docId"
       />
     </div>
-    <div id="toc-area" class="toc-area" />
+
+    <div class="toc-area">
+      <div id="toc-area" />
+    </div>
     <div class="document-area">
       <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
-    <div v-on:click="miradorPresent =! miradorPresent" class="separation-area">
-        <i class="fas fa-book-open"></i>
+    <div v-on:click="miradorPresent = !miradorPresent" class="separation-area">
+      <i class="fas fa-book-open"></i>
     </div>
-    <div  id="vue-mirador-container" class="mirador-container-area" />
-  </div>
-  <div v-else class="document-page-grid-container-2">
-    <div v-if="metadata">
-      <document-metadata :metadata="metadata" class="metadata-area" />
-      <liste-these-annee
-        v-if="metadata.date"
-        class="liste-theses-area"
-        :id="metadata.date"
-        :textid="$route.params.docId"
-      />
-    </div>
-    <div id="toc-area" class="toc-area" />
-    <div class="document-area">
-      <document :id="$route.params.docId" :key="$route.params.docId" />
-    </div>
-    <div v-if="metadata.iiifManifestUrl" v-on:click="miradorPresent =! miradorPresent" class="separation-area">
-        <i class="fas fa-book-open" style="border-left-color:  $nice-grey;"></i>
+    <div class="mirador-container-area">
+      <div id="vue-mirador-container" />
     </div>
   </div>
 </template>
@@ -59,7 +53,7 @@ const sources = [
   { name: "wikipedia", ext: "wikipedia" },
   { name: "thenca", ext: "thenca" },
   { name: "hal", ext: "hal" },
-  { name: "benc", ext: "koha"},
+  { name: "benc", ext: "koha" },
   {},
 ];
 
@@ -96,7 +90,7 @@ export default {
       thenca: null,
       iiifManifestUrl: null,
       hal: null,
-      download : null,
+      download: null,
 
       author: null,
       data_bnf: null,
@@ -111,10 +105,9 @@ export default {
     provide("mirador", miradorInstance);
 
     const getMetadata = async (docId) => {
-
       const listmetadata = await getMetadataFromApi(docId);
 
-      metadata.download = listmetadata["dts:download"]
+      metadata.download = listmetadata["dts:download"];
 
       const dublincore = listmetadata["dts:dublincore"];
       try {
@@ -126,7 +119,7 @@ export default {
       metadata.page = dublincore["dct:extend"];
       metadata.coverage = dublincore["dct:coverage"];
       metadata.rights = dublincore["dct:rights"][0]["@id"];
-      
+
       if (dublincore) {
         // reset the sources
         for (let s of sources) {
@@ -147,7 +140,7 @@ export default {
         }
 
         // creators
-        if (Array.isArray(dublincore["dct:creator"])){
+        if (Array.isArray(dublincore["dct:creator"])) {
           for (let aut of dublincore["dct:creator"]) {
             if (aut["@id"]) {
               // find the source name from its extension
@@ -166,44 +159,40 @@ export default {
       }
     };
 
-    const initializeMirador = function(){
-      console.log("Test3")
-      if (metadata.iiifManifestUrl === ''){
+    const initializeMirador = function () {
+      console.log("Test3");
+      if (metadata.iiifManifestUrl === "") {
         miradorPresent.value = false;
-      } else if (miradorPresent.value === true){
-        setMirador()
+      } else if (miradorPresent.value === true) {
+        setMirador();
       }
-    }
-
-    const setMirador = function () {
-        fetch(metadata.iiifManifestUrl, {
-          method: "HEAD",
-        })
-          .then((r) => {
-            manifestIsAvailable.value = r.ok;
-            miradorInstance.setManifestUrl(metadata.iiifManifestUrl);
-            miradorInstance.initialize();
-          })
-          .catch(() => {
-            manifestIsAvailable.value = false;
-          });
-
     };
 
+    const setMirador = function () {
+      fetch(metadata.iiifManifestUrl, {
+        method: "HEAD",
+      })
+        .then((r) => {
+          manifestIsAvailable.value = r.ok;
+          miradorInstance.setManifestUrl(metadata.iiifManifestUrl);
+          miradorInstance.initialize();
+        })
+        .catch(() => {
+          manifestIsAvailable.value = false;
+        });
+    };
 
     watch(
-      () => metadata.iiifManifestUrl, 
+      () => metadata.iiifManifestUrl,
       async () => {
         setMirador();
         initializeMirador();
-      },
-    );
-    watch(
-      miradorPresent, () => {
-        setMirador();
-        initializeMirador();
       }
-    )
+    );
+    watch(miradorPresent, () => {
+      //setMirador();
+      //initializeMirador();
+    });
 
     onBeforeRouteUpdate(async (to) => {
       getMetadata(to.params.docId);
@@ -215,7 +204,7 @@ export default {
     return {
       metadata,
       manifestIsAvailable,
-      miradorPresent
+      miradorPresent,
     };
   },
 };
@@ -223,20 +212,20 @@ export default {
 
 <style>
 .document-area {
-  grid-area: "document";
+  grid-area: document;
   margin-left: 20px;
 }
 .toc-area {
-  grid-area: "toc";
+  grid-area: toc;
 }
 .metadata-area {
-  grid-area: "metadata";
+  grid-area: metadata;
 }
 .liste-theses-area {
-  grid-area: "liste-theses";
+  grid-area: liste-theses;
 }
-.separation-area{
-  grid-area: "separation";
+.separation-area {
+  grid-area: separation;
   position: sticky;
   vertical-align: top;
   max-height: 100vh;
@@ -245,7 +234,7 @@ export default {
   bottom: 0;
 }
 .mirador-container-area {
-  grid-area: "mirador-container";
+  grid-area: mirador-container;
 
   position: sticky;
   vertical-align: top;
@@ -259,19 +248,19 @@ export default {
   margin-bottom: 150px;
 
   grid-template-columns: 280px 230px auto 50px 620px;
-  grid-template-rows: auto;
+  grid-template-rows: 640px auto;
   grid-template-areas:
-    "metadata" "toc" "document" "separation" "mirador-container-area"
-    "liste-theses" "document" "document" "separation" "mirador-container-area";
+    "metadata toc document separation mirador-container"
+    "liste-theses . document separation mirador-container";
 }
-.document-page-grid-container-2 {
+.document-page-grid-container-no-viewer {
   display: grid;
   margin-bottom: 150px;
 
-  grid-template-columns: 280px 230px auto 50px;
-  grid-template-rows: auto;
+  grid-template-columns: 280px 230px auto 50px 0px;
+  grid-template-rows: 640px auto;
   grid-template-areas:
-    "metadata" "toc" "document" "separation"
-    "liste-theses" "document" "document" "separation";
+    "metadata toc document separation mirador-container"
+    "liste-theses . document separation mirador-container";
 }
 </style>
