@@ -1,7 +1,7 @@
 <template>
   <div
     :class="
-      miradorVisible
+      layout.miradorVisible.value
         ? 'document-page-grid-container'
         : 'document-page-grid-container-no-viewer'
     "
@@ -23,7 +23,7 @@
     <div class="document-area">
       <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
-    <div v-on:click="miradorVisible =! miradorVisible" class="separation-area">
+    <div v-on:click="layout.setMiradorVisible(!layout.miradorVisible.value)" class="separation-area">
       <i class="fas fa-book-open"></i>
     </div>
     <div class="mirador-container-area">
@@ -36,7 +36,7 @@
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
 import { getMetadataFromApi } from "@/api/document";
-import { watch, reactive, provide, ref } from "vue/dist/vue.esm-bundler.js";
+import { watch, reactive, provide, ref, inject } from "vue/dist/vue.esm-bundler.js";
 
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
@@ -82,8 +82,7 @@ export default {
   },
   async setup() {
     const manifestIsAvailable = ref(false);
-    const miradorVisible = ref(true);
-
+    
     const metadata = reactive({
       sudoc: null,
       benc: null,
@@ -103,6 +102,8 @@ export default {
     const miradorInstance = useMirador("vue-mirador-container", null, 0);
     // provide an uninitialized instance of Mirador
     provide("mirador", miradorInstance);
+
+    const layout = inject("variable-layout");
 
     const getMetadata = async (docId) => {
       const listmetadata = await getMetadataFromApi(docId);
@@ -159,6 +160,7 @@ export default {
       }
     };
 
+
     const setMirador = function () {
       fetch(metadata.iiifManifestUrl, {
         method: "HEAD",
@@ -172,6 +174,7 @@ export default {
           manifestIsAvailable.value = false;
         });
     };
+
 
     watch(
       () => metadata.iiifManifestUrl,
@@ -190,7 +193,7 @@ export default {
     return {
       metadata,
       manifestIsAvailable,
-      miradorVisible,
+      layout,
     };
   },
 };

@@ -19,10 +19,14 @@ export default {
 
   setup(props) {
     const mirador = inject("mirador");
+    const layout = inject("variable-layout");
 
     const goToCanvas = function () {
       if (mirador) {
         mirador.setCanvasId(props.canvasId);
+        if(layout.miradorVisible != true){
+          layout.setMiradorVisible(true);
+        }
       }
     };
 
