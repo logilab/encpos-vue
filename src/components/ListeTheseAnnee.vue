@@ -3,8 +3,7 @@
     <p class="menu-label">Thèses de l'année : {{ annee }}</p>
     <vue-slider
       v-model="annee"
-      :min="1849"
-      :max="2017"
+      :vData="listProm"
       :lazy="true"
       :tooltip="'active'"
       style="margin-left: 1.1em; margin-right: 1.1em"
@@ -39,7 +38,7 @@
 
 <script>
 import { ref, reactive, toRefs, watch } from "vue";
-import { getPositionAnneeFromApi } from "@/api/document";
+import { getPositionAnneeFromApi, getMetadataENCPOSFromApi } from "@/api/document";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 
@@ -53,8 +52,9 @@ export default {
   setup(props) {
     let state = reactive({});
     const { id } = toRefs(props);
-    var annee = ref(id.value);
-
+    var annee = ref(id.value.toString());
+    const listProm = ref([]);
+    
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
@@ -86,26 +86,36 @@ export default {
       state.metadata = metadata;
     };
 
-    getPositionThese();
+    const getCollectionThese = async () => {
+      const data = await getMetadataENCPOSFromApi();
+      let listPromo = []
+      for (var member of data.member){
+        listPromo.push(member['@id'].replace('ENCPOS_',''))
+      }
+      listPromo.sort();
+      listProm.value = listPromo;
+    }
 
-    watch(annee, getPositionThese);
+    getPositionThese();
+    getCollectionThese();
+    watch(annee, getPositionThese, getCollectionThese);
 
     const downOneAnne = function () {
-      let anneedown = parseInt(annee.value);
-      anneedown -= 1;
-      annee.value = anneedown.toString();
+      if (listProm.value.indexOf(annee.value.toString()) != '0'){
+        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) - 1].toString();
+      }
       return annee;
     };
 
     const reinitalise = function () {
-      annee.value = id.value;
+      annee.value = id.value.toString();
       return annee;
     };
 
     const addOneAnne = function () {
-      let anneeup = parseInt(annee.value);
-      anneeup += 1;
-      annee.value = anneeup.toString();
+      if (listProm.value.indexOf(annee.value.toString()) != listProm.value.length.toString() - 1){
+        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) + 1].toString();
+      }
       return annee;
     };
 
@@ -121,6 +131,7 @@ export default {
       reinitalise,
       downOneAnne,
       gotoTop,
+      listProm
     };
   },
 };
