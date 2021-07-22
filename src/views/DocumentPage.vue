@@ -23,7 +23,7 @@
     <div class="document-area">
       <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
-    <div v-on:click="layout.setMiradorVisible(!layout.miradorVisible.value)" class="separation-area">
+    <div v-if="metadata.iiifManifestUrl != ''" v-on:click="layout.setMiradorVisible(!layout.miradorVisible.value)" class="separation-area">
       <i class="fas fa-book-open"></i>
     </div>
     <div class="mirador-container-area">
@@ -113,8 +113,10 @@ export default {
       const dublincore = listmetadata["dts:dublincore"];
       try {
         metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
+        layout.setMiradorVisible(true);
       } catch {
         metadata.iiifManifestUrl = "";
+        layout.setMiradorVisible(false);
       }
       metadata.date = dublincore["dct:date"];
       metadata.page = dublincore["dct:extend"];
