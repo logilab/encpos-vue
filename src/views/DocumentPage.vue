@@ -239,7 +239,7 @@ export default {
   margin-bottom: 150px;
 
   grid-template-columns: 280px 230px auto 50px 620px;
-  grid-template-rows: 640px auto;
+  grid-template-rows: minmax(0, auto) auto;
   grid-template-areas:
     "metadata toc document separation mirador-container"
     "liste-theses . document separation mirador-container";
@@ -249,7 +249,7 @@ export default {
   margin-bottom: 150px;
 
   grid-template-columns: 280px 230px auto 50px 0px;
-  grid-template-rows: 640px auto;
+  grid-template-rows: minmax(0, auto) auto;
   grid-template-areas:
     "metadata toc document separation mirador-container"
     "liste-theses . document separation mirador-container";
