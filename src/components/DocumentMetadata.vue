@@ -75,6 +75,7 @@
               class="block"
               style="text-justify: none; "
               >Période du sujet  : {{ metadata.coverage }}</li>
+              <template v-if="typeof metadata.download ==='object'">
               <span
               v-for="link in metadata.download" :key="link"
               class="block"
@@ -83,6 +84,10 @@
                 <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a>
                 <a v-if="link.includes('xml')" v-bind:href="link">Voir le xml </a>
               </span>
+              </template>
+              <template v-else>
+                <a v-if="metadata.download.includes('xml')" v-bind:href="metadata.download">Voir le xml </a>
+              </template>
               <span><a v-bind:href="metadata.rights">(licence cc. BY-NC-ND 3.0)</a></span>
               <br />
             </ul>
