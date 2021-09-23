@@ -30,8 +30,8 @@ export default {
       }
     };
 
-    const thumbnail = `${props.image}/full/60,/0/default.jpg`;
-    const imageInfo = `${props.image}`;
+    const thumbnail = `${props.image.replace("/full/full/0/default.jpg", "/full/60,/0/default.jpg")}`;
+    const imageInfo = `${props.image.replace("/full/full/0/default.jpg", "")}`;
 
     return {
       goToCanvas,
