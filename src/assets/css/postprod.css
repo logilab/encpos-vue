@@ -73,6 +73,32 @@
     width: 100%;
 }
 
+.head.textpart{
+    color: #971716;
+}
+
+.titlepage{
+    margin-top: 1pc;
+    text-align: center;
+}
+
+.name{
+    margin-top: 0.5pc;
+}
+
+.forename{
+    font-variant: small-caps;
+}
+
+.surname{
+    text-transform: uppercase;
+}
+
+.roleName{
+    font-style: italic;
+    margin-bottom: 0.5pc;
+}
+
 article > header {
     margin: 0em 4em 0em 0em;
     font-family: Georgia, "Bitstream Vera Serif", Times, serif;
