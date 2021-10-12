@@ -73,10 +73,6 @@
     width: 100%;
 }
 
-.head.textpart{
-    color: #971716;
-}
-
 .titlepage{
     margin-top: 1pc;
     text-align: center;
@@ -84,6 +80,9 @@
 
 .name{
     margin-top: 0.5pc;
+}
+.titlepage{
+    font-variant: small-caps;
 }
 
 .forename{
@@ -96,7 +95,13 @@
 
 .roleName{
     font-style: italic;
+    font-variant: normal;
     margin-bottom: 0.5pc;
+}
+
+hr{
+    text-align: center;
+    margin: 2em auto 2.5em auto;
 }
 
 article > header {
@@ -118,5 +123,13 @@ article > header > h1, h2 {
 
 .tree li.more::before{
     content: '○';
+}
+
+.uc sup {
+    font-variant: normal;
+}
+
+.num sup, .uc sup{
+    text-transform: none;
 }
 
