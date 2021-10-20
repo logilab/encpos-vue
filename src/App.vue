@@ -58,7 +58,7 @@ body {
   display: grid;
   height: calc(100% - 50px);
   grid-template-columns: 100%;
-  grid-template-rows: 50px auto 100px;
+  grid-template-rows: auto auto 272px;
   grid-template-areas:
     "header"
     "main"

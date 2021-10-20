@@ -8,7 +8,8 @@
     </span>
     <span class="pagination__button__input-box">
       <input v-model="currentInput" class="input is-medium" />
-      <span> / {{ pageCount }}</span>
+      <span>sur</span>
+      <span class="page-count">{{ pageCount }}</span>
     </span>
     <span class="icon button" @click="goToPage(++currentInput)">
       <i class="fas fa-arrow-right" />
@@ -66,20 +67,51 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+span {
+  margin: 0 5px;
+  font-family: "Barlow", sans-serif;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+  color: #979797;
+  text-transform: uppercase;
+}
+.pagination__button__input-box .input,
+span.page-count,
 span.button {
-  height: 26px;
-  width: 40px;
-  margin: 4px;
+  height: 47px;
+  width: 47px;
+  margin: 0 5px;
+}
+span.button {
+  color: #FFF;
+  background-color: #C3C3C3;
+}
+.page-count {
+  display: inline-block;
+  border: solid 1px #dbdbdb;
+  background-color: #DFDFDF;
+  border-radius: 4px;
+  color: #9B9B9B;
+  vertical-align: middle;
+  line-height: 45px;
 }
 .pagination__button__input-box {
-  margin-right: 16px;
-  margin-left: 16px;
-  line-height: 2.15;
+  margin: 0 5px;
+}
+span.page-count,
+.pagination__button__input-box .input {
+  font-family: "Barlow", sans-serif;
+  font-size: 24px;
+  font-weight: 800;
 }
 .pagination__button__input-box .input {
-  margin: 4px;
-  width: 50px;
-  height: 26px;
+  color: #B9192F;
+  border: solid 1px #B9192F;
+  line-height: 1;
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: center;
 }
 </style>

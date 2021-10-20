@@ -2,6 +2,7 @@
   <section>
     <nav class="level">
       <div class="level-left">
+        <a href="#" class="logo-header"></a>
         <span class="level-item" active-class="active">
           <router-link :to="{ name: 'SearchPage' }" active-class="active"
             >Les positions</router-link
@@ -29,17 +30,35 @@
 
 <style scoped>
 nav {
-  font-size: inherit;
-}
-section {
-  padding: 14px;
-  padding-bottom: 30px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  color: #FFFFFF;
+  background-color: #B9192F;
+  padding: 10px calc( 50% - 552px );
 }
 a {
-  color: #457b9d;
-  font-family: "Montserrat", sans-serif;
+  color: inherit;
+  font-family: inherit;
 }
 .active {
-  color: #e63946;
+  color: #FFFFFF;
+}
+nav span.level-item:not(:last-child)::after {
+  content: '|';
+  display: inline-block;
+  color: #000;
+  padding-left: .75rem;
+}
+.logo-header {
+  width: 45px;
+  height: 50px;
+  margin-right: 40px;
+  background: url(../assets/images/head_logo.svg) center / cover;
+}
+@media screen and (max-width: 1150px) {
+  nav {
+    padding:26px 20px;
+  }
 }
 </style>
