@@ -298,7 +298,7 @@
           <api-call-dropdown
             method="GET"
             description="Réponse formatée en HTML pour l’intégralité de la position ENCPOS_1972_18"
-            :url="`${DTS_URL}/document?id=ENCPOS_1972_18&format=html`"
+            :url="`${DTS_URL}/document?id=ENCPOS_1972_18&xslt`"
             format="xml"
           />
         </div>
