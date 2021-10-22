@@ -107,7 +107,8 @@ export default {
 
     const getMetadata = async (docId) => {
       const listmetadata = await getMetadataFromApi(docId);
-
+      var dcnamespace = Object.keys(listmetadata["@context"]).find(k => listmetadata["@context"][k].includes('dc/elements')); 
+      metadata.author = listmetadata["dts:extensions"][dcnamespace + ":creator"];
       metadata.download = listmetadata["dts:download"];
 
       const dublincore = listmetadata["dts:dublincore"];
@@ -152,12 +153,8 @@ export default {
                 metadata[source] = aut["@id"];
                 console.log("source found:", source, aut["@id"]);
               }
-            } else {
-              metadata.author = aut;
             }
           }
-        } else {
-          metadata.author = dublincore["dct:creator"];
         }
       }
     };

@@ -16,7 +16,7 @@
     </diV>
     <ul class="menu-list" v-if="state.metadata">
       <li v-for="these in state.metadata" :key="these">
-        <ul v-if="these[1] !== 'None'">
+        <ul v-if="these[1]">
           <b v-if="these[0] === textid"
             >{{ these[1] }} - <span v-html="these[2]"></span
           ></b>
@@ -58,22 +58,14 @@ export default {
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
-      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html')) 
+      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html'))
+      var dcnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('dc/elements')); 
 
       if (data && data["member"]) {
         for (var these of data["member"]) {
           var title = these["dts:extensions"][htmlnamespace+":h1"];
-          if (Array.isArray(these["dts:dublincore"]["dct:creator"]) === true) {
-            for (let aut of these["dts:dublincore"]["dct:creator"]) {
-              if (typeof aut == "string") {
-                var author = aut;
-              }
-            }
-          } else if (these["dts:dublincore"]["dct:creator"] == "") {
-            author = "None";
-          } else {
-            author = these["dts:dublincore"]["dct:creator"];
-          }
+          var author = these["dts:extensions"][dcnamespace+":creator"];
+          console.log(author);
           try {
             const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
             metadata[page] = [these["@id"], author, title];
