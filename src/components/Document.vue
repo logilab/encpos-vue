@@ -40,8 +40,13 @@ export default {
       });
 
       const toc = tmpDom.querySelector("#aside");
-      const tocDest = document.querySelector("#toc-area");
-      tocDest.appendChild(toc);
+
+      const tocAreaDest = document.querySelector("#toc-area");
+      tocAreaDest.appendChild(toc);
+
+      const tocAsideDest = document.querySelector("#toc-area-aside");
+      tocAsideDest.appendChild(toc.cloneNode(true));
+
       // return what will make the async component
       return new Promise((resolve) => {
         resolve({

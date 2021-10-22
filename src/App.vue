@@ -40,7 +40,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 #nav {
   padding: 30px;
 }
@@ -63,5 +62,28 @@ body {
     "header"
     "main"
     "footer";
+}
+
+/* responsive layout */
+.app-width-margin {
+  margin: 0 auto !important;
+  max-width: 1100px;
+}
+.app-width-padding {
+  margin: 0;
+  padding-left: calc( 50% - 550px );
+  padding-right: calc( 50% - 550px );
+}
+
+@media screen and (max-width: 1150px) {
+  .app-width-padding {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .app-width-margin {
+    margin: 0;
+    max-width: 100%;
+    padding: 0 20px;
+  }
 }
 </style>

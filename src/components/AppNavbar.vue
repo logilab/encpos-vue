@@ -1,6 +1,6 @@
 <template>
   <section>
-    <nav class="level">
+    <nav class="level app-width-padding">
       <div class="level-left">
         <a href="#" class="logo-header"></a>
         <span class="level-item" active-class="active">
@@ -35,7 +35,8 @@ nav {
   line-height: 1;
   color: #FFFFFF;
   background-color: #B9192F;
-  padding: 10px calc( 50% - 552px );
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 a {
   color: inherit;
@@ -53,12 +54,13 @@ nav span.level-item:not(:last-child)::after {
 .logo-header {
   width: 45px;
   height: 50px;
-  margin-right: 40px;
+  margin:0 40px 0 2px;
   background: url(../assets/images/head_logo.svg) center / cover;
 }
 @media screen and (max-width: 1150px) {
   nav {
-    padding:26px 20px;
+    padding-top:26px;
+    padding-bottom:26px;
   }
 }
 </style>

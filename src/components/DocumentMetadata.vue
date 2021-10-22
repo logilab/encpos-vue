@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div class="document-metadata" :class="metaDataCssClass">
+    <div class="document-metadata-header" >
+      <a href="#" v-on:click="toggleContent">
+        <span class="metadata-header-author">Auteur{{ metadata["author"] }}</span>
+        <span class="metadata-header-title">Titre{{ metadata["title"] }}</span>
+      </a>
+      <a href="#" class="toggle-btn" v-on:click="toggleContent"></a>
+    </div>
     <aside class="menu is-hidden-mobile">
       <Suspense>
         <div class="columns block">
@@ -50,7 +57,7 @@
 </template>
 
 <script>
-import { ref, toRefs, watch } from "vue";
+  import {computed, reactive, ref, toRefs, watch} from "vue";
 import md5 from "md5";
 
 export default {
@@ -61,6 +68,9 @@ export default {
   props: { metadata: { required: true, default: () => {}, type: Object } },
 
   setup(props) {
+    let state = reactive({
+      isOpened: false
+    });
     const { metadata } = toRefs(props);
     let authorThumbnailUrl = ref(null);
 
@@ -108,6 +118,15 @@ export default {
       }
     };
 
+    const metaDataCssClass = computed(() => {
+      return state.isOpened ? "is-opened" : "";
+    });
+
+    const toggleContent = function (event) {
+      event.preventDefault();
+      state.isOpened = !state.isOpened;
+    };
+
     // when the component is created
     // and when the metadata changes
     watch(
@@ -120,6 +139,8 @@ export default {
     );
 
     return {
+      metaDataCssClass,
+      toggleContent,
       authorThumbnailUrl,
     };
   },
@@ -127,6 +148,50 @@ export default {
 </script>
 
 <style scoped>
+.document-metadata {
+  width: 100%;
+  font-family: "Barlow", sans-serif !important;
+}
+.document-metadata-header {
+  display: flex;
+  width: 100%;
+  padding: 20px;
+  background-color: #F1F1F1;
+  border-radius: 6px;
+  position: relative;
+
+  font-family: "Barlow Semi Condensed", sans-serif !important;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22px;
+}
+.document-metadata-header span.metadata-header-author {
+  margin-right: 40px;
+  color: #4A4A4A;
+}
+.document-metadata-header span.metadata-header-title {
+  color: #929292;
+}
+/* toogle */
+.toggle-btn {
+  position: absolute;
+  right: 20px;
+  width: 27px;
+  height: 27px;
+  background: url(../assets/images/chevron_rouge.svg) center / cover no-repeat;
+  border: none;
+  text-decoration: none;
+}
+.document-metadata-header > a {
+  text-decoration: none;
+  border: none;
+}
+.document-metadata .menu {
+  display: none;
+}
+.document-metadata.is-opened .menu {
+  display: block;
+}
 ol,
 ul {
   list-style: none;

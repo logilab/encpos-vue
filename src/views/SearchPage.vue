@@ -1,7 +1,7 @@
 <template>
   <section class="tiles-section">
     <div class="tiles">
-      <div class="tile is-ancestor">
+      <div class="tile is-ancestor app-width-padding">
         <div class="tile">
           <div class="tile">
             <div class="tile is-parent">
@@ -15,7 +15,7 @@
           </div>
         </div>
       </div>
-      <div class="tile is-ancestor is-vertical">
+      <div class="tile is-ancestor is-vertical app-width-margin">
         <div class="tile is-parent search-form-and-carousel">
           <div class="tile is-child search-form">
             <!-- Input + submit button -->
@@ -566,6 +566,8 @@ export default {
 
 <style src="@vueform/toggle/themes/default.css"></style>
 <style scoped>
+
+
 th {
   white-space: nowrap;
 }
@@ -579,13 +581,10 @@ th {
   padding-bottom: 100px;
 }
 .tile.is-ancestor:first-child {
-  padding: 35px calc( 50% - 552px ) 37px;
+  padding-top: 35px;
+  padding-bottom: 37px;
   background-color: #FBF8F4;
-  margin: 0 0 46px;
-}
-.tile.is-ancestor:not(:first-child) {
-  margin: 0 auto;
-  max-width: 1100px;
+  margin-bottom: 46px;
 }
 .tile.box {
   border: none;
@@ -721,9 +720,9 @@ th {
   text-transform: uppercase;
 }
 /* toggle */
-.toggle-input >>> input {
+.toggle-input :deep(input) {
 }
-.toggle-input >>> input + label {
+.toggle-input :deep(input + label) {
   display: flex;
   width: auto;
   text-transform: uppercase;
@@ -733,23 +732,23 @@ th {
   font-family: "Barlow", sans-serif;
   font-size: 14px;
 }
-.toggle-input >>> input + label span {
+.toggle-input :deep( input + label span ) {
   padding: 0 15px;
   line-height: 36px;
 }
-.toggle-input >>> input + label .toggle-on,
-.toggle-input >>> input + label .toggle-off {
+.toggle-input :deep( input + label .toggle-on),
+.toggle-input :deep( input + label .toggle-off) {
   display: inline-block;
   color: #828282;
 }
-.toggle-input >>> input:not(:checked) + label .toggle-off,
-.toggle-input >>> input:checked + label .toggle-on {
+.toggle-input :deep( input:not(:checked) + label .toggle-off ),
+.toggle-input :deep( input:checked + label .toggle-on ) {
   margin: 0;
   background-color: #B9192F !important;
   border-radius: 17.5px;
   color: #FFF;
 }
-.toggle-input >>> label::before {
+.toggle-input :deep( label::before ) {
   display: none;
 }
 
@@ -785,24 +784,24 @@ th {
   padding: 0 10px !important;
   height: 3px !important;
 }
-.vue-slider >>> .vue-slider-dot {
+.vue-slider :deep( .vue-slider-dot ) {
   width: 18px !important;
   height: 18px !important;
 }
-.vue-slider:hover >>>  .vue-slider-rail,
-.vue-slider >>> .vue-slider-rail {
+.vue-slider:hover :deep( .vue-slider-rail ),
+.vue-slider :deep( .vue-slider-rail ) {
   background-color: #FFFFFF;
 }
-.vue-slider >>> .vue-slider:hover .vue-slider-process,
-.vue-slider >>> .vue-slider-process {
+.vue-slider :deep( .vue-slider:hover .vue-slider-process ),
+.vue-slider :deep( .vue-slider-process ) {
   background-color: #B9192F !important;
 }
-.vue-slider >>> .vue-slider-dot-handle:hover,
-.vue-slider >>> .vue-slider-dot-handle-focus,
-.vue-slider >>> .vue-slider-dot-handle {
+.vue-slider :deep( .vue-slider-dot-handle:hover ),
+.vue-slider :deep( .vue-slider-dot-handle-focus ),
+.vue-slider :deep( .vue-slider-dot-handle ) {
   border-color: #B9192F !important;
 }
-.vue-slider >>> .vue-slider-dot-handle-focus {
+.vue-slider :deep( .vue-slider-dot-handle-focus ) {
   box-shadow: 0 0 0 5px rgba(185,25,47,0.2);
 }
 
@@ -831,7 +830,7 @@ th {
   line-height: 32px;
   text-align: center;
 }
-.carousel >>> canvas {
+.carousel :deep( canvas ) {
   max-width: 100%;
 }
 
@@ -892,13 +891,13 @@ tr.row-infos:hover {
 tr.row-details {
   background-color: #F6F6F6;
 }
-tr.row-details >>> td {
+tr.row-details :deep( td ) {
   border: inherit;
 }
-tr.row-details >>> ul {
+tr.row-details :deep( ul ) {
   padding: 25px 25px 40px;
 }
-tr.row-details >>> li {
+tr.row-details :deep( li ) {
   font-family: "Libre Baskerville", serif;
   font-size: 16px;
   font-weight: 400;
@@ -949,8 +948,8 @@ tr.row-details >>> li {
   color: #5F5F5F;
   margin-top: 15px;
 }
-tr.row-details >>> em,
-.text-results .table > a >>> em {
+tr.row-details :deep( em ),
+.text-results .table > a :deep( em ) {
   background-color: #FFEC00;
   border-radius: 3px;
   font-style: normal;
@@ -1005,12 +1004,8 @@ tr.row-details >>> em,
 }
 @media screen and (max-width: 1150px) {
   .tile.is-ancestor:first-child {
-    padding:35px 20px;
-  }
-  .tile.is-ancestor:not(:first-child) {
-    margin: 0;
-    max-width: 100%;
-    padding: 0 20px;
+    padding-top:35px;
+    padding-bottom:35px;
   }
 }
 
