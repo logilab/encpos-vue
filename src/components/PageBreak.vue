@@ -19,15 +19,19 @@ export default {
 
   setup(props) {
     const mirador = inject("mirador");
+    const layout = inject("variable-layout");
 
     const goToCanvas = function () {
       if (mirador) {
         mirador.setCanvasId(props.canvasId);
+        if(layout.miradorVisible != true){
+          layout.setMiradorVisible(true);
+        }
       }
     };
 
-    const thumbnail = `${props.image}/full/60,/0/default.jpg`;
-    const imageInfo = `${props.image}`;
+    const thumbnail = `${props.image.replace("/full/full/0/default.jpg", "/full/60,/0/default.jpg")}`;
+    const imageInfo = `${props.image.replace("/full/full/0/default.jpg", "")}`;
 
     return {
       goToCanvas,

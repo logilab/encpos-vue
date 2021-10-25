@@ -1,43 +1,127 @@
 <template>
   <div>
-    <aside class="menu is-hidden-mobile">
+    <aside class="menu is-hidden-mobile" style="margin-left: 1.1em; margin-right: 1.1em">
       <Suspense>
-        <div class="columns block">
-          <div v-if="authorThumbnailUrl" class="column is-5">
-            <figure class="image" style="max-width: 100%">
-              <img :src="authorThumbnailUrl" />
-            </figure>
-          </div>
-          <div class="column">
+        <div class="columns is-multiline" >
+          <div>
+            <h2 class="title is-5">Auteur:</h2>
+            <div v-if="authorThumbnailUrl" class="column is-5">
+              <figure class="image" style="max-width: 100%">
+                <img :src="authorThumbnailUrl" />
+              </figure>
+            </div>
             <span
-              v-if="metadata['author']"
+              v-if="metadata.author"
               class="block"
-              style="text-justify: none; line-height: 4em"
-              >{{ metadata["author"] }}</span
+              style="text-justify: none; "
+              >{{ metadata.author }}</span
             ><br />
-            <div class="level">
-              <div class="level-left">
-                <div v-if="metadata.wikipedia" class="level-item">
-                  <figure class="image is-48x48">
-                    <a v-bind:href="metadata.wikipedia">
-                      <img :src="require('@/assets/images/wikipedia-logo.png')" />
-                    </a>
-                  </figure>
-                </div>
-                <div v-if="metadata.catalogue_bnf" class="level-item">
-                  <figure class="image is-48x48 level-left">
-                    <a v-bind:href="metadata['catalogue_bnf']">
-                      <img :src="require('@/assets/images/Logo_bnf.png')" />
-                    </a>
-                  </figure>
-                </div>
-                <div v-if="metadata.thenca" class="level-item">
-                  <figure class="image is-48x48 level-left">
-                    <a v-bind:href="metadata.thenca">
-                      <img :src="require('@/assets/images/Logo_thenca.png')" />
-                    </a>
-                  </figure>
-                </div>
+            <div class="columns is-multiline is-mobile block" >
+              <div v-if="metadata.wikipedia" class="column is-one-quarter">
+                <figure class="image is-48x48">
+                  <a v-bind:href="metadata.wikipedia">
+                    <img :src="require('@/assets/images/Logo_wikipedia.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.catalogue_bnf" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata['catalogue_bnf']">
+                    <img :src="require('@/assets/images/Logo_bnf.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.data_bnf" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.data_bnf">
+                    <img :src="require('@/assets/images/Logo_databnf.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.idref" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.idref">
+                    <img :src="require('@/assets/images/Logo_idref.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.dbpedia" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.dbpedia">
+                    <img :src="require('@/assets/images/Logo_dbpedia.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.wikidata" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.wikidata">
+                    <img :src="require('@/assets/images/Logo_wikidata.png')" />
+                  </a>
+                </figure>
+              </div>
+            </div>
+          </div>
+
+          <div class="colum">
+            <p class="title is-5">Position de thèse :</p>
+            <ul>
+              <li
+              v-if="metadata.date && metadata.page"
+              class="block"
+              style="text-justify: none;"
+              >Positions des thèses soutenues par les élèves de la promotion de {{ metadata.date }} pour obtenir le diplôme d'archiviste paléographe, p.{{ metadata.page }}</li>
+              <li
+              v-if="metadata.coverage"
+              class="block"
+              style="text-justify: none; "
+              >Période du sujet  : {{ metadata.coverage }}</li>
+              <template v-if="typeof metadata.download ==='object'">
+              <span
+              v-for="link in metadata.download" :key="link"
+              class="block"
+              style="text-justify: none;"
+              >
+                <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a>
+                <a v-if="link.includes('xml')" v-bind:href="link">Voir le xml </a>
+              </span>
+              </template>
+              <template v-else>
+                <a v-if="metadata.download.includes('xml')" v-bind:href="metadata.download">Voir le xml </a>
+              </template>
+              <span><a v-bind:href="metadata.rights">(licence cc. BY-NC-ND 3.0)</a></span>
+              <br />
+            </ul>
+          </div>
+          <div class="column" >
+            <p class="title is-5">Thèse :</p>
+            <div class="columns is-multiline is-mobile block">
+              <div v-if="metadata.thenca" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.thenca">
+                    <img :src="require('@/assets/images/Logo_thenca.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.sudoc" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.sudoc">
+                    <img :src="require('@/assets/images/Logo_sudoc.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.benc" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.benc">
+                    <img :src="require('@/assets/images/Logo_benc.png')" />
+                  </a>
+                </figure>
+              </div>
+              <div v-if="metadata.hal" class="column is-one-quarter">
+                <figure class="image is-48x48 level-left">
+                  <a v-bind:href="metadata.hal">
+                    <img :src="require('@/assets/images/Logo_hal.png')" />
+                  </a>
+                </figure>
               </div>
             </div>
           </div>
@@ -52,6 +136,7 @@
 <script>
 import { ref, toRefs, watch } from "vue";
 import md5 from "md5";
+import  $rdf from "rdflib";
 
 export default {
   name: "DocumentMetadata",
@@ -79,8 +164,7 @@ export default {
 
         if (document.claims.P18) {
           let wikidata_link = document.claims.P18[0]["mainsnak"]["datavalue"]["value"]
-            .replace(" ", "_")
-            .replace(" ", "_");
+            .replaceAll(" ", "_");
 
           const _sum = md5(wikidata_link);
           wikidata_link = `https://upload.wikimedia.org/wikipedia/commons/${_sum[0]}/${_sum[0]}${_sum[1]}/${wikidata_link}`;
@@ -99,13 +183,22 @@ export default {
       if (metadata.value.data_bnf) {
         const httpsUrl = metadata.value.data_bnf.replace("http:", "https:");
         //console.log("extra metadata:", httpsUrl);
+        console.log(decodeURIComponent(`${httpsUrl}.json`))
         const response = await fetch(`${httpsUrl}.json`, {
           method: "GET",
-          mode: "no-cors",
+          redirect: 'follow',
+          mode: "cors",
         });
         //const document = await response.text();
-        console.log("fetch biblio data", response);
+        console.log(response.uri.href)
+        console.log("fetch biblio data", response.json());
       }
+    };
+
+    const fetchRDF = async () =>{
+      const store = $rdf.graph();
+      const me = store.sym(metadata.value.idref);
+      console.log(me);
     };
 
     // when the component is created
@@ -115,6 +208,7 @@ export default {
       () => {
         fetchAuthorThumbnailUrl();
         fetchBiblioData();
+        fetchRDF();
       },
       { deep: true, immediate: true }
     );

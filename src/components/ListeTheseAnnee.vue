@@ -3,18 +3,20 @@
     <p class="menu-label">Thèses de l'année : {{ annee }}</p>
     <vue-slider
       v-model="annee"
-      :min="1849"
-      :max="2017"
+      :vData="listProm"
       :lazy="true"
       :tooltip="'active'"
+      style="margin-left: 1.1em; margin-right: 1.1em"
     ></vue-slider>
     <br />
-    <button v-on:click="downOneAnne">-</button>
-    <button v-on:click="reinitalise">Retour</button>
-    <button v-on:click="addOneAnne">+</button>
+    <div style="margin: 0 auto; width: 100px;">
+      <button v-on:click="downOneAnne">-</button>
+      <button v-on:click="reinitalise">Retour</button>
+      <button v-on:click="addOneAnne">+</button>
+    </diV>
     <ul class="menu-list" v-if="state.metadata">
       <li v-for="these in state.metadata" :key="these">
-        <ul v-if="these[1] !== 'None'">
+        <ul v-if="these[1]">
           <b v-if="these[0] === textid"
             >{{ these[1] }} - <span v-html="these[2]"></span
           ></b>
@@ -36,7 +38,7 @@
 
 <script>
 import { ref, reactive, toRefs, watch } from "vue";
-import { getPositionAnneeFromApi } from "@/api/document";
+import { getPositionAnneeFromApi, getMetadataENCPOSFromApi } from "@/api/document";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 
@@ -50,27 +52,20 @@ export default {
   setup(props) {
     let state = reactive({});
     const { id } = toRefs(props);
-    var annee = ref(id.value);
-
+    var annee = ref(id.value.toString());
+    const listProm = ref([]);
+    
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
-      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html')) 
+      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html'))
+      var dcnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('dc/elements')); 
 
       if (data && data["member"]) {
         for (var these of data["member"]) {
           var title = these["dts:extensions"][htmlnamespace+":h1"];
-          if (Array.isArray(these["dts:dublincore"]["dct:creator"]) === true) {
-            for (let aut of these["dts:dublincore"]["dct:creator"]) {
-              if (typeof aut == "string") {
-                var author = aut;
-              }
-            }
-          } else if (these["dts:dublincore"]["dct:creator"] == "") {
-            author = "None";
-          } else {
-            author = these["dts:dublincore"]["dct:creator"];
-          }
+          var author = these["dts:extensions"][dcnamespace+":creator"];
+          console.log(author);
           try {
             const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
             metadata[page] = [these["@id"], author, title];
@@ -83,26 +78,36 @@ export default {
       state.metadata = metadata;
     };
 
-    getPositionThese();
+    const getCollectionThese = async () => {
+      const data = await getMetadataENCPOSFromApi();
+      let listPromo = []
+      for (var member of data.member){
+        listPromo.push(member['@id'].replace('ENCPOS_',''))
+      }
+      listPromo.sort();
+      listProm.value = listPromo;
+    }
 
-    watch(annee, getPositionThese);
+    getPositionThese();
+    getCollectionThese();
+    watch(annee, getPositionThese, getCollectionThese);
 
     const downOneAnne = function () {
-      let anneedown = parseInt(annee.value);
-      anneedown -= 1;
-      annee.value = anneedown.toString();
+      if (listProm.value.indexOf(annee.value.toString()) != '0'){
+        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) - 1].toString();
+      }
       return annee;
     };
 
     const reinitalise = function () {
-      annee.value = id.value;
+      annee.value = id.value.toString();
       return annee;
     };
 
     const addOneAnne = function () {
-      let anneeup = parseInt(annee.value);
-      anneeup += 1;
-      annee.value = anneeup.toString();
+      if (listProm.value.indexOf(annee.value.toString()) != listProm.value.length.toString() - 1){
+        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) + 1].toString();
+      }
       return annee;
     };
 
@@ -118,6 +123,7 @@ export default {
       reinitalise,
       downOneAnne,
       gotoTop,
+      listProm
     };
   },
 };

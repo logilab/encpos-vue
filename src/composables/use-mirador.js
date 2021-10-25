@@ -35,7 +35,6 @@ export default function useMirador(containerId = "vue-mirador-container", _manif
           },
         };
       });
-
     
     const initialize = function() {
         console.log("mirador init")
