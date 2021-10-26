@@ -584,6 +584,7 @@ th {
   padding-top: 35px;
   padding-bottom: 37px;
   background-color: #FBF8F4;
+  margin-top: 0;
   margin-bottom: 46px;
 }
 .tile.box {

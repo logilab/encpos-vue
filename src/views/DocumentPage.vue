@@ -16,8 +16,21 @@
       </div>
       <div id="toc-area" class="toc-area-content" />
     </div>
+    <nav class="controls is-flex app-width-margin">
+      <a href="" @click="toggleTOCMenu">Sommaire</a>
+      <ul class="is-flex">
+        <li><a href="" class="text-btn" aria-label="texte seul"></a></li>
+        <li><a href="" class="text-images-btn" aria-label="texte et images"></a></li>
+        <li><a href="" class="images-btn" aria-label="images seules"></a></li>
+      </ul>
+      <ul class="is-flex">
+        <li><a href="" class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
+        <li><a href="" class="xml-btn" aria-label="Télécharger le XML"></a></li>
+        <li><a href="" class="access_link">Accès à la thèse</a></li>
+      </ul>
+    </nav>
     <div class="document-area is-flex app-width-margin">
-      <div id="toc-area-aside" class="toc-area-aside" />
+      <div id="toc-area-aside" class="toc-area-aside" :class="tocMenuCssClass" />
       <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
     <div v-if="metadata.iiifManifestUrl != ''" id="vue-mirador-container" class="mirador-container-area" />
@@ -74,7 +87,8 @@ export default {
   },
   async setup() {
     let state = reactive({
-      isTOCOpened: false
+      isTOCOpened: false,
+      isTOCMenuOpened: false,
     });
 
     const manifestIsAvailable = ref(false);
@@ -83,9 +97,18 @@ export default {
       return state.isTOCOpened ? "is-opened" : "";
     });
 
+    const tocMenuCssClass = computed(() => {
+      return state.isTOCMenuOpened ? "is-opened" : "";
+    });
+
     const toggleTOCContent = function (event) {
       event.preventDefault();
       state.isTOCOpened = !state.isTOCOpened;
+    };
+
+    const toggleTOCMenu = function (event) {
+      event.preventDefault();
+      state.isTOCMenuOpened = !state.isTOCMenuOpened;
     };
 
     const metadata = reactive({
@@ -191,6 +214,8 @@ export default {
       state,
       tocCssClass,
       toggleTOCContent,
+      tocMenuCssClass,
+      toggleTOCMenu,
       metadata,
       manifestIsAvailable,
     };
@@ -213,11 +238,10 @@ export default {
   .metadata-area .columns {
     margin: 0;
   }
-  .document-area {
-  }
   .toc-area {
     width: 100%;
     font-family: "Barlow", sans-serif !important;
+    margin-bottom: 30px !important;
   }
   .toc-area-header {
     display: flex;
@@ -274,7 +298,6 @@ export default {
   .toc-area .toc-area-content nav > ol.tree li::before {
     display: none;
   }
-
   .toc-area.is-opened .toc-area-content a {
     font-family: "Barlow Semi Condensed", sans-serif !important;
     font-size: 17px;
@@ -283,6 +306,16 @@ export default {
     line-height: 20px;
     letter-spacing: 0;
     color: #252525;
+  }
+  .toc-area-aside {
+    display: none;
+  }
+  .toc-area-aside.is-opened {
+    display: flex;
+    width: 230px;
+  }
+
+  .document-area {
   }
 
   /* toogle */
@@ -297,6 +330,65 @@ export default {
   }
   .toc-area.is-opened .toggle-btn {
     background: url(../assets/images/croix.svg) center / cover no-repeat;
+  }
+
+  .controls {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-top: #B9192F 1px dashed;
+    border-bottom: #B8B8B8 1px solid;
+    padding: 12px 0 9px;
+  }
+  .controls a {
+    display:inline;
+    font-family: "Barlow", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #4A4A4A;
+    margin: 0;
+  }
+  .controls > a {
+    font-size: 14px;
+    color: #AEAEAE;
+    padding: 6px 10px;
+    border: #AEAEAE 1px solid;
+    border-radius: 4px;
+  }
+  .controls ul {
+    align-items: center;
+  }
+  .controls ul > li {
+    margin: 0;
+  }
+  .controls ul > li > a {
+    display:inline-block;
+    width: 42px;
+    height: 42px;
+    margin-right: 10px;
+  }
+  .controls ul > li > a.access_link {
+    vertical-align: center;
+    display: inline;
+    margin-left: 15px;
+  }
+  .controls a.text-btn {
+    background: url(../assets/images/b_text_off.svg) center / cover no-repeat;
+  }
+  .controls a.text-images-btn {
+    width: 80px;
+    background: url(../assets/images/b_text-image_off.svg) center / cover no-repeat;
+    margin: 0 25px 0 15px;
+  }
+  .controls a.images-btn {
+    background: url(../assets/images/b_image_off.svg) center / cover no-repeat;
+  }
+  .controls a.pdf-btn {
+    background: url(../assets/images/b_PDF.svg) center / cover no-repeat;
+  }
+  .controls a.xml-btn {
+    background: url(../assets/images/b_XML.svg) center / cover no-repeat;
   }
 
   .document-area  #aside,
