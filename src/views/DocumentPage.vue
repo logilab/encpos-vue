@@ -1,7 +1,7 @@
 <template>
   <div
           class="is-flex is-flex-direction-column"
-          :class="layout.miradorVisible.value ? 'document-page-grid-container' : 'document-page-grid-container-no-viewer'"
+          :class="state.viewMode"
   >
     <div v-if="metadata">
       <liste-these-annee
@@ -20,11 +20,11 @@
       <div id="toc-area" class="toc-area-content" />
     </div>
     <nav class="controls is-flex app-width-margin">
-      <a href="" @click="toggleTOCMenu">Sommaire</a>
-      <ul class="is-flex">
-        <li><a href="" class="text-btn" aria-label="texte seul"></a></li>
-        <li><a href="" class="text-images-btn" aria-label="texte et images"></a></li>
-        <li><a href="" class="images-btn" aria-label="images seules"></a></li>
+      <a href="" @click="toggleTOCMenu" class="toc-menu-toggle" :class="TOCMenuBtnCssClass">Sommaire</a>
+      <ul class="is-flex" >
+        <li><a href="" class="text-btn" aria-label="texte seul" @click="changeViewMode($event, 'text-mode')"></a></li>
+        <li><a href="" class="text-images-btn" aria-label="texte et images" @click="changeViewMode($event, 'text-and-images-mode')"></a></li>
+        <li><a href="" class="images-btn" aria-label="images seules" @click="changeViewMode($event, 'images-mode')"></a></li>
       </ul>
       <ul class="is-flex">
         <li><a href="" class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
@@ -34,13 +34,17 @@
     </nav>
     <div class="document-area is-flex app-width-margin">
       <div id="toc-area-aside" class="toc-area-aside" :class="tocMenuCssClass" />
-      <document :id="$route.params.docId" :key="$route.params.docId" />
+      <div class="is-flex">
+        <div class="text-view">
+          <document :id="$route.params.docId" :key="$route.params.docId" />
+        </div>
+        <div class="mirador-view">
+          <div id="vue-mirador-container" />
+        </div>
+      </div>
     </div>
     <div v-if="metadata.iiifManifestUrl != ''" v-on:click="layout.setMiradorVisible(!layout.miradorVisible.value)" class="separation-area">
       <i class="fas fa-book-open"></i>
-    </div>
-    <div class="mirador-container-area">
-      <div id="vue-mirador-container" />
     </div>
   </div>
 </template>
@@ -98,6 +102,7 @@ export default {
     let state = reactive({
       isTOCOpened: false,
       isTOCMenuOpened: false,
+      viewMode: 'text-mode'
     });
 
     const manifestIsAvailable = ref(false);
@@ -118,6 +123,16 @@ export default {
     const toggleTOCMenu = function (event) {
       event.preventDefault();
       state.isTOCMenuOpened = !state.isTOCMenuOpened;
+    };
+
+    const TOCMenuBtnCssClass = computed(() => {
+      return state.isTOCMenuOpened ? "is-opened" : "";
+    });
+
+    const changeViewMode = function (event, viewMode) {
+      event.preventDefault();
+      state.viewMode = viewMode;
+      console.log(event, viewMode)
     };
 
     const metadata = reactive({
@@ -239,6 +254,8 @@ export default {
       toggleTOCContent,
       tocMenuCssClass,
       toggleTOCMenu,
+      TOCMenuBtnCssClass,
+      changeViewMode,
       metadata,
       manifestIsAvailable,
       layout,
@@ -340,9 +357,6 @@ export default {
     width: 230px;
   }
 
-  .document-area {
-  }
-
   /* toogle */
   .toggle-btn {
     position: absolute;
@@ -374,12 +388,16 @@ export default {
     color: #4A4A4A;
     margin: 0;
   }
-  .controls > a {
+  .controls > a.toc-menu-toggle {
     font-size: 14px;
     color: #AEAEAE;
     padding: 6px 10px;
     border: #AEAEAE 1px solid;
     border-radius: 4px;
+  }
+  .controls > a.toc-menu-toggle.is-opened {
+    color: #B9192F;
+    border-color: #B9192F;
   }
   .controls ul {
     align-items: center;
@@ -401,13 +419,22 @@ export default {
   .controls a.text-btn {
     background: url(../assets/images/b_text_off.svg) center / cover no-repeat;
   }
+  .text-mode .controls a.text-btn {
+    background-image: url(../assets/images/b_text_on.svg);
+  }
   .controls a.text-images-btn {
     width: 80px;
     background: url(../assets/images/b_text-image_off.svg) center / cover no-repeat;
     margin: 0 25px 0 15px;
   }
+  .text-and-images-mode .controls a.text-images-btn {
+    background-image: url(../assets/images/b_text-image_on.svg);
+  }
   .controls a.images-btn {
     background: url(../assets/images/b_image_off.svg) center / cover no-repeat;
+  }
+  .images-mode .controls a.images-btn {
+    background-image: url(../assets/images/b_image_on.svg);
   }
   .controls a.pdf-btn {
     background: url(../assets/images/b_PDF.svg) center / cover no-repeat;
@@ -415,8 +442,10 @@ export default {
   .controls a.xml-btn {
     background: url(../assets/images/b_XML.svg) center / cover no-repeat;
   }
-
-  .document-area  #aside,
+  .document-area {
+    width: 100%;
+  }
+  .document-area #aside,
   .toc-area #aside {
     position: unset;
     float: none;
@@ -424,75 +453,30 @@ export default {
     background: none;
     border: none;
   }
-  .document-area  #aside header,
+  .document-area #aside header,
   .toc-area #aside  header {
     display: none;
   }
-  .document-area {
-  }
-  .mirador-container-area {
-    position: sticky;
-    vertical-align: top;
+  .mirador-view {
+    position: relative;
+    min-height: 80vh;
     max-height: 100vh;
-    overflow-y: auto;
-    top: 0;
-    bottom: 0;
   }
-
-  /*
-    .document-area {
-      grid-area: document;
-      margin-left: 20px;
-    }
-    .toc-area {
-      grid-area: toc;
-    }
-    .metadata-area {
-      grid-area: metadata;
-    }
-    .liste-theses-area {
-      grid-area: liste-theses;
-    }
-   */
-
-.separation-area {
-  grid-area: separation;
-  position: sticky;
-  vertical-align: top;
-  max-height: 100vh;
-  overflow-y: auto;
-  top: 0;
-  bottom: 0;
-}
-.mirador-container-area {
-  grid-area: mirador-container;
-
-  position: sticky;
-  vertical-align: top;
-  max-height: 100vh;
-  overflow-y: auto;
-  top: 0;
-  bottom: 0;
-}
-.document-page-grid-container {
-  display: grid;
-  margin-bottom: 150px;
-
-  grid-template-columns: 280px 230px auto 50px 620px;
-  grid-template-rows: minmax(0, auto) auto;
-  grid-template-areas:
-    "metadata toc document separation mirador-container"
-    "liste-theses . document separation mirador-container";
-}
-.document-page-grid-container-no-viewer {
-  display: grid;
-  margin-bottom: 150px;
-
-  grid-template-columns: 280px 230px auto 50px 0px;
-  grid-template-rows: minmax(0, auto) auto;
-  grid-template-areas:
-    "metadata toc document separation mirador-container"
-    "liste-theses . document separation mirador-container";
-}
+  .text-mode .text-view,
+  .images-mode .mirador-view {
+    flex: 100% 0 0;
+    width: 100%;
+  }
+  .images-mode .text-view,
+  .text-mode .mirador-view {
+    display: none;
+  }
+  .text-mode .mirador-view {
+    flex: 100% 0 0;
+  }
+  .text-and-images-mode .text-view,
+  .text-and-images-mode .mirador-view {
+    flex: 50% 0 0;
+  }
 
 </style>
