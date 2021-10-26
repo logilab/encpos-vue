@@ -3,7 +3,7 @@
     <div class="document-metadata-header" >
       <a href="#" v-on:click="toggleContent">
         <span class="metadata-header-author">{{ metadata["author"] }}</span>
-        <span class="metadata-header-title">Titre{{ metadata["title"] }}</span>
+        <span class="metadata-header-title">{{ metadata["title"] }}</span>
       </a>
       <a href="#" class="toggle-btn" v-on:click="toggleContent"></a>
     </div>

@@ -150,6 +150,8 @@ export default {
       metadata.download = listmetadata["dts:download"];
 
       const dublincore = listmetadata["dts:dublincore"];
+      console.log('---------');
+      console.log('dublincore', dublincore);
       try {
         metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
         layout.setMiradorVisible(true);
@@ -161,8 +163,10 @@ export default {
       metadata.page = dublincore["dct:extend"];
       metadata.coverage = dublincore["dct:coverage"];
       metadata.rights = dublincore["dct:rights"][0]["@id"];
+      metadata.title = dublincore["dct:title"][0]["@value"];
 
-      console.log(metadata);
+      console.log('metadata.iiifManifestUrl', metadata.iiifManifestUrl);
+      console.log('metadata', metadata);
 
       if (dublincore) {
         // reset the sources
