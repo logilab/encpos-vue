@@ -382,7 +382,7 @@ export default {
     right: 20px;
     width: 27px;
     height: 27px;
-    background: url(../assets/images/chevron_rouge.svg) center / cover no-repeat;
+    background: url(../assets/images/chevron_rouge.svg) center top -7px / cover no-repeat;
     border: none;
     text-decoration: none;
   }

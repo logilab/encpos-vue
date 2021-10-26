@@ -239,7 +239,7 @@ export default {
     right: 20px;
     width: 27px;
     height: 27px;
-    background: url(../assets/images/chevron_blanc.svg) center / cover no-repeat;
+    background: url(../assets/images/chevron_blanc.svg) center top -3px / cover no-repeat;
     border: none;
     text-decoration: none;
   }

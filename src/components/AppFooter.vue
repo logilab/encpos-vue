@@ -22,6 +22,7 @@
   max-height: 400px;
   text-align: center;
   padding: 50px 10%;
+  transform: rotateZ(0);
 }
 .footer .content {
   height: 100%;

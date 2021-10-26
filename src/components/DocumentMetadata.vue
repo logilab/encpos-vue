@@ -2,75 +2,23 @@
   <div class="document-metadata" :class="metaDataCssClass">
     <div class="document-metadata-header" >
       <a href="#" v-on:click="toggleContent">
-        <span class="metadata-header-author">{{ metadata["author"] }}</span>
-        <span class="metadata-header-title">{{ metadata["title"] }}</span>
+        <span class="metadata-header-author">{{ metadata.author }}</span>
+        <span class="metadata-header-title">{{ metadata.title }}</span>
       </a>
       <a href="#" class="toggle-btn" v-on:click="toggleContent"></a>
     </div>
     <aside class="menu is-hidden-mobile">
       <Suspense>
         <div class="columns is-multiline" >
-          <div>
-            <h2 class="title is-5">Auteur:</h2>
-            <div v-if="authorThumbnailUrl" class="column is-5">
+          <div class="column is-2">
+            <div v-if="authorThumbnailUrl">
               <figure class="image" style="max-width: 100%">
                 <img :src="authorThumbnailUrl" />
               </figure>
             </div>
-            <span
-              v-if="metadata.author"
-              class="block"
-              style="text-justify: none; "
-              >{{ metadata.author }}</span
-            ><br />
-            <div class="columns is-multiline is-mobile block" >
-              <div v-if="metadata.wikipedia" class="column is-one-quarter">
-                <figure class="image is-48x48">
-                  <a v-bind:href="metadata.wikipedia">
-                    <img :src="require('@/assets/images/Logo_wikipedia.png')" />
-                  </a>
-                </figure>
-              </div>
-              <div v-if="metadata.catalogue_bnf" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata['catalogue_bnf']">
-                    <img :src="require('@/assets/images/Logo_bnf.png')" />
-                  </a>
-                </figure>
-              </div>
-              <div v-if="metadata.data_bnf" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.data_bnf">
-                    <img :src="require('@/assets/images/Logo_databnf.png')" />
-                  </a>
-                </figure>
-              </div>
-              <div v-if="metadata.idref" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.idref">
-                    <img :src="require('@/assets/images/Logo_idref.png')" />
-                  </a>
-                </figure>
-              </div>
-              <div v-if="metadata.dbpedia" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.dbpedia">
-                    <img :src="require('@/assets/images/Logo_dbpedia.png')" />
-                  </a>
-                </figure>
-              </div>
-              <div v-if="metadata.wikidata" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.wikidata">
-                    <img :src="require('@/assets/images/Logo_wikidata.png')" />
-                  </a>
-                </figure>
-              </div>
-            </div>
           </div>
-
-          <div class="colum">
-            <p class="title is-5">Position de thèse :</p>
+          <div class="column is-4">
+            <h2 class="title">La position</h2>
             <ul>
               <li
               v-if="metadata.date && metadata.page"
@@ -81,13 +29,13 @@
               v-if="metadata.coverage"
               class="block"
               style="text-justify: none; "
-              >Période du sujet  : {{ metadata.coverage }}</li>
+              ><span>Période du sujet</span>  : {{ metadata.coverage }}</li>
               <template v-if="typeof metadata.download ==='object'">
               <span
               v-for="link in metadata.download" :key="link"
               class="block"
               style="text-justify: none;"
-              >
+              >chev
                 <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a>
                 <a v-if="link.includes('xml')" v-bind:href="link">Voir le xml </a>
               </span>
@@ -99,37 +47,90 @@
               <br />
             </ul>
           </div>
-          <div class="column" >
-            <p class="title is-5">Thèse :</p>
-            <div class="columns is-multiline is-mobile block">
-              <div v-if="metadata.thenca" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.thenca">
-                    <img :src="require('@/assets/images/Logo_thenca.png')" />
-                  </a>
-                </figure>
+          <div class="column is-4 thesis-links" >
+            <h2 class="title">Liens externes</h2>
+            <div class="is-flex is-flex-direction-column">
+              <div>
+                <p class="title">Auteur:</p>
+                <div class="columns is-multiline is-mobile block" >
+                  <div v-if="metadata.wikipedia" class="column is-one-quarter">
+                    <figure class="image is-48x48">
+                      <a v-bind:href="metadata.wikipedia">
+                        <img :src="require('@/assets/images/Logo_wikipedia.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.catalogue_bnf" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata['catalogue_bnf']">
+                        <img :src="require('@/assets/images/Logo_bnf.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.data_bnf" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.data_bnf">
+                        <img :src="require('@/assets/images/Logo_databnf.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.idref" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.idref">
+                        <img :src="require('@/assets/images/Logo_idref.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.dbpedia" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.dbpedia">
+                        <img :src="require('@/assets/images/Logo_dbpedia.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.wikidata" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.wikidata">
+                        <img :src="require('@/assets/images/Logo_wikidata.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                </div>
               </div>
-              <div v-if="metadata.sudoc" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.sudoc">
-                    <img :src="require('@/assets/images/Logo_sudoc.png')" />
-                  </a>
-                </figure>
+              <div>
+                <p class="title">Thèse :</p>
+                <div class="columns is-multiline is-mobile block">
+                  <div v-if="metadata.thenca" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.thenca">
+                        <img :src="require('@/assets/images/Logo_thenca.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.sudoc" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.sudoc">
+                        <img :src="require('@/assets/images/Logo_sudoc.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.benc" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.benc">
+                        <img :src="require('@/assets/images/Logo_benc.png')" />
+                      </a>
+                    </figure>
+                  </div>
+                  <div v-if="metadata.hal" class="column is-one-quarter">
+                    <figure class="image is-48x48 level-left">
+                      <a v-bind:href="metadata.hal">
+                        <img :src="require('@/assets/images/Logo_hal.png')" />
+                      </a>
+                    </figure>
+                  </div>
               </div>
-              <div v-if="metadata.benc" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.benc">
-                    <img :src="require('@/assets/images/Logo_benc.png')" />
-                  </a>
-                </figure>
-              </div>
-              <div v-if="metadata.hal" class="column is-one-quarter">
-                <figure class="image is-48x48 level-left">
-                  <a v-bind:href="metadata.hal">
-                    <img :src="require('@/assets/images/Logo_hal.png')" />
-                  </a>
-                </figure>
-              </div>
+            </div>
+
             </div>
           </div>
         </div>
@@ -252,7 +253,7 @@ export default {
   display: flex;
   width: 100%;
   padding: 20px;
-  background-color: #F1F1F1;
+  background-color: #E4E4E4;
   border-radius: 6px;
   position: relative;
 
@@ -274,10 +275,14 @@ export default {
   right: 20px;
   width: 27px;
   height: 27px;
-  background: url(../assets/images/chevron_rouge.svg) center / cover no-repeat;
+  background: url(../assets/images/chevron_rouge.svg) center top -7px / cover no-repeat;
   border: none;
   text-decoration: none;
 }
+.is-opened .toggle-btn {
+  background: url(../assets/images/croix.svg) center / cover no-repeat;
+}
+
 .document-metadata-header > a {
   text-decoration: none;
   border: none;
@@ -292,4 +297,46 @@ ol,
 ul {
   list-style: none;
 }
+aside.menu > .columns {
+  padding: 25px 20px;
+  border-top:solid 2px #FCFCFC;
+}
+aside.menu > .columns > .column {
+  padding: 0;
+}
+aside.menu > .columns > .column:not(:last-child) {
+  padding-right: 40px;
+}
+.column .title,
+.column {
+  font-family: "Barlow", sans-serif;
+  font-size: 15px;
+  font-style: normal;
+}
+.title {
+  text-indent: 0;
+  margin-bottom: 0;
+  color: #4A4A4A;
+}
+h2.title {
+  text-align: left;
+  margin: 0 0 20px 0;
+  padding: 0;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #929292;
+}
+figure img,
+figure {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none;
+}
+.thesis-links > div {
+  gap: 40px;
+}
+.thesis-links .column {
+  padding: 15px 5px 0 0;
+}
+
 </style>
