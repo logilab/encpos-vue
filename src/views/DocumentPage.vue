@@ -1,5 +1,8 @@
 <template>
-  <div class="is-flex is-flex-direction-column">
+  <div
+          class="is-flex is-flex-direction-column"
+          :class="layout.miradorVisible.value ? 'document-page-grid-container' : 'document-page-grid-container-no-viewer'"
+  >
     <div v-if="metadata">
       <liste-these-annee
               v-if="metadata.date"
@@ -33,8 +36,12 @@
       <div id="toc-area-aside" class="toc-area-aside" :class="tocMenuCssClass" />
       <document :id="$route.params.docId" :key="$route.params.docId" />
     </div>
-    <div v-if="metadata.iiifManifestUrl != ''" id="vue-mirador-container" class="mirador-container-area" />
-    <div v-else></div>
+    <div v-if="metadata.iiifManifestUrl != ''" v-on:click="layout.setMiradorVisible(!layout.miradorVisible.value)" class="separation-area">
+      <i class="fas fa-book-open"></i>
+    </div>
+    <div class="mirador-container-area">
+      <div id="vue-mirador-container" />
+    </div>
   </div>
 </template>
 
@@ -42,7 +49,7 @@
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
 import { getMetadataFromApi } from "@/api/document";
-import { watch, reactive, provide, ref } from "vue/dist/vue.esm-bundler.js";
+import { watch, reactive, provide, ref, inject } from "vue/dist/vue.esm-bundler.js";
 
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
@@ -59,6 +66,8 @@ const sources = [
   { name: "wikidata", ext: "wikidata" },
   { name: "wikipedia", ext: "wikipedia" },
   { name: "thenca", ext: "thenca" },
+  { name: "hal", ext: "hal" },
+  { name: "benc", ext: "koha" },
   {},
 ];
 
@@ -116,6 +125,8 @@ export default {
       benc: null,
       thenca: null,
       iiifManifestUrl: null,
+      hal: null,
+      download: null,
 
       author: null,
       data_bnf: null,
@@ -129,17 +140,29 @@ export default {
     // provide an uninitialized instance of Mirador
     provide("mirador", miradorInstance);
 
-    const getMetadata = async (docId) => {
+    const layout = inject("variable-layout");
 
+    const getMetadata = async (docId) => {
       const listmetadata = await getMetadataFromApi(docId);
+
+      var dcnamespace = Object.keys(listmetadata["@context"]).find(k => listmetadata["@context"][k].includes('dc/elements'));
+      metadata.author = listmetadata["dts:extensions"][dcnamespace + ":creator"];
+      metadata.download = listmetadata["dts:download"];
 
       const dublincore = listmetadata["dts:dublincore"];
       try {
         metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
+        layout.setMiradorVisible(true);
       } catch {
         metadata.iiifManifestUrl = "";
+        layout.setMiradorVisible(false);
       }
       metadata.date = dublincore["dct:date"];
+      metadata.page = dublincore["dct:extend"];
+      metadata.coverage = dublincore["dct:coverage"];
+      metadata.rights = dublincore["dct:rights"][0]["@id"];
+
+      console.log(metadata);
 
       if (dublincore) {
         // reset the sources
@@ -161,40 +184,36 @@ export default {
         }
 
         // creators
-        for (let aut of dublincore["dct:creator"]) {
-          if (aut["@id"]) {
-            // find the source name from its extension
-            const source = findSource(aut["@id"]);
-            if (source) {
-              metadata[source] = aut["@id"];
-              console.log("source found:", source, aut["@id"]);
+        if (Array.isArray(dublincore["dct:creator"])) {
+          for (let aut of dublincore["dct:creator"]) {
+            if (aut["@id"]) {
+              // find the source name from its extension
+              const source = findSource(aut["@id"]);
+              if (source) {
+                metadata[source] = aut["@id"];
+                console.log("source found:", source, aut["@id"]);
+              }
             }
-          } else {
-            metadata.author = aut;
           }
         }
       }
     };
 
+
     const setMirador = function () {
-      if (metadata.iiifManifestUrl) {
-        fetch(metadata.iiifManifestUrl, {
-          method: "HEAD",
+      fetch(metadata.iiifManifestUrl, {
+        method: "HEAD",
+      })
+        .then((r) => {
+          manifestIsAvailable.value = r.ok;
+          miradorInstance.setManifestUrl(metadata.iiifManifestUrl);
+          miradorInstance.initialize();
         })
-          .then((r) => {
-            if (manifestIsAvailable.value === false){
-              miradorInstance.initialize();
-            }
-            manifestIsAvailable.value = r.ok;
-            miradorInstance.setManifestUrl(metadata.iiifManifestUrl);
-          })
-          .catch(() => {
-            manifestIsAvailable.value = false;
-          });
-      } else {
-        manifestIsAvailable.value = false;
-      }
+        .catch(() => {
+          manifestIsAvailable.value = false;
+        });
     };
+
 
     watch(
       () => metadata.iiifManifestUrl,
@@ -218,12 +237,14 @@ export default {
       toggleTOCMenu,
       metadata,
       manifestIsAvailable,
+      layout,
     };
   },
 };
 </script>
 
 <style>
+
   .liste-theses-area {
     background-color: #FBF8F4;
     padding-top: 50px;
@@ -413,4 +434,61 @@ export default {
     top: 0;
     bottom: 0;
   }
+
+  /*
+    .document-area {
+      grid-area: document;
+      margin-left: 20px;
+    }
+    .toc-area {
+      grid-area: toc;
+    }
+    .metadata-area {
+      grid-area: metadata;
+    }
+    .liste-theses-area {
+      grid-area: liste-theses;
+    }
+   */
+
+.separation-area {
+  grid-area: separation;
+  position: sticky;
+  vertical-align: top;
+  max-height: 100vh;
+  overflow-y: auto;
+  top: 0;
+  bottom: 0;
+}
+.mirador-container-area {
+  grid-area: mirador-container;
+
+  position: sticky;
+  vertical-align: top;
+  max-height: 100vh;
+  overflow-y: auto;
+  top: 0;
+  bottom: 0;
+}
+.document-page-grid-container {
+  display: grid;
+  margin-bottom: 150px;
+
+  grid-template-columns: 280px 230px auto 50px 620px;
+  grid-template-rows: minmax(0, auto) auto;
+  grid-template-areas:
+    "metadata toc document separation mirador-container"
+    "liste-theses . document separation mirador-container";
+}
+.document-page-grid-container-no-viewer {
+  display: grid;
+  margin-bottom: 150px;
+
+  grid-template-columns: 280px 230px auto 50px 0px;
+  grid-template-rows: minmax(0, auto) auto;
+  grid-template-areas:
+    "metadata toc document separation mirador-container"
+    "liste-theses . document separation mirador-container";
+}
+
 </style>

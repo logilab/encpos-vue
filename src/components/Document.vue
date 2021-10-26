@@ -9,7 +9,6 @@ import { defineAsyncComponent } from "vue/dist/vue.esm-bundler.js";
 import { getDocumentFromApi } from "@/api/document";
 
 const VUE_APP_IIIF_URL = `${process.env.VUE_APP_IIIF_URL}`;
-const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`;
 
 export default {
   name: "Document",
@@ -30,10 +29,7 @@ export default {
         const container = document.createElement("div");
         // TODO: gérer ce lowercase un peu gênant
         const canvadId = `${VUE_APP_IIIF_URL}/${props.id.toLowerCase()}/canvas/f${frameNum}`;
-        const imageName = a.href.split("/").pop();
-        const imageUrl = `${VUE_APP_IIIF_IMAGES_URL}/${props.id}/${imageName}`;
-        //console.log(a.href, imageUrl);
-        container.innerHTML = `<page-break canvas-id="${canvadId}" canvas-num="${frameNum}" image="${imageUrl}"/>`;
+        container.innerHTML = `<page-break canvas-id="${canvadId}" canvas-num="${frameNum}" image="${a.href}"/>`;
         frameNum += 1;
         // replace the link with a PageBreak component
         a.parentNode.replaceChild(container.firstChild, a);

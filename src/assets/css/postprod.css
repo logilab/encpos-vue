@@ -73,6 +73,37 @@
     width: 100%;
 }
 
+.titlepage{
+    margin-top: 1pc;
+    text-align: center;
+}
+
+.name{
+    margin-top: 0.5pc;
+}
+.titlepage{
+    font-variant: small-caps;
+}
+
+.forename{
+    font-variant: small-caps;
+}
+
+.surname{
+    text-transform: uppercase;
+}
+
+.roleName{
+    font-style: italic;
+    font-variant: normal;
+    margin-bottom: 0.5pc;
+}
+
+hr{
+    text-align: center;
+    margin: 2em auto 2.5em auto;
+}
+
 article > header {
     margin: 0em 4em 0em 0em;
     font-family: Georgia, "Bitstream Vera Serif", Times, serif;
@@ -92,5 +123,13 @@ article > header > h1, h2 {
 
 .tree li.more::before{
     content: '○';
+}
+
+.uc sup {
+    font-variant: normal;
+}
+
+.num sup, .uc sup{
+    text-transform: none;
 }
 

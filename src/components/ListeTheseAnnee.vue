@@ -4,12 +4,11 @@
       <p class="menu-label">Thèses de l'année : <span>{{ annee }}</span></p>
       <vue-slider
         v-model="annee"
-        :min="1849"
-        :max="2017"
+        :vData="listProm"
         :lazy="true"
         :tooltip="'active'"
       ></vue-slider>
-      <nav v-if="annee !== id">
+      <nav v-if="isNotInitialAnnee">
         <button v-on:click="downOneAnne">-</button>
         <button v-on:click="reinitalise">Retour à l'année en cours <span>{{ id }}</span></button>
         <button v-on:click="addOneAnne">+</button>
@@ -18,7 +17,7 @@
     </div>
     <ul class="menu-list" v-if="state.metadata">
       <li v-for="these in state.metadata" :key="these">
-        <ul v-if="these[1] !== 'None'">
+        <ul v-if="these[1]">
           <b v-if="these[0] === textid">
             <div class="thesis-author">{{ these[1] }}</div>
             <div class="thesis-title" v-html="these[2]"></div>
@@ -43,8 +42,8 @@
 </template>
 
 <script>
-  import {ref, reactive, toRefs, watch, computed} from "vue";
-import { getPositionAnneeFromApi } from "@/api/document";
+import {ref, reactive, toRefs, watch, computed} from "vue";
+import { getPositionAnneeFromApi, getMetadataENCPOSFromApi } from "@/api/document";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 
@@ -60,37 +59,20 @@ export default {
       isOpened: false
     });
     const { id } = toRefs(props);
-    var annee = ref(id.value);
 
-
+    var annee = ref(id.value.toString());
+    const listProm = ref([]);
+    
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
-
-      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html'));
-      var dcnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('dc/elements'));
+      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html'))
+      var dcnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('dc/elements')); 
 
       if (data && data["member"]) {
         for (var these of data["member"]) {
           var title = these["dts:extensions"][htmlnamespace+":h1"];
-          var author = '';
-
-          if (Array.isArray(these["dts:dublincore"]["dct:creator"]) === true) {
-            for (let aut of these["dts:dublincore"]["dct:creator"]) {
-              if (typeof aut == "string") {
-                author = aut;
-              }
-            }
-          } else if (these["dts:dublincore"]["dct:creator"] === "") {
-            author = "None";
-          } else if (these["dts:dublincore"]["dct:creator"]) {
-            author = these["dts:dublincore"]["dct:creator"];
-          }
-
-          if (author.length === 0) {
-            author = these["dts:extensions"][dcnamespace+":creator"];
-          }
-
+          var author = these["dts:extensions"][dcnamespace+":creator"];
           try {
             const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
             metadata[page] = [these["@id"], author, title];
@@ -102,12 +84,22 @@ export default {
 
       state.metadata = metadata;
 
-      console.log('state.metadata', state.metadata)
+      // console.log('state.metadata', state.metadata)
     };
 
-    getPositionThese();
+    const getCollectionThese = async () => {
+      const data = await getMetadataENCPOSFromApi();
+      let listPromo = []
+      for (var member of data.member){
+        listPromo.push(member['@id'].replace('ENCPOS_',''))
+      }
+      listPromo.sort();
+      listProm.value = listPromo;
+    }
 
-    watch(annee, getPositionThese);
+    getPositionThese();
+    getCollectionThese();
+    watch(annee, getPositionThese, getCollectionThese);
 
 
     const listCssClass = computed(() => {
@@ -119,22 +111,26 @@ export default {
       state.isOpened = !state.isOpened;
     };
 
+    const isNotInitialAnnee = computed(() => {
+      return annee.value.toString() !== id.value.toString();
+    });
+
     const downOneAnne = function () {
-      let anneedown = parseInt(annee.value);
-      anneedown -= 1;
-      annee.value = anneedown.toString();
+      if (listProm.value.indexOf(annee.value.toString()) != '0'){
+        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) - 1].toString();
+      }
       return annee;
     };
 
     const reinitalise = function () {
-      annee.value = id.value;
+      annee.value = id.value.toString();
       return annee;
     };
 
     const addOneAnne = function () {
-      let anneeup = parseInt(annee.value);
-      anneeup += 1;
-      annee.value = anneeup.toString();
+      if (listProm.value.indexOf(annee.value.toString()) != listProm.value.length.toString() - 1){
+        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) + 1].toString();
+      }
       return annee;
     };
 
@@ -146,12 +142,14 @@ export default {
       state,
       listCssClass,
       toggleContent,
+      isNotInitialAnnee,
       addOneAnne,
       getPositionThese,
       annee,
       reinitalise,
       downOneAnne,
       gotoTop,
+      listProm
     };
   },
 };
