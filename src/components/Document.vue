@@ -38,9 +38,11 @@ export default {
       const toc = tmpDom.querySelector("#aside");
 
       const tocAreaDest = document.querySelector("#toc-area");
+      if (tocAreaDest.firstChild) tocAreaDest.removeChild(tocAreaDest.firstChild);
       tocAreaDest.appendChild(toc);
 
       const tocAsideDest = document.querySelector("#toc-area-aside");
+      if (tocAsideDest.firstChild) tocAsideDest.removeChild(tocAsideDest.firstChild);
       tocAsideDest.appendChild(toc.cloneNode(true));
 
       // return what will make the async component

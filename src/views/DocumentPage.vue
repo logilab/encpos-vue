@@ -1,7 +1,7 @@
 <template>
   <div
           class="is-flex is-flex-direction-column"
-          :class="state.viewMode"
+          :class="viewModeCssClass"
   >
     <div v-if="metadata">
       <liste-these-annee
@@ -17,7 +17,7 @@
         <a href="#" v-on:click="toggleTOCContent">SOMMAIRE</a>
         <a href="#" class="toggle-btn" v-on:click="toggleTOCContent"></a>
       </div>
-      <div id="toc-area" class="toc-area-content" />
+      <div id="toc-area" class="toc-area-content toc-content" />
     </div>
     <nav class="controls is-flex app-width-margin">
       <a href="" @click="toggleTOCMenu" class="toc-menu-toggle" :class="TOCMenuBtnCssClass">Sommaire</a>
@@ -32,9 +32,9 @@
         <li><a href="" class="access_link">Accès à la thèse</a></li>
       </ul>
     </nav>
-    <div class="document-area is-flex app-width-margin">
-      <div id="toc-area-aside" class="toc-area-aside" :class="tocMenuCssClass" />
-      <div class="is-flex">
+    <div class="document-area is-flex app-width-margin" :class="tocMenuCssClass">
+      <div id="toc-area-aside" class="toc-area-aside toc-content" />
+      <div class="document-views is-flex">
         <div class="text-view">
           <document :id="$route.params.docId" :key="$route.params.docId" />
         </div>
@@ -112,7 +112,7 @@ export default {
     });
 
     const tocMenuCssClass = computed(() => {
-      return state.isTOCMenuOpened ? "is-opened" : "";
+      return state.isTOCMenuOpened ? "toc-aside-is-opened" : "";
     });
 
     const toggleTOCContent = function (event) {
@@ -129,10 +129,17 @@ export default {
       return state.isTOCMenuOpened ? "is-opened" : "";
     });
 
+    const viewModeCssClass = computed(() => {
+      if (! layout.miradorVisible.value) {
+        return "text-mode text-mode-only";
+      } else {
+        return state.viewMode;
+      }
+    });
+
     const changeViewMode = function (event, viewMode) {
       event.preventDefault();
       state.viewMode = viewMode;
-      console.log(event, viewMode)
     };
 
     const metadata = reactive({
@@ -256,6 +263,7 @@ export default {
       toggleTOCMenu,
       TOCMenuBtnCssClass,
       changeViewMode,
+      viewModeCssClass,
       metadata,
       manifestIsAvailable,
       layout,
@@ -317,44 +325,55 @@ export default {
     columns: 4;
     gap: 40px;
   }
-  .toc-area .toc-area-content > aside > nav > nav > ol.tree > li {
+  .toc-content > aside > nav > nav > ol.tree > li {
     text-transform: uppercase;
     margin-bottom: 20px;
     padding: 0;
   }
-  .toc-area .toc-area-content > aside > nav > nav > ol.tree > li.more > a {
+  .toc-content > aside > nav > nav > ol.tree > li.more > a {
     display: inline-block;
     margin-bottom: 8px;
   }
-  .toc-area .toc-area-content > aside > nav > nav > ol.tree > li li {
+  .toc-content > aside > nav > nav > ol.tree > li li {
     padding: 0;
     margin: 0 0 6px;
     text-transform: none;
   }
-  .toc-area .toc-area-content > aside > nav > nav > ol.tree > li ol {
+  .toc-content > aside > nav > nav > ol.tree > li ol {
     margin: 0;
   }
-  .toc-area .toc-area-content nav > ol.tree > li {
+  .toc-content nav > ol.tree > li {
     break-inside: avoid;
   }
-  .toc-area .toc-area-content nav > ol.tree li::before {
+  .toc-content nav > ol.tree li::before {
     display: none;
   }
-  .toc-area.is-opened .toc-area-content a {
+  .toc-content nav > .tree ol, .tree ul {
+    border: none !important;
+  }
+  .toc-content a:hover {
+    background-color: transparent !important;
+    border-radius: unset !important;
+    color: #000;
+    text-decoration: underline dotted !important;
+  }
+  .toc-area-aside a,
+  .toc-area-content a {
     font-family: "Barlow Semi Condensed", sans-serif !important;
-    font-size: 17px;
-    text-align: left;
     font-weight: 400;
+    text-align: left;
     line-height: 20px;
     letter-spacing: 0;
+    border:none;
+    box-shadow: none;
+  }
+  .toc-area-content a {
+    font-size: 17px;
     color: #252525;
   }
-  .toc-area-aside {
-    display: none;
-  }
-  .toc-area-aside.is-opened {
-    display: flex;
-    width: 230px;
+  .toc-area-aside a {
+    font-size: 16px;
+    color: #000;
   }
 
   /* toogle */
@@ -436,6 +455,10 @@ export default {
   .images-mode .controls a.images-btn {
     background-image: url(../assets/images/b_image_on.svg);
   }
+  .text-mode-only .controls a.text-images-btn,
+  .text-mode-only .controls a.images-btn {
+    display: none;
+  }
   .controls a.pdf-btn {
     background: url(../assets/images/b_PDF.svg) center / cover no-repeat;
   }
@@ -456,6 +479,19 @@ export default {
   .document-area #aside header,
   .toc-area #aside  header {
     display: none;
+  }
+  .document-views {
+    width: 100%;
+  }
+  .toc-area-aside {
+    display: none;
+  }
+  .toc-aside-is-opened .toc-area-aside {
+    display: flex;
+    width: 220px;
+  }
+  .toc-aside-is-opened .document-views {
+    flex: calc( 100% - 220px );
   }
   .mirador-view {
     position: relative;
