@@ -65,7 +65,6 @@ export default {
         for (var these of data["member"]) {
           var title = these["dts:extensions"][htmlnamespace+":h1"];
           var author = these["dts:extensions"][dcnamespace+":creator"];
-          console.log(author);
           try {
             const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
             metadata[page] = [these["@id"], author, title];

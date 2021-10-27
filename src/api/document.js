@@ -8,7 +8,7 @@ async function getMetadataFromApi(id, options={}) {
 }
 
 async function getDocumentFromApi(id, options={}) {
-    const response = await fetch(`${_baseApiURL}/document?id=${id}&xslt`, {mode: 'cors', ...options})
+    const response = await fetch(`${_baseApiURL}/document?id=${id}&format=html`, {mode: 'cors', ...options})
     const document = await response.text()
     return document
 }
