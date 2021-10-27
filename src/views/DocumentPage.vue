@@ -453,9 +453,13 @@ export default {
   .images-mode .controls a.images-btn {
     background-image: url(../assets/images/b_image_on.svg);
   }
+  .text-mode-only .controls a.text-btn {
+    pointer-events: none;
+  }
   .text-mode-only .controls a.text-images-btn,
   .text-mode-only .controls a.images-btn {
-    display: none;
+    pointer-events: none;
+    opacity: 0.2;
   }
   .controls a.pdf-btn {
     background: url(../assets/images/b_PDF.svg) center / cover no-repeat;
