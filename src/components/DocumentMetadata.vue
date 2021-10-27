@@ -17,41 +17,46 @@
               </figure>
             </div>
           </div>
-          <div class="column is-4">
-            <h2 class="title">La position</h2>
-            <ul>
-              <li
-              v-if="metadata.date && metadata.page"
-              class="block"
-              style="text-justify: none;"
-              >Positions des thèses soutenues par les élèves de la promotion de {{ metadata.date }} pour obtenir le diplôme d'archiviste paléographe, p.{{ metadata.page }}</li>
-              <li
-              v-if="metadata.coverage"
-              class="block"
-              style="text-justify: none; "
-              ><span>Période du sujet</span>  : {{ metadata.coverage }}</li>
-              <template v-if="typeof metadata.download ==='object'">
+          <div class="column is-4 thesis-infos is-flex is-flex-direction-column">
+            <div>
+              <h2 class="title">La position</h2>
+              <ul>
+                <li
+                        v-if="metadata.date && metadata.page"
+                        class="block"
+                        style="text-justify: none;"
+                >Positions des thèses soutenues par les élèves de la promotion de {{ metadata.date }} pour obtenir le diplôme d'archiviste paléographe, p.{{ metadata.page }}</li>
+                <li
+                        v-if="metadata.coverage"
+                        class="block"
+                        style="text-justify: none; "
+                ><span>Période du sujet</span>  : {{ metadata.coverage }}</li>
+                <template v-if="typeof metadata.download ==='object'">
               <span
-              v-for="link in metadata.download" :key="link"
-              class="block"
-              style="text-justify: none;"
+                      v-for="link in metadata.download" :key="link"
+                      class="block"
+                      style="text-justify: none;"
               >chev
                 <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a>
                 <a v-if="link.includes('xml')" v-bind:href="link">Voir le xml </a>
               </span>
-              </template>
-              <template v-else>
-                <a v-if="metadata.download.includes('xml')" v-bind:href="metadata.download">Voir le xml </a>
-              </template>
-              <span><a v-bind:href="metadata.rights">(licence cc. BY-NC-ND 3.0)</a></span>
-              <br />
-            </ul>
+                </template>
+                <template v-else>
+                  <a v-if="metadata.download.includes('xml')" v-bind:href="metadata.download">Voir le xml </a>
+                </template>
+                <span><a v-bind:href="metadata.rights">(licence cc. BY-NC-ND 3.0)</a></span>
+                <br />
+              </ul>
+            </div>
+            <div>
+              <h2 class="title">Citer</h2>
+            </div>
           </div>
           <div class="column is-4 thesis-links" >
             <h2 class="title">Liens externes</h2>
             <div class="is-flex is-flex-direction-column">
               <div>
-                <p class="title">Auteur:</p>
+                <p class="title">Auteur</p>
                 <div class="columns is-multiline is-mobile block" >
                   <div v-if="metadata.wikipedia" class="column is-one-quarter">
                     <figure class="image is-48x48">
@@ -98,7 +103,7 @@
                 </div>
               </div>
               <div>
-                <p class="title">Thèse :</p>
+                <p class="title">Thèse</p>
                 <div class="columns is-multiline is-mobile block">
                   <div v-if="metadata.thenca" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
@@ -316,6 +321,7 @@ aside.menu > .columns > .column:not(:last-child) {
 .column {
   font-family: "Barlow", sans-serif;
   font-size: 15px;
+  font-weight: 500;
   font-style: normal;
 }
 .title {
@@ -337,6 +343,7 @@ figure {
   padding: 0 !important;
   border: none;
 }
+.thesis-infos,
 .thesis-links > div {
   gap: 40px;
 }

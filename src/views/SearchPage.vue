@@ -618,10 +618,12 @@ tr td.chevron-up a {
   display: block;
   width: 35px;
   text-decoration: none !important;
+  border-bottom:none !important;
 }
 tr td.oeil a:hover,
 tr td.chevron-down a:hover,
 tr td.chevron-up a:hover {
+  background-color: transparent !important;
   text-decoration: none !important;
 }
 tr td.oeil a {

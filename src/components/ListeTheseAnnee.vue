@@ -15,29 +15,33 @@
       </nav>
       <a href="#" class="toggle-btn" v-on:click="toggleContent"></a>
     </div>
-    <ul class="menu-list" v-if="state.metadata">
-      <li v-for="these in state.metadata" :key="these">
-        <ul v-if="these[1]">
-          <b v-if="these[0] === textid">
-            <div class="thesis-author">{{ these[1] }}</div>
-            <div class="thesis-title" v-html="these[2]"></div>
-          </b>
-          <router-link :to="these[0]" v-else
-            >
-            <div v-on:click="gotoTop">
-              <div class="thesis-author">{{ these[1] }}</div>
-              <div v-html="these[2]"></div>
-            </div>
-          </router-link>
+    <div class="list-body">
+      <div class="menu-list-scrollable thin-scroll">
+        <ul class="menu-list" v-if="state.metadata">
+          <li v-for="these in state.metadata" :key="these">
+            <ul v-if="these[1]">
+              <b v-if="these[0] === textid">
+                <div class="thesis-author">{{ these[1] }}</div>
+                <div class="thesis-title" v-html="these[2]"></div>
+              </b>
+              <router-link :to="these[0]" v-else
+                >
+                <div v-on:click="gotoTop">
+                  <div class="thesis-author">{{ these[1] }}</div>
+                  <div v-html="these[2]"></div>
+                </div>
+              </router-link>
+            </ul>
+            <ul v-else>
+              <b v-if="these[0] === textid">{{ these[2] }}</b>
+              <router-link :to="these[0]" v-on:click="gotoTop" v-else
+                ><span v-html="these[2]"></span
+              ></router-link>
+            </ul>
+          </li>
         </ul>
-        <ul v-else>
-          <b v-if="these[0] === textid">{{ these[2] }}</b>
-          <router-link :to="these[0]" v-on:click="gotoTop" v-else
-            ><span v-html="these[2]"></span
-          ></router-link>
-        </ul>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -177,6 +181,16 @@ export default {
   .list-header p.menu-label {
     color: #4A4A4A;
   }
+  .list-body {
+    display: none;
+    padding: 30px 20px;
+    background-color: #E5E3DE;
+    border-radius: 0 0 6px 6px;
+  }
+  .list-content.is-opened .list-body {
+    display: block;
+  }
+
   .menu-label {
     margin-bottom: 0;
   }
@@ -246,18 +260,28 @@ export default {
   .list-content.is-opened .toggle-btn {
     background: url(../assets/images/croix_blc.svg) center / cover no-repeat;
   }
+  .menu-list-scrollable {
+    padding: 10px 20px 10px 0;
+    max-height: 50vh;
+    overflow-y:auto;
+  }
 
-  .list-content .menu-list {
-    display: none;
+  *.thin-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #B9192F #CECCC8;
   }
-  .list-content.is-opened .menu-list {
-    display: block;
-    border-radius: 0 0 6px 6px;
+  /* Works on Chrome/Edge/Safari */
+  *.thin-scroll::-webkit-scrollbar {
+    width: 8px;
   }
+  *.thin-scroll::-webkit-scrollbar-track {
+    background: #CECCC8;
+  }
+  *.thin-scroll::-webkit-scrollbar-thumb {
+    background-color: #B9192F;
+  }
+
   .menu-list {
-    padding: 20px;
-    background-color: #E5E3DE;
-    border-radius: 0 0 6px 6px;
     counter-reset: thesis-counter;
     columns: 3;
   }

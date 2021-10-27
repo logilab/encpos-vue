@@ -796,15 +796,49 @@ export default {
 
   padding-top: 32px;
 
-  font-family: "Montserrat", sans-serif;
+  font-family: "Barlow Semi Condensed", sans-serif;
   text-transform: uppercase;
 }
 .main {
+  font-family: "Libre Baskerville", serif !important;
+  font-size: 16px;
+  text-align: left;
+  font-weight: 400;
+  line-height: 28px;
+  color: #5F5F5F;
+
   grid-area: "sidebar";
   padding-bottom: 150px;
 }
+.main p {
+  text-indent: 0;
+  padding: 10px 0;
+}
+.main h1,
+.main h2,
+.main h3,
+.main h4,
+.main h5
+{
+  font-family: "Noto Serif", serif;
+  font-style: normal;
+  font-weight: 400;
+}
+.main h1,
+.main h2 {
+  margin: 60px 0 !important;
+  padding-top: 0;
+}
+.main h1 {
+  font-size: 35px;
+  line-height: 47px;
+}
+.main h2 {
+  font-size: 25px;
+  line-height: 34px;
+}
+
 .content {
-  padding-top: 75px;
 }
 
 .toc li {

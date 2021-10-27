@@ -542,6 +542,7 @@ export default {
     font-size: 25px;
     font-weight: 500;
     line-height: 33px;
+    text-transform: none;
   }
 
   #article .titlepage {

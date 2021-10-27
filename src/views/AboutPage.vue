@@ -1,6 +1,6 @@
 <template>
-  <div class="about">
-    <section class="main container content">
+  <div class="about app-width-margin">
+    <section class="main container content ">
       <h1>Thèses de l'École nationale des chartes</h1>
       <p>Ce site est dédié aux thèses soutenues par les élèves de l'École nationale des chartes. 
         La thèse pour le diplôme d'archiviste paléographe est un travail de recherche privilégiant l'exploration des champs spécifiques aux enseignements de l'École :</p>
@@ -27,3 +27,38 @@
     </section>
   </div>
 </template>
+<style>
+  .about {
+    font-family: "Libre Baskerville", serif !important;
+    font-size: 16px;
+    text-align: left;
+    font-weight: 400;
+    line-height: 28px;
+    color: #5F5F5F;
+    text-indent: 0;
+    padding-bottom: 100px;
+  }
+  .about p {
+    font-size: 16px;
+    text-align: left;
+    font-weight: 400;
+    line-height: 28px;
+    color: #5F5F5F;
+    text-indent: 0;
+  }
+  .about ul {
+    padding-bottom: 10px;
+  }
+  .about ul > li {
+    margin-bottom: 10px;
+  }
+  .about h1 {
+    margin: 60px 0 !important;
+    padding-top: 0;
+    font-family: "Noto Serif", serif;
+    font-size: 35px;
+    line-height: 47px;
+    font-style: normal;
+    font-weight: 400;
+  }
+</style>
