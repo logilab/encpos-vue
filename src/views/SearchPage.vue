@@ -188,7 +188,7 @@
                   tag="tr"
                   style="text-decoration: none; color: inherit"
                 >
-                  <div class="columns mb-6" @click="rollActive($event, position.id)">
+                  <div class="columns mb-6">
                     <div class="column is-2">
                       <img
                         class="pb-thumnbail"
