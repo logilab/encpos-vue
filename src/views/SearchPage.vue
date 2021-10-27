@@ -617,6 +617,12 @@ tr td.chevron-down a,
 tr td.chevron-up a {
   display: block;
   width: 35px;
+  text-decoration: none !important;
+}
+tr td.oeil a:hover,
+tr td.chevron-down a:hover,
+tr td.chevron-up a:hover {
+  text-decoration: none !important;
 }
 tr td.oeil a {
   width: 27px;

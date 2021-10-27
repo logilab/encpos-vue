@@ -523,9 +523,83 @@ export default {
   }
 
   #article {
-    padding: 3em 10%;
+    padding: 40px 10% 120px;
     border-bottom: 1px dotted #FFFFFF;
     min-height: 100%;
+  }
+
+  #article article {
+    margin: 0;
+  }
+
+  #article h1.head.textpart,
+  #article .titlepage {
+    font-family: "Barlow", sans-serif !important;
+  }
+
+  #article h1.head.textpart {
+    padding: 0;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 33px;
+  }
+
+  #article .titlepage {
+    font-size: 18px;
+    line-height: 25px;
+  }
+
+  #article .titlepage hr {
+    width: 100%;
+    margin: 60px 0 45px;
+    border: dashed #B9192F 1px;
+  }
+
+  #article .titlepage,
+  #article .titlepage .forename,
+  #article .titlepage .surname {
+    font-variant: inherit;
+    text-transform: none;
+  }
+  #article .titlepage .forename,
+  #article .titlepage .surname {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  #article .titlepage .name {
+    margin-bottom: 30px;
+  }
+  #article .titlepage .roleName {
+    font-size: 16px;
+    font-style: normal;
+    line-height: 22px;
+    text-transform: uppercase;
+    color:#777;
+  }
+
+  #article section.div {
+    border: none;
+    padding-bottom: 0;
+    padding-top: 40px;
+    font-family: "Libre Baskerville", serif !important;
+    font-size: 16px;
+    text-align: left;
+    font-weight: 400;
+    line-height: 28px;
+    color: #5F5F5F;
+  }
+
+  #article section.div h2.head,
+  #article section.div h3.head {
+    padding: 0;
+    margin-top: 0;
+    font-family: "Libre Baskerville", serif !important;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    color: #5F5F5F;
+    text-align: left;
+    text-transform: uppercase;
   }
 
   @media screen and (max-width: 1150px) {

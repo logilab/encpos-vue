@@ -41,9 +41,15 @@ nav {
 a {
   color: inherit;
   font-family: inherit;
+  background-color: transparent !important;
+}
+a:hover {
+  text-decoration: underline dotted;
+  color: #FFFFFF;
 }
 .active {
   color: #FFFFFF;
+  text-decoration: none;
 }
 nav span.level-item:not(:last-child)::after {
   content: '|';
