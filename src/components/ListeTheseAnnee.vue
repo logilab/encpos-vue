@@ -1,7 +1,7 @@
 <template>
   <div class="list-content" :class="listCssClass">
     <div class="list-header is-flex">
-      <p class="menu-label">Thèses de l'année : <span>{{ annee }}</span></p>
+      <p class="menu-label"><span @click="toggleContent">Thèses de l'année</span> : <span class="year">{{ annee }}</span></p>
       <vue-slider
         v-model="annee"
         :vData="listProm"
@@ -13,7 +13,7 @@
         <button v-on:click="reinitalise">Retour à l'année en cours <span>{{ id }}</span></button>
         <button v-on:click="addOneAnne">+</button>
       </nav>
-      <a href="#" class="toggle-btn" v-on:click="toggleContent"></a>
+      <a href="#" class="toggle-btn" @click="toggleContent"></a>
     </div>
     <div class="list-body">
       <div class="menu-list-scrollable thin-scroll">
@@ -194,7 +194,10 @@ export default {
   .menu-label {
     margin-bottom: 0;
   }
-  .menu-label span {
+  .menu-label span:first-child {
+    cursor: pointer;
+  }
+  .menu-label span.year {
     background-color: #FFF;
     font-size: 14px;
     color: #8B8A7E;

@@ -306,7 +306,7 @@ ul {
   list-style: none;
 }
 aside.menu > .columns {
-  padding: 25px 20px;
+  padding: 25px 20px 40px;
   border-top:solid 2px #FCFCFC;
   background-color: #E4E4E4;
   border-radius: 0 0 6px 6px;
@@ -314,8 +314,14 @@ aside.menu > .columns {
 aside.menu > .columns > .column {
   padding: 0;
 }
-aside.menu > .columns > .column:not(:last-child) {
-  padding-right: 40px;
+aside.menu > .columns > .column:nth-child(1) {
+  padding-right: 50px;
+}
+aside.menu > .columns > .column:nth-child(2) {
+  padding-right: 80px;
+}
+aside.menu > .columns > .column:nth-child(3) {
+  max-width: 50%;
 }
 .column .title,
 .column {
@@ -348,7 +354,7 @@ figure {
   gap: 40px;
 }
 .thesis-links .column {
-  padding: 15px 5px 0 0;
+  padding: 15px 0 0 0;
 }
 
 @media screen and (max-width: 1150px) {.menu-list[data-v-445717e5]

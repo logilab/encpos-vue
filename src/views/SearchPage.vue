@@ -682,9 +682,23 @@ tr td.chevron-up a::before {
 .toggle-list-and-pagination > div:first-child .is-inline-block {
   margin-bottom: 0 !important;
 }
+.toggle-list-and-pagination .sort-options select,
 .toggle-list-and-pagination .sort-options > span {
-  margin: 0 10px;
+  font-family: "Barlow", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ADADAD;
+}
+.toggle-list-and-pagination .sort-options > span {
   text-transform: uppercase;
+  margin: 0 10px 0 30px;
+}
+.toggle-list-and-pagination .sort-options select {
+  background: transparent;
+  inset: unset;
+  border: #D9D8D3 solid 1px;
+  padding: 3px 5px 5px 10px;
+  margin-right: 10px;
 }
 .title-tile > p:last-child {
   width: 345px;
