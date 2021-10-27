@@ -281,8 +281,6 @@ export default {
     margin-bottom: 28px;
   }
   .metadata-area {
-    background-color: #E4E4E4;
-    border-radius: 6px;
     margin-bottom: 15px !important;
   }
   .metadata-area .columns {
@@ -515,4 +513,28 @@ export default {
     flex: 50% 0 0;
   }
 
+  #center {
+    width: 100%;
+    margin:0 !important;
+  }
+
+  #article {
+    padding: 3em 10%;
+    border-bottom: 1px dotted #FFFFFF;
+    min-height: 100%;
+  }
+
+  @media screen and (max-width: 1150px) {
+    .toc-area .toc-area-content nav > ol.tree {
+      columns:2;
+    }
+
+    .controls > a.toc-menu-toggle {
+      margin-left: 20px;
+    }
+
+    .controls ul > li > a.access_link {
+      margin-right: 20px;
+    }
+  }
 </style>

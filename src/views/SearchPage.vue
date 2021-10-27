@@ -124,7 +124,7 @@
                   <Toggle
                           id="ToggleTableau"
                           on-label="Tableau"
-                          off-label="Déroulé"
+                          off-label="Déplié"
                           v-model="isTableau"
                           :width="120"
                   />
@@ -188,7 +188,7 @@
                   tag="tr"
                   style="text-decoration: none; color: inherit"
                 >
-                  <div class="columns mb-6" @click="rollActive(position.id)">
+                  <div class="columns mb-6" @click="rollActive($event, position.id)">
                     <div class="column is-2">
                       <img
                         class="pb-thumnbail"
@@ -209,10 +209,9 @@
                         <span class="year"
                           >Promotion :
                           {{ position.fields.metadata.promotion_year }}</span
-                        >
-                        / Période du sujet :
+                        >|<span class="period">Période du sujet :
                         {{ position.fields.metadata.topic_notBefore }} -
-                        {{ position.fields.metadata.topic_notAfter }}
+                        {{ position.fields.metadata.topic_notAfter }}</span>
                       </div>
                       <div v-if="position.highlight" class="position-highlight">
                         <span
@@ -242,101 +241,94 @@
                     @click="inputSort = '-metadata.author_name.keyword'"
                     v-if="inputSort === 'metadata.author_name.keyword'"
                   >
-                    Nom
-                    <i class="fas fa-sort-numeric-down is-inline-block"></i>
+                      <div class="sortable sort-alpha-down"><span>Nom</span></div>
                   </th>
                   <th
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.author_name.keyword'"
                   >
-                    Nom
-                    <i class="fas fa-sort-numeric-up is-inline-block"></i>
+                      <div class="sortable sort-alpha-up"><span>Nom</span></div>
                   </th>
-                  <th @click="inputSort = 'metadata.author_name.keyword'" v-else>
-                    Nom
-                    <i class="fas fa-sort is-inline-block"></i>
+                  <th @click="inputSort = 'metadata.author_name.keyword'"
+                      v-else>
+                      <div class="sortable"><span>Nom</span></div>
                   </th>
-                  <th>Prénom</th>
+                  <th>
+                      <div><span>Prénom</span></div>
+                  </th>
                   <th
                     class="largerTab"
                     @click="inputSort = '-metadata.promotion_year'"
                     v-if="inputSort === 'metadata.promotion_year'"
                   >
-                    <abbr title="Promotion" class="is-inline-block">Prom.</abbr>
-                    <i class="fas fa-sort-numeric-down is-inline-block"></i>
+                      <div class="sortable sort-numeric-down"><abbr title="Promotion" class="is-inline-block">Prom.</abbr></div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.promotion_year'"
                   >
-                    <abbr title="Promotion" class="is-inline-block">Prom.</abbr>
-                    <i class="fas fa-sort-numeric-up is-inline-block"></i>
+                      <div class="sortable sort-numeric-up"><abbr title="Promotion" class="is-inline-block">Prom.</abbr></div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = 'metadata.promotion_year'"
                     v-else
                   >
-                    <abbr title="Promotion" class="is-inline-block">Prom.</abbr>
-                    <i class="fas fa-sort is-inline-block"></i>
+                      <div class="sortable"><abbr title="Promotion" class="is-inline-block">Prom.</abbr></div>
                   </th>
-                  <th>Titre</th>
+                  <th>
+                      <div><span>Titre</span></div>
+                  </th>
                   <th
                     class="largerTab"
                     @click="inputSort = '-metadata.topic_notBefore'"
                     v-if="inputSort === 'metadata.topic_notBefore'"
                   >
-                    <abbr title="Période du sujet">De </abbr>
-                    <i class="fas fa-sort-numeric-down is-inline-block"></i>
+                      <div class="sortable sort-numeric-down"><abbr title="Période du sujet">De </abbr></div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.topic_notBefore'"
                   >
-                    <abbr title="Période du sujet">De </abbr>
-                    <i class="fas fa-sort-numeric-up is-inline-block"></i>
+                      <div class="sortable sort-numeric-up"><abbr title="Période du sujet">De </abbr></div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = 'metadata.topic_notBefore'"
                     v-else
                   >
-                    <abbr title="Période du sujet">De </abbr>
-                    <i class="fas fa-sort is-inline-block"></i>
+                      <div class="sortable"><abbr title="Période du sujet">De </abbr></div>
                   </th>
                   <th
                     class="inline"
                     @click="inputSort = '-metadata.topic_notAfter'"
                     v-if="inputSort === 'metadata.topic_notAfter'"
                   >
-                    <abbr title="Période du sujet">A </abbr>
-                    <i class="fas fa-sort-numeric-down is-inline-block"></i>
+                      <div class="sortable sort-numeric-down"><abbr title="Période du sujet">A </abbr></div>
                   </th>
                   <th
                     class="inline"
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.topic_notAfter'"
                   >
-                    <abbr title="Période du sujet">A </abbr>
-                    <i class="fas fa-sort-numeric-up is-inline-block"></i>
+                      <div class="sortable sort-numeric-up"><abbr title="Période du sujet">A </abbr></div>
                   </th>
                   <th
                     class="inline"
                     @click="inputSort = 'metadata.topic_notAfter'"
                     v-else
                   >
-                    <abbr title="Période du sujet">A </abbr>
-                    <i class="fas fa-sort is-inline-block"></i>
+                      <div class="sortable"><abbr title="Période du sujet">A </abbr></div>
                   </th>
+                  <th></th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 <template v-for="position in search.result.value" :key="position.id">
                   <tr
-                          @click="rollActive(position.id)"
                           class="row-infos"
                           :class="positionCssClass(position)"
                   >
@@ -350,22 +342,30 @@
                           params: { docId: position.id },
                         }"
                       >
-                        <span v-html="position.fields.metadata.title_rich"></span
-                      ></router-link>
+                        <span v-html="position.fields.metadata.title_rich"></span>
+                      </router-link>
                     </td>
                     <td>{{ position.fields.metadata.topic_notBefore }}</td>
                     <td>{{ position.fields.metadata.topic_notAfter }}</td>
-                    <td v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline">
-                      <i class="fas fa-chevron-down" />
+                    <td class="inline oeil">
+                      <router-link
+                              :to="{
+                          name: 'DocumentPage',
+                          params: { docId: position.id },
+                        }"
+                      />
                     </td>
-                    <td v-else-if="(isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline">
-                      <i class="fas fa-chevron-up" />
+                    <td v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline chevron-down">
+                        <a href="#" @click="rollActive($event, position.id)"></a>
+                    </td>
+                    <td v-else-if="(isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline chevron-up">
+                        <a href="#" @click="rollActive($event, position.id)"></a>
                     </td>
                   </tr>
                   <tr v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null"
                       class="row-details"
                   >
-                    <td colspan="7">
+                    <td colspan="8">
                       <ul>
                         <li v-for="phrase in position.highlight.content" :key="phrase">
                           <span v-html="phrase"></span>
@@ -547,11 +547,12 @@ export default {
     };
   },
   methods: {
-    rollActive: function (event) {
-      if (this.onrollActive.includes(event) === false) {
-        this.onrollActive.push(event);
+    rollActive: function (event, id) {
+      event.preventDefault();
+      if (this.onrollActive.includes(id) === false) {
+        this.onrollActive.push(id);
       } else {
-        const index = this.onrollActive.indexOf(event);
+        const index = this.onrollActive.indexOf(id);
         if (index > -1) {
           this.onrollActive.splice(index, 1);
         }
@@ -566,11 +567,80 @@ export default {
 
 <style src="@vueform/toggle/themes/default.css"></style>
 <style scoped>
-
-
+abbr {
+    text-decoration: none !important;
+}
+thead tr {
+    display: table-row;
+}
 th {
   white-space: nowrap;
 }
+th > div {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
+    border: none !important;
+    text-decoration: none !important;
+}
+th > div > span {
+  display: inline-block;
+}
+th > div.sortable {
+    cursor: pointer;
+}
+th > div::before {
+    content:'';
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 5px;
+}
+th > div.sortable::before {
+    background: url(../assets/images/b_tri.svg) center / cover no-repeat;
+}
+th > div.sort-alpha-down::before {
+    background-image: url(../assets/images/b_tri_AZ.svg);
+}
+th > div.sort-alpha-up::before {
+    background-image: url(../assets/images/b_tri_ZA.svg);
+}
+th > div.sort-numeric-down::before {
+    background-image: url(../assets/images/b_tri_19.svg);
+}
+th > div.sort-numeric-up::before {
+    background-image: url(../assets/images/b_tri_91.svg);
+}
+tr td.oeil a,
+tr td.chevron-down a,
+tr td.chevron-up a {
+  display: block;
+  width: 35px;
+}
+tr td.oeil a {
+  width: 27px;
+  height: 20px;
+  background: url(../assets/images/b_oeil.svg) center / contain no-repeat;
+}
+.table tr.row-infos.is-selected td.oeil a {
+  background-image: url(../assets/images/b_oeil_blc.svg);
+}
+tr td.chevron-up a::before,
+tr td.chevron-down a::before {
+    content: '';
+    display: inline-block;
+    width: 27px;
+    height: 20px;
+    transform-origin: 50%;
+}
+tr td.chevron-down a::before {
+  background: url(../assets/images/croix_blc.svg) center / contain no-repeat;
+}
+tr td.chevron-up a::before {
+  background: url(../assets/images/chevron_rouge.svg) center / contain no-repeat;
+}
+
 .description {
   text-align: center;
 }
@@ -846,7 +916,7 @@ th {
   background-color: #F0F0F0;
 }
 .table thead th {
-  padding: 20px 0 20px 20px;
+  padding: 15px 0 12px 20px;
   background: none;
   text-transform: uppercase;
 }
@@ -940,6 +1010,12 @@ tr.row-details :deep( li ) {
   font-size: 16px;
   font-weight: 600;
   color: #828282;
+}
+.text-results .table > a .position-infos span.year {
+  margin-right: 8px;
+}
+.text-results .table > a .position-infos span.period {
+  margin-left: 8px;
 }
 .text-results .table > a .position-highlight {
   font-family: "Libre Baskerville", serif;

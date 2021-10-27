@@ -301,4 +301,10 @@ export default {
   ul {
     list-style: none;
   }
+
+  @media screen and (max-width: 1150px) {
+    .menu-list {
+      columns:2;
+    }
+  }
 </style>

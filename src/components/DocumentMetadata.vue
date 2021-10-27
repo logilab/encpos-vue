@@ -262,6 +262,9 @@ export default {
   font-weight: 500;
   line-height: 22px;
 }
+.is-opened .document-metadata-header {
+  border-radius: 6px 6px 0 0;
+}
 .document-metadata-header span.metadata-header-author {
   margin-right: 40px;
   color: #4A4A4A;
@@ -300,6 +303,8 @@ ul {
 aside.menu > .columns {
   padding: 25px 20px;
   border-top:solid 2px #FCFCFC;
+  background-color: #E4E4E4;
+  border-radius: 0 0 6px 6px;
 }
 aside.menu > .columns > .column {
   padding: 0;
@@ -339,4 +344,13 @@ figure {
   padding: 15px 5px 0 0;
 }
 
+@media screen and (max-width: 1150px) {.menu-list[data-v-445717e5]
+aside.menu > .columns {
+  flex-direction: column;
+}
+
+  .thesis-links {
+    margin-top: 40px;
+  }
+}
 </style>
