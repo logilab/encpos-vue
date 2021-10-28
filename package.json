@@ -20,6 +20,7 @@
     "vue": "^3.2.20",
     "vue-router": "^4.0.0-0",
     "vue-slider-component": "^4.0.0-beta.3",
+    "vue3-carousel": "^0.1.29",
     "vue3-highlightjs": "^1.0.5"
   },
   "devDependencies": {

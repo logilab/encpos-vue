@@ -1,28 +1,54 @@
 <template>
-  <div style="width: 100%; display: flex; flex-direction: column">
-    <vue3-chart-js
-      v-show="
-        aggSearch.result.value &&
-        aggSearch.result.value.length &&
-        histoChart.data.datasets.length
-      "
-      :id="histoChart.id"
-      ref="chartRef"
-      :type="histoChart.type"
-      :data="histoChart.data"
-      :options="histoChart.options"
-    ></vue3-chart-js>
+  <div>
+    <Carousel>
+      <Slide :key="1">
+        <div class="carousel__item">
+          <p>Début du Carrousel de test</p>
+        </div>
+      </Slide>
+      <Slide :key="2">
+        <div class="carousel__item">
+          <vue3-chart-js
+            v-show="
+              aggSearch.result.value &&
+              aggSearch.result.value.length &&
+              histoChart.data.datasets.length
+            "
+            :id="histoChart.id"
+            ref="chartRef"
+            :type="histoChart.type"
+            :data="histoChart.data"
+            :options="histoChart.options"
+          ></vue3-chart-js>
+        </div>
+      </Slide>
+      <Slide :key="3">
+        <div class="carousel__item">
+          <p>Fin du carrousel</p>
+        </div>
+      </Slide>
+      <template #addons>
+        <Navigation />
+        <Pagination />
+      </template>
+    </Carousel>
   </div>
 </template>
 
 <script>
 import { ref, inject, watch } from "vue";
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
+import { Carousel, Slide, Navigation, Pagination } from "vue3-carousel";
+import "vue3-carousel/dist/carousel.css";
 
 export default {
   name: "Histogram",
   components: {
     Vue3ChartJs,
+    Carousel,
+    Slide,
+    Navigation,
+    Pagination,
   },
   setup() {
     const aggSearch = inject("agg-search");
@@ -109,3 +135,27 @@ export default {
   },
 };
 </script>
+<style scoped>
+.carousel__item {
+  min-height: 200px;
+  width: 80%;
+  font-size: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel__slide {
+  padding: 10px;
+}
+
+.carousel__prev,
+.carousel__next {
+  box-sizing: content-box;
+  border: 5px solid white;
+}
+.content ol:not([type]){
+  list-style: none 
+}
+</style>

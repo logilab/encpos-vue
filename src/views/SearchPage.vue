@@ -347,7 +347,7 @@
             </div>
           </article>
         </div>
-        <div class="tile is-vertical is-parent">
+        <div class="tile is-vertical is-parent is-4">
           <article class="tile is-child box">
             <p class="title has-text-weight-light">Le saviez vous ?</p>
             <p class="subtitle">With some content</p>
