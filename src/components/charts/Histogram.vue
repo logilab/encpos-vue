@@ -148,13 +148,37 @@ export default {
 .carousel__slide {
   padding: 10px;
 }
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
+:deep(.carousel__prev),
+:deep(.carousel__next) {
+  background-color: #AAA292;
+  width:24px;
+  height: 24px;
+}
+:deep(.carousel__prev) {
+  left: 18px;
+}
+:deep(.carousel__next) {
+  right: 18px;
+}
+:deep(.carousel__track) {
+  margin: 0;
 }
 .carousel__pagination {
   margin: 0 !important;
+  align-items: center;
+}
+.carousel__pagination :deep(li) {
+  margin: 0;
+}
+.carousel__pagination :deep(.carousel__pagination-button) {
+  background-color: #CFC7B6;
+  border: solid 3px #AAA292;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+.carousel__pagination :deep(.carousel__pagination-button--active) {
+  background-color: #AAA292;
 }
 .content ol:not([type]){
   list-style: none 
