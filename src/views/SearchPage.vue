@@ -1268,9 +1268,11 @@ tr.row-details :deep( em ),
     .table-container tr.row-infos[data-v-138752de] {
       padding: 10px 40px 10px 10px;
     }
-    tr.row-infos > td:nth-child(7),
-    tr.row-infos > td:nth-child(8) {
+    tr.row-infos > td:nth-child(7) {
       right: 10px;
+    }
+    tr.row-infos > td:nth-child(8) {
+      right: 0;
     }
   }
 
