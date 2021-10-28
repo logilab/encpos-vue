@@ -1,6 +1,6 @@
 <template>
   <div class="grid-container">
-    <section class="toc">
+    <section class="toc" :class="menuCsscClass">
       <ul class="toc-lvl1">
         <li><a href="#ids-pattern">Structure éditoriale</a></li>
         <li>
@@ -46,6 +46,7 @@
         </li>
       </ul>
     </section>
+    <a href="#" @click="toggleMenu($event)" class="toggle-menu-btn">MENU</a>
     <section class="main container content">
       <section class="section" id="documentation-top">
         <h1>Thèses</h1>
@@ -784,7 +785,29 @@ export default {
       IIIF_SERVER_URL: `${process.env.VUE_APP_IIIF_SERVER_URL}`,
       IIIF_URL: `${process.env.VUE_APP_IIIF_URL}`,
       IIIF_IMAGES_URL: `${process.env.VUE_APP_IIIF_IMAGES_URL}`,
+      isMenuOpened: false
     };
+  },
+  computed: {
+    menuCsscClass () {
+      return this.isMenuOpened ? 'opened' : ''
+    }
+  },
+  methods: {
+    toggleMenu ($event) {
+      $event.preventDefault()
+      $event.stopImmediatePropagation()
+      this.isMenuOpened = !this.isMenuOpened
+    },
+    closeMenu () {
+      this.isMenuOpened = false
+    }
+  },
+  mounted () {
+    document.body.addEventListener('click', this.closeMenu)
+  },
+  beforeUnmount () {
+    document.body.removeEventListener('click', this.closeMenu)
   },
 };
 </script>
@@ -837,10 +860,9 @@ export default {
   font-size: 25px;
   line-height: 34px;
 }
-
 .content {
+  width: calc( 100vw - 300px );
 }
-
 .toc li {
   margin: 25px;
 }
@@ -850,18 +872,15 @@ export default {
 .toc a:hover {
   color: #e63946;
 }
-
 .toc-lvl2 {
   border-left: 1px solid #ccc;
-  padding-left: 0px;
+  padding-left: 0;
 
   margin-top: -5px;
 }
-
 .toc-lvl2 li {
   margin: 15px;
 }
-
 .grid-container {
   display: grid;
   height: 100%;
@@ -883,4 +902,88 @@ export default {
   margin-top: 20px;
   margin-bottom: 30px;
 }
+.toggle-menu-btn {
+  display: none;
+}
+@media screen and (max-width: 800px) {
+  .toggle-menu-btn {
+    display: inline-block;
+    position: fixed;
+    z-index: 3;
+    right:10px;
+    top:100px;
+  }
+  .toc {
+    position: fixed;
+    top:0;
+    z-index: 2;
+    padding-top: calc( 32px + 71px );
+    background-color: rgba(243,243,243,0.95);
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+    transform: translateX(-110%);
+    height: 100vh;
+    overflow: auto;
+  }
+  .toc.opened {
+    transform: translateX(0%);
+    border-right: 1px solid #ccc;
+  }
+  .divider {
+    width: calc(100vw - 100px);
+    min-width: unset;
+  }
+  .content {
+    width: calc( 100vw - 50px );
+    z-index: 1;
+  }
+  .content .section {
+    padding-top: 0;
+    padding-bottom: 10px;
+  }
+  .content p,
+  .content ul {
+    font-size: 14px;
+    line-height: 24px;
+  }
+  .content p {
+    margin: 0 !important;
+  }
+  .content ul {
+    list-style-position: outside;
+    margin: 20px 0 20px 10px !important;
+  }
+  .content h1,
+  .content h2 {
+  }
+  .content h1 {
+    font-size: 30px;
+    line-height: 36px;
+    margin: 35px auto !important;
+  }
+  .content h2,
+  .content h3,
+  .content h4{
+    margin: 10px auto !important;
+  }
+  .content h2 {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  .content h3 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  :deep(.method) {
+    width: 45px;
+    font-size: 10px !important;
+    margin-right: 10px !important;
+    padding: 0 !important;
+  }
+  :deep(.grid-container) {
+    grid-template-columns: 70px auto 35px;
+    font-size: 12px;
+    line-height: 21px;
+  }
+}
+
 </style>

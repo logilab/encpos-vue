@@ -77,6 +77,11 @@ nav span.level-item:not(:last-child)::after {
     display: flex;
     margin-top: 0;
     font-size: 16px;
+    z-index: 10; /* cf documentation menu */
+
+    position: fixed;
+    top:0;
+    width: 100vw;
   }
   .logo-header {
     margin-right: 20px;
@@ -97,7 +102,6 @@ nav span.level-item:not(:last-child)::after {
 }
 @media screen and (max-width: 500px) {
   nav {
-    position: relative;
     padding-top: 10px;
     padding-bottom: 30px;
   }

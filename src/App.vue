@@ -98,4 +98,16 @@ body {
     padding: 0 2.5%;
   }
 }
+
+@media screen and (max-width: 800px) {
+  .layout-grid-container {
+    margin-top: 71px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .layout-grid-container {
+    margin-top: 90px;
+  }
+}
 </style>
