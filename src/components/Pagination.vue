@@ -114,4 +114,16 @@ span.page-count,
   padding-right: 2px;
   text-align: center;
 }
+@media screen and (max-width: 640px) {
+  .pagination__button__input-box .input,
+  span.page-count,
+  span.button {
+    margin: 0 2px;
+    height: 38px;
+    width: 38px;
+  }
+  .page-count {
+    line-height:38px;
+  }
+}
 </style>

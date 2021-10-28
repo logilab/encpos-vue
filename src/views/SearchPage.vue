@@ -1191,10 +1191,10 @@ tr.row-details :deep( em ),
     /* Nom */
     order: 1;
     font-size: 18px;
+    margin-right: 10px;
   }
   tr.row-infos > td:nth-child(2) {
     order: 2;
-    margin-left: 10px;
     font-size: 16px;
   }
   tr.row-infos > td:nth-child(3) {
@@ -1258,6 +1258,19 @@ tr.row-details :deep( em ),
     .title-tile > p:last-child {
       margin: auto;
       width: 60%;
+    }
+    .table thead th {
+      padding-left: 10px;
+    }
+    .table-container thead tr > th:nth-child(6) {
+      padding-right: 10px;
+    }
+    .table-container tr.row-infos[data-v-138752de] {
+      padding: 10px 40px 10px 10px;
+    }
+    tr.row-infos > td:nth-child(7),
+    tr.row-infos > td:nth-child(8) {
+      right: 10px;
     }
   }
 
