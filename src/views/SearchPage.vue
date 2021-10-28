@@ -1094,11 +1094,12 @@ tr.row-details :deep( em ),
     flex-direction: column;
   }
 }
-
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 768px) {
   .carousel-parent {
     margin-top: 20px !important;
   }
+}
+@media screen and (max-width: 800px) {
   .title {
     font-size: 30px;
     line-height: 36px;

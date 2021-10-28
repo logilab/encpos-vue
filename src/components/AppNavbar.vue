@@ -95,4 +95,20 @@ nav span.level-item:not(:last-child)::after {
     margin-top: 0;
   }
 }
+@media screen and (max-width: 500px) {
+  nav {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 30px;
+  }
+  .level-right {
+    position: absolute;
+    bottom: 12px;
+    right: 3%;
+  }
+  .level-right a {
+    font-size: 14px;
+  }
+}
+
 </style>
