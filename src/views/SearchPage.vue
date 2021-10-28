@@ -944,6 +944,9 @@ tr.row-infos > td {
   border: none;
   border-top: #B9192F 1px dashed;
 }
+tr.row-infos > td a {
+  color:#666666;
+}
 tr.row-infos.is-selected > td > a,
 tr.row-infos.is-selected > td {
   color: #FFFFFF !important;
