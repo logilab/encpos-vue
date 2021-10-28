@@ -607,13 +607,56 @@ export default {
     .toc-area .toc-area-content nav > ol.tree {
       columns:2;
     }
-
     .controls > a.toc-menu-toggle {
       margin-left: 20px;
     }
-
     .controls ul > li > a.access_link {
       margin-right: 20px;
     }
   }
+  @media screen and (max-width: 800px) {
+    #article {
+      padding: 40px 4% 120px;
+    }
+    .toc-area .toc-area-content aside {
+      padding: 20px 20px !important;
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .toc-area .toc-area-content nav > ol.tree {
+      columns:1;
+    }
+    .toggle-btn {
+      width: 20px;
+      right: 15px;
+    }
+    .controls {
+      flex-wrap: wrap;
+    }
+    .controls ul:first-of-type {
+      order: 3;
+      flex: 100% 0 0;
+      width: 100%;
+      justify-content: center;
+      padding: 20px 0 10px;
+    }
+    .controls ul:last-of-type > li > a {
+      width: 30px;
+      height: 30px;
+    }
+    #article section.div {
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    #article section.div h2.head,
+    #article section.div h3.head {
+      font-size: 14px;
+      line-height: 24px;
+    }
+    #article section.div {
+      padding-top: 10px;
+    }
+  }
+
 </style>

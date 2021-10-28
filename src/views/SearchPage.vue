@@ -328,32 +328,23 @@
               </thead>
               <tbody>
                 <template v-for="position in search.result.value" :key="position.id">
-                  <tr
-                          class="row-infos"
-                          :class="positionCssClass(position)"
-                  >
-                    <td>{{ position.fields.metadata.author_name }}</td>
+                  <tr class="row-infos" :class="positionCssClass(position)">
+                    <td>
+                      <router-link :to="{ name: 'DocumentPage', params: { docId: position.id }, }">
+                      {{ position.fields.metadata.author_name }}
+                      </router-link>
+                    </td>
                     <td>{{ position.fields.metadata.author_firstname }}</td>
                     <td>{{ position.fields.metadata.promotion_year }}</td>
                     <td>
-                      <router-link
-                        :to="{
-                          name: 'DocumentPage',
-                          params: { docId: position.id },
-                        }"
-                      >
+                      <router-link :to="{ name: 'DocumentPage', params: { docId: position.id }, }">
                         <span v-html="position.fields.metadata.title_rich"></span>
                       </router-link>
                     </td>
                     <td>{{ position.fields.metadata.topic_notBefore }}</td>
                     <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     <td class="inline oeil">
-                      <router-link
-                              :to="{
-                          name: 'DocumentPage',
-                          params: { docId: position.id },
-                        }"
-                      />
+                      <router-link :to="{ name: 'DocumentPage', params: { docId: position.id }, }" />
                     </td>
                     <td v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline chevron-down">
                         <a href="#" @click="rollActive($event, position.id)"></a>
@@ -662,8 +653,7 @@ tr td.chevron-up a::before {
   padding-top: 35px;
   padding-bottom: 37px;
   background-color: #FBF8F4;
-  margin-top: 0;
-  margin-bottom: 46px;
+  margin: 0 0 46px 0;
 }
 .tile.box {
   border: none;
@@ -1055,28 +1045,13 @@ tr.row-details :deep( em ),
   padding: 4px 5px;
 }
 
-@media screen and (max-width: 780px) {
-  .carousel-parent {
-    margin-top: 20px !important;
+@media screen and (max-width: 1150px) {
+  .tile.is-ancestor:first-child {
+    padding-top:35px;
+    padding-bottom:35px;
   }
 }
-@media screen and (max-width: 900px) {
-  .title-tile {
-    flex-direction: column !important;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 20px;
-  }
-  .search-form-footer .control {
-    flex-direction: column;
-  }
-  .search-form-footer .control label {
-    margin-bottom: 5px;
-  }
-  .text-results .table > a .columns.mb-6 {
-    flex-direction: column;
-  }
-}
+
 @media screen and (max-width: 1040px) {
   .sliders {
     flex-direction: column;
@@ -1101,11 +1076,187 @@ tr.row-details :deep( em ),
     align-self: center;
   }
 }
-@media screen and (max-width: 1150px) {
-  .tile.is-ancestor:first-child {
-    padding-top:35px;
-    padding-bottom:35px;
+
+@media screen and (max-width: 900px) {
+  .title-tile {
+    flex-direction: column !important;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
   }
+  .search-form-footer .control {
+    flex-direction: column;
+  }
+  .search-form-footer .control label {
+    margin-bottom: 5px;
+  }
+  .text-results .table > a .columns.mb-6 {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .carousel-parent {
+    margin-top: 20px !important;
+  }
+  .title {
+    font-size: 30px;
+    line-height: 36px;
+  }
+  .tile.is-ancestor:first-child {
+    margin-bottom: 22px;
+  }
+  .tiles-section {
+    padding-bottom: 40px;
+  }
+  .toggle-list-and-pagination > div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap:30px;
+  }
+  .toggle-list-and-pagination > div:first-child > .is-inline-block {
+    margin-bottom:20px !important;
+  }
+  .toggle-list-and-pagination .sort-options > span {
+    margin-left:0;
+  }
+  .text-results .table > a .columns.mb-6 {
+    margin: 10px 0;
+  }
+  .table,
+  .table tr {
+    width: 100%;
+  }
+  .table-container thead tr,
+  .table-container tr.row-infos {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .table-container thead tr {
+    justify-content: flex-start;
+  }
+  .table-container thead tr > th {
+    flex: 25% 0 0;
+  }
+  .table-container thead tr > th:nth-child(2),
+  .table-container thead tr > th:nth-child(4),
+  .table-container thead tr > th:nth-child(7),
+  .table-container thead tr > th:nth-child(8) {
+    display: none;
+  }
+  .table-container thead tr > th:nth-child(5),
+  .table-container thead tr > th:nth-child(6) {
+    padding: 15px 20px 12px 0;
+  }
+  .table-container thead tr > th:nth-child(5) div.sortable,
+  .table-container thead tr > th:nth-child(6) div.sortable {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+  .table-container thead tr > th:nth-child(5) div.sortable abbr {
+    padding-right: 12px;
+  }
+  .table-container tr.row-infos {
+    border-top: #B9192F 1px dashed;
+    padding: 10px 20px;
+    position: relative;
+  }
+  .table-container tr.row-infos:last-child {
+    padding-bottom: 20px;
+    border-bottom: #BA0F29 solid 3px;
+  }
+  .table-container tr.row-details td {
+    padding: 0;
+  }
+  .table-container tr.row-details ul {
+    padding: 15px;
+  }
+  .text-results .table > a .position-highlight,
+  tr.row-details li {
+    font-size: 14px;
+    line-height: 24px;
+  }
+  tr.row-infos > td {
+    border: none !important;
+    padding: 0;
+  }
+  tr.row-infos.is-selected > td::before {
+    color: #FFF !important;
+  }
+  tr.row-infos > td:nth-child(1) {
+    /* Nom */
+    order: 1;
+    font-size: 18px;
+  }
+  tr.row-infos > td:nth-child(2) {
+    order: 2;
+    margin-left: 10px;
+    font-size: 16px;
+  }
+  tr.row-infos > td:nth-child(3) {
+    /* Promotion */
+    order: 4;
+    flex: 100% 0 0;
+    padding-top: 10px;
+    font-weight: 500;
+    color: #000000;
+  }
+  tr.row-infos > td:nth-child(3)::before {
+    content: "Promotion : ";
+    color: #666666;
+  }
+  tr.row-infos > td:nth-child(4) {
+    /* Titre */
+    order: 3;
+    flex: 100% 0 0;
+    padding:4px 50px 0 0;
+  }
+  tr.row-infos > td:nth-child(4) > a {
+    font-weight: 600 !important;
+    line-height: 22px;
+  }
+  tr.row-infos > td:nth-child(5) {
+    order: 5;
+    color: #000000;
+  }
+  tr.row-infos > td:nth-child(5)::before {
+    content: "Période du sujet : de";
+    margin: 0 5px 0 0;
+    color: #666666;
+  }
+  tr.row-infos > td:nth-child(6) {
+    order: 6;
+    color: #000000;
+  }
+  tr.row-infos > td:nth-child(6)::before {
+    content: "à";
+    margin: 0 5px;
+    color: #666666;
+  }
+  tr.row-infos > td:nth-child(7) {
+    order: 7;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+  }
+  tr.row-infos > td:nth-child(8) {
+    order: 8;
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+  }
+  @media screen and (max-width: 640px) {
+    .title {
+      text-align: center;
+      padding-bottom: 20px;
+      margin: auto;
+    }
+    .title-tile > p:last-child {
+      margin: auto;
+      width: 60%;
+    }
+  }
+
 }
 
 </style>

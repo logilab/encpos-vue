@@ -61,4 +61,25 @@
     font-style: normal;
     font-weight: 400;
   }
+  @media screen and (max-width: 800px) {
+    .about p,
+    .about ul {
+      font-size: 14px;
+      line-height: 24px;
+    }
+    .about p {
+      margin: 0 12px !important;
+    }
+    .about ul {
+      list-style-position: inside;
+      margin: 20px 12px !important;
+    }
+    .about h1 {
+      width: 80%;
+      margin: 35px auto !important;
+      font-size: 30px;
+      line-height: 36px;
+    }
+  }
+
 </style>

@@ -190,9 +190,13 @@ export default {
   .list-content.is-opened .list-body {
     display: block;
   }
+  .list-header {
+    padding-left: 20px;
+  }
 
-  .menu-label {
+  p.menu-label {
     margin-bottom: 0;
+    text-indent: 0;
   }
   .menu-label span:first-child {
     cursor: pointer;
@@ -298,6 +302,9 @@ export default {
     color: #B9192F;
     margin-right: 5px;
   }
+  .menu-list li ul {
+    padding-left: 0;
+  }
   .menu-list > li {
     margin-bottom: 20px;
     break-inside: avoid;
@@ -332,6 +339,35 @@ export default {
   @media screen and (max-width: 1150px) {
     .menu-list {
       columns:2;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    .list-header {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .vue-slider.vue-slider-ltr {
+      margin-top: 5px !important;
+      padding: 0 !important;
+      width: calc( 100% - 70px ) !important;
+    }
+    .list-body {
+      padding: 8px 5px 30px 20px;
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .liste-theses-area {
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }
+    .menu-list {
+      columns:1;
+    }
+    .toggle-btn {
+      width: 20px;
+      right: 15px;
     }
   }
 </style>

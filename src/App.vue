@@ -86,4 +86,16 @@ body {
     padding: 0 20px;
   }
 }
+
+@media screen and (max-width: 800px) {
+  .app-width-padding {
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+  .app-width-margin {
+    margin: 0;
+    max-width: 100%;
+    padding: 0 2.5%;
+  }
+}
 </style>

@@ -7,7 +7,7 @@
       </a>
       <a href="#" class="toggle-btn" v-on:click="toggleContent"></a>
     </div>
-    <aside class="menu is-hidden-mobile">
+    <aside class="menu">
       <Suspense>
         <div class="columns is-multiline" >
           <div class="column is-2">
@@ -357,13 +357,29 @@ figure {
   padding: 15px 0 0 0;
 }
 
-@media screen and (max-width: 1150px) {.menu-list[data-v-445717e5]
-aside.menu > .columns {
-  flex-direction: column;
-}
-
+@media screen and (max-width: 1150px) {
+  .menu-list,
+  aside.menu > .columns {
+    flex-direction: column;
+  }
   .thesis-links {
     margin-top: 40px;
   }
 }
+@media screen and (max-width: 800px) {
+  .document-metadata-header > a {
+    max-width: calc( 100% - 30px );
+  }
+  .document-metadata-header span.metadata-header-title,
+  .document-metadata-header span.metadata-header-author {
+    display: block;
+  }
+}
+@media screen and (max-width: 640px) {
+  .toggle-btn {
+    width: 20px;
+    right: 15px;
+  }
+}
+
 </style>

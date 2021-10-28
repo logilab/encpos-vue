@@ -58,15 +58,41 @@ nav span.level-item:not(:last-child)::after {
   padding-left: .75rem;
 }
 .logo-header {
+  display: inline-block;
   width: 45px;
   height: 50px;
   margin:0 40px 0 2px;
   background: url(../assets/images/head_logo.svg) center / cover;
 }
-@media screen and (max-width: 1150px) {
+.level-left {
+  display: flex;
+}
+@media screen and (max-width: 800px) {
+  .logo-header {
+    transform-origin: left center;
+    transform: scale(0.8);
+    margin-right: 10px !important;
+  }
   nav {
-    padding-top:26px;
-    padding-bottom:26px;
+    display: flex;
+    margin-top: 0;
+    font-size: 16px;
+  }
+  .logo-header {
+    margin-right: 20px;
+  }
+  .level-left .level-item:not(:last-child),
+  .level-right .level-item:not(:last-child) {
+    margin-right: .5rem;
+  }
+  nav span.level-item:not(:last-child)::after {
+    padding-left: .5rem;
+  }
+  .level-item:not(:last-child) {
+    margin-bottom: 0;
+  }
+  .level-right {
+    margin-top: 0;
   }
 }
 </style>
