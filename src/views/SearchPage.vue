@@ -104,14 +104,6 @@
                   <histogram />
                 </div>
               </article>
-              <article class="tile is-child box">
-                <p class="title has-text-weight-light">La diplomatique</p>
-                <p class="subtitle">Top box</p>
-              </article>
-              <article class="tile is-child box">
-                <p class="title has-text-weight-light">Histoire des métiers</p>
-                <p class="subtitle">Bottom box</p>
-              </article>
             </div>
           </div>
         </div>
@@ -368,9 +360,6 @@
               </tbody>
             </table>
           </div>
-
-          <article class="tile is-child box">
-          </article>
         </div>
       </div>
     </div>
@@ -892,7 +881,7 @@ tr td.chevron-up a::before {
 .carousel-parent {
   flex: 355px 0 0;
   background-color: #F6F2ED;
-  padding: 15px 8px;
+  padding: 0;
   border-radius: 6px;
 }
 .carousel > *:not(:first-child) {
@@ -906,12 +895,13 @@ tr td.chevron-up a::before {
   font-style: italic;
   text-transform: none;
   color: #5B5B5B;
-  margin-bottom: 10px;
+  margin: 0;
 }
 .carousel article .subtitle {
   font-size: 20px;
   line-height: 32px;
   text-align: center;
+  margin: 0;
 }
 .carousel :deep( canvas ) {
   max-width: 100%;
