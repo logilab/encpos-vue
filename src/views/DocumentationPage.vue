@@ -903,15 +903,25 @@ export default {
   margin-bottom: 30px;
 }
 .toggle-menu-btn {
+  font-family: "Barlow Semi Condensed", sans-serif;
+  font-size: 0;
+  font-weight: 500;
+  color:#B9192F;
+  text-transform: uppercase;
+
   display: none;
+  padding: 0 5px;
+  background: url(../assets/images/mob_burger.svg) center / contain no-repeat;
 }
 @media screen and (max-width: 800px) {
   .toggle-menu-btn {
-    display: inline-block;
+    display: block;
+    width: 20px;
+    height: 30px;
     position: fixed;
     z-index: 3;
     right:10px;
-    top:100px;
+    top:80px;
   }
   .toc {
     position: fixed;
@@ -985,5 +995,9 @@ export default {
     line-height: 21px;
   }
 }
-
+@media screen and (max-width: 500px) {
+  .toggle-menu-btn {
+    top:100px;
+  }
+}
 </style>

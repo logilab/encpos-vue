@@ -107,7 +107,7 @@ body {
 
 @media screen and (max-width: 800px) {
   .layout-grid-container {
-    :-top: 71px;
+    margin-top: 71px;
   }
 }
 
