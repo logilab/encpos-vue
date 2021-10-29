@@ -148,6 +148,12 @@ export default {
 .carousel__slide {
   padding: 10px;
 }
+.carousel {
+  padding-bottom: 30px;
+}
+:deep(.carousel__viewport) {
+  height: 100%;
+}
 :deep(.carousel__prev),
 :deep(.carousel__next) {
   background-color: #AAA292;
@@ -166,12 +172,15 @@ export default {
 .carousel__pagination {
   margin: 0 !important;
   align-items: center;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
 }
 .carousel__pagination :deep(li) {
   margin: 0;
 }
 .carousel__pagination :deep(.carousel__pagination-button) {
-  background-color: #CFC7B6;
+  background-color: transparent;
   border: solid 3px #AAA292;
   border-radius: 50%;
   width: 20px;

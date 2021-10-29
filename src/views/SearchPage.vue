@@ -96,15 +96,13 @@
           </div>
           </div>
           <div class="tile is-child carousel-parent">
-            <div class="tile is-parent carousel">
-              <article class="tile is-child box">
-                <p class="title has-text-weight-light">Le saviez vous ?</p>
-                <p class="subtitle">With some content</p>
-                <div class="content">
-                  <histogram />
-                </div>
-              </article>
-            </div>
+            <article class="tile is-child box">
+              <p class="title has-text-weight-light">Le saviez vous ?</p>
+              <p class="subtitle">With some content</p>
+              <div class="content">
+                <histogram />
+              </div>
+            </article>
           </div>
         </div>
         <div class="tile is-parent is-vertical">
@@ -881,13 +879,15 @@ tr td.chevron-up a::before {
 .carousel-parent {
   flex: 355px 0 0;
   background-color: #F6F2ED;
-  padding: 0;
+  padding: 10px;
   border-radius: 6px;
 }
-.carousel > *:not(:first-child) {
-  display: none;
+.carousel-parent article {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
-.carousel article .title {
+.carousel-parent article .title {
   font-size: 24px;
   text-align: center;
   vertical-align: top;
@@ -897,14 +897,23 @@ tr td.chevron-up a::before {
   color: #5B5B5B;
   margin: 0;
 }
-.carousel article .subtitle {
+.carousel-parent article .subtitle {
   font-size: 20px;
   line-height: 32px;
   text-align: center;
   margin: 0;
 }
-.carousel :deep( canvas ) {
+.carousel-parent article .content {
+  flex: auto 3 1;
+}
+.carousel-parent article .content > div {
+  height: 100%;
+}
+.carousel-parent article :deep( canvas ) {
   max-width: 100%;
+}
+.carousel-parent article :deep( .carousel ) {
+  height: 100%;
 }
 
 /* search table */
@@ -1242,7 +1251,7 @@ tr.row-details :deep( em ),
   @media screen and (max-width: 640px) {
     .title {
       text-align: center;
-      padding-bottom: 20px;
+      padding-bottom: 5px;
       margin: auto;
     }
     .title-tile > p:last-child {
