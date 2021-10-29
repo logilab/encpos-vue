@@ -657,6 +657,13 @@ export default {
     #article section.div {
       padding-top: 10px;
     }
+    .text-and-images-mode .document-views {
+      display: block !important;
+    }
+    .text-and-images-mode .text-view,
+    .text-and-images-mode .mirador-view {
+    }
+
   }
 
 </style>
