@@ -4,6 +4,7 @@
     <Suspense>
       <router-view class="layout-main" />
     </Suspense>
+    <back-to-top-button class="back-to-top-button" />
     <app-footer class="layout-footer" />
   </div>
 </template>
@@ -11,11 +12,13 @@
 <script>
 import AppNavbar from "@/components/AppNavbar";
 import AppFooter from "@/components/AppFooter";
+import BackToTopButton from "@/components/BackToToButton";
 
 import { onMounted } from "vue";
 
 export default {
   components: {
+    BackToTopButton,
     AppNavbar,
     AppFooter,
   },
@@ -63,6 +66,9 @@ body {
     "main"
     "footer";
 }
+.back-to-top-button {
+  z-index: 2;
+}
 
 /* responsive layout */
 .app-width-margin {
@@ -101,7 +107,7 @@ body {
 
 @media screen and (max-width: 800px) {
   .layout-grid-container {
-    margin-top: 71px;
+    :-top: 71px;
   }
 }
 

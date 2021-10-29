@@ -1,9 +1,9 @@
 <template>
   <div v-show="pageCount > 1">
-    <span class="icon button" @click="goToPage(1)">
+    <span class="icon button first-page" @click="goToPage(1)">
       <i class="fas fa-angle-double-left" />
     </span>
-    <span class="icon button" @click="goToPage(--currentInput)">
+    <span class="icon button previous-page" @click="goToPage(--currentInput)">
       <i class="fas fa-arrow-left"></i>
     </span>
     <span class="pagination__button__input-box">
@@ -11,10 +11,10 @@
       <span>sur</span>
       <span class="page-count">{{ pageCount }}</span>
     </span>
-    <span class="icon button" @click="goToPage(++currentInput)">
+    <span class="icon button next-page" @click="goToPage(++currentInput)">
       <i class="fas fa-arrow-right" />
     </span>
-    <span class="icon button" @click="goToPage(pageCount)">
+    <span class="icon button last-page" @click="goToPage(pageCount)">
       <i class="fas fa-angle-double-right"></i>
     </span>
   </div>
@@ -87,6 +87,21 @@ span.button {
 span.button {
   color: #FFF;
   background-color: #C3C3C3;
+}
+span.button > i {
+  display: none;
+}
+span.button.first-page {
+  background: url(../assets/images/page_debut.svg) center / cover no-repeat;
+}
+span.button.previous-page {
+  background: url(../assets/images/page_avant.svg) center / cover no-repeat;
+}
+span.button.next-page {
+  background: url(../assets/images/page_suivant.svg) center / cover no-repeat;
+}
+span.button.last-page {
+  background: url(../assets/images/page_fin.svg) center / cover no-repeat;
 }
 .page-count {
   display: inline-block;
