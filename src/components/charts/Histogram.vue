@@ -151,6 +151,9 @@ export default {
 .carousel {
   padding-bottom: 30px;
 }
+.carousel :deep(p) {
+  text-align: center;
+}
 :deep(.carousel__viewport) {
   height: 100%;
 }

@@ -1,21 +1,15 @@
 <template>
   <section class="tiles-section">
     <div class="tiles">
-      <div class="tile is-ancestor app-width-padding">
-        <div class="tile">
-          <div class="tile">
-            <div class="tile is-parent">
-              <article class="tile is-child box">
-                <div class="is-flex is-flex-direction-row title-tile">
-                  <p class="title">Les positions de thèses<br />de l'École nationale des chartes</p>
-                  <p><span>Position</span> : Lieu où est placée une chose, une personne, par rapport à un ensemble.</p>
-                </div>
-              </article>
-            </div>
+      <div class="tile page-header app-width-padding">
+        <article class="tile is-child">
+          <div class="is-flex is-flex-direction-row title-tile">
+            <p class="title">Les positions de thèses<br />de l'École nationale des chartes</p>
+            <p class="header-baseline"><span>Position</span> : Lieu où est placée une chose, une personne, par rapport à un ensemble.</p>
           </div>
-        </div>
+        </article>
       </div>
-      <div class="tile is-ancestor is-vertical app-width-margin">
+      <div class="tile is-vertical app-width-margin">
         <div class="tile is-parent search-form-and-carousel">
           <div class="tile is-child search-form">
             <!-- Input + submit button -->
@@ -96,7 +90,7 @@
           </div>
           </div>
           <div class="tile is-child carousel-parent">
-            <article class="tile is-child box">
+            <article class="tile is-child">
               <p class="title has-text-weight-light">Le saviez vous ?</p>
               <p class="subtitle">With some content</p>
               <div class="content">
@@ -545,11 +539,14 @@ export default {
 
 <style src="@vueform/toggle/themes/default.css"></style>
 <style scoped>
+.tile.page-header {
+  margin-bottom: 46px;
+}
 abbr {
-    text-decoration: none !important;
+  text-decoration: none !important;
 }
 thead tr {
-    display: table-row;
+  display: table-row;
 }
 th {
   white-space: nowrap;
@@ -636,23 +633,10 @@ tr td.chevron-up a::before {
   background-color: #ffffff;
   padding-bottom: 100px;
 }
-.tile.is-ancestor:first-child {
-  padding-top: 35px;
-  padding-bottom: 37px;
-  background-color: #FBF8F4;
-  margin: 0 0 46px 0;
-}
-.tile.box {
-  border: none;
-  box-shadow: none;
-  background: none;
-  padding: 0;
-}
 .tile.is-parent {
   padding: 0;
 }
-.toggle-list-and-pagination,
-.title-tile {
+.toggle-list-and-pagination {
   justify-content: space-between;
   align-items: center;
 }
@@ -677,23 +661,12 @@ tr td.chevron-up a::before {
   padding: 3px 5px 5px 10px;
   margin-right: 10px;
 }
-.title-tile > p:last-child {
-  width: 345px;
-  font-family: "Noto Serif", serif;
-  font-size: 14px;
-  color: #5C5241;
-  font-style: italic;
-  text-align: left;
-  text-indent: 0;
-}
-.title-tile > p:last-child span {
-  font-weight: 700;
-  font-style: normal;
-}
-.title, .subtitle {
+
+.carousel-parent article .title,
+.carousel-parent article .subtitle {
   font-family: "Noto Serif", serif;
 }
-.title {
+.carousel-parent article .title {
   font-size: 35px;
   font-style: normal;
   line-height: 47px;
@@ -703,7 +676,7 @@ tr td.chevron-up a::before {
   text-align: left;
   text-indent:0;
 }
-.subtitle {
+.carousel-parent article .subtitle {
   font-size: 25px;
   line-height: 32px;
 }
@@ -1047,13 +1020,6 @@ tr.row-details :deep( em ),
   padding: 4px 5px;
 }
 
-@media screen and (max-width: 1150px) {
-  .tile.is-ancestor:first-child {
-    padding-top:35px;
-    padding-bottom:35px;
-  }
-}
-
 @media screen and (max-width: 1040px) {
   .sliders {
     flex-direction: column;
@@ -1096,19 +1062,8 @@ tr.row-details :deep( em ),
     flex-direction: column;
   }
 }
-@media screen and (max-width: 768px) {
-  .carousel-parent {
-    margin-top: 20px !important;
-  }
-}
 @media screen and (max-width: 800px) {
-  .title {
-    font-size: 30px;
-    line-height: 36px;
-  }
-  .tile.is-ancestor:first-child {
-    margin-bottom: 22px;
-  }
+
   .tiles-section {
     padding-bottom: 40px;
   }
@@ -1248,33 +1203,28 @@ tr.row-details :deep( em ),
     bottom: 10px;
     right: 12px;
   }
-  @media screen and (max-width: 640px) {
-    .title {
-      text-align: center;
-      padding-bottom: 5px;
-      margin: auto;
-    }
-    .title-tile > p:last-child {
-      margin: auto;
-      width: 60%;
-    }
-    .table thead th {
-      padding-left: 10px;
-    }
-    .table-container thead tr > th:nth-child(6) {
-      padding-right: 10px;
-    }
-    .table-container tr.row-infos[data-v-138752de] {
-      padding: 10px 40px 10px 10px;
-    }
-    tr.row-infos > td:nth-child(7) {
-      right: 10px;
-    }
-    tr.row-infos > td:nth-child(8) {
-      right: 0;
-    }
+}
+@media screen and (max-width: 768px) {
+  .carousel-parent {
+    margin-top: 20px !important;
   }
-
+}
+@media screen and (max-width: 640px) {
+  .table thead th {
+    padding-left: 10px;
+  }
+  .table-container thead tr > th:nth-child(6) {
+    padding-right: 10px;
+  }
+  .table-container tr.row-infos[data-v-138752de] {
+    padding: 10px 40px 10px 10px;
+  }
+  tr.row-infos > td:nth-child(7) {
+    right: 10px;
+  }
+  tr.row-infos > td:nth-child(8) {
+    right: 0;
+  }
 }
 
 </style>

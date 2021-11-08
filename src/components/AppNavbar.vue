@@ -81,7 +81,7 @@ nav span.level-item:not(:last-child)::after {
 
     position: fixed;
     top:0;
-    width: 100vw;
+    width: calc( 100vw - 20px );
   }
   .logo-header {
     margin-right: 20px;

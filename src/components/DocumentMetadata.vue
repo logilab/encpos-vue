@@ -16,6 +16,7 @@
                 <img :src="authorThumbnailUrl" />
               </figure>
             </div>
+            <div v-else class="author-default-thumbnail"/>
           </div>
           <div class="column is-4 thesis-infos is-flex is-flex-direction-column">
             <div>
@@ -348,6 +349,12 @@ figure {
   margin: 0 !important;
   padding: 0 !important;
   border: none;
+}
+.author-default-thumbnail {
+  display: block;
+  width: 120px;
+  height: 158px;
+  background: url(../assets/images/fantome.png) center / contain no-repeat;
 }
 .thesis-infos,
 .thesis-links > div {
