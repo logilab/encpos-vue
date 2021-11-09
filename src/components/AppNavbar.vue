@@ -1,6 +1,9 @@
 <template>
   <section>
-    <nav class="level app-width-padding">
+    <nav
+      class="level app-width-padding"
+      :class="menuCsscClass"
+    >
       <div class="level-left">
         <a href="#" class="logo-header"></a>
         <span class="level-item" active-class="active">
@@ -25,9 +28,43 @@
         </span>
       </div>
     </nav>
+    <div class="mobile-button">
+      <router-link :to="{ name: 'SearchPage' }" class="home-button"></router-link>
+      <Burger @change="burgerChanged" :opened="isMenuOpened" />
+    </div>
   </section>
 </template>
-
+<script>
+  import Burger from "./Burger";
+  export default {
+    name: "AppNavBar",
+    components: {Burger},
+    data() {
+      return {
+        isMenuOpened: false
+      }
+    },
+    computed: {
+      menuCsscClass () {
+        return this.isMenuOpened ? 'is-opened' : ''
+      }
+    },
+    methods: {
+      burgerChanged($event) {
+        this.isMenuOpened = $event.isOpened;
+      },
+      closeMenu() {
+        this.isMenuOpened = false;
+      },
+    },
+    mounted () {
+      document.body.addEventListener('click', this.closeMenu)
+    },
+    beforeUnmount () {
+      document.body.removeEventListener('click', this.closeMenu)
+    },
+  }
+</script>
 <style scoped>
 nav {
   font-family: 'Barlow', sans-serif;
@@ -51,6 +88,9 @@ a:hover {
   color: #FFFFFF;
   text-decoration: none;
 }
+.level {
+  margin-bottom: 0 !important;
+}
 nav span.level-item:not(:last-child)::after {
   content: '|';
   display: inline-block;
@@ -62,11 +102,21 @@ nav span.level-item:not(:last-child)::after {
   width: 45px;
   height: 50px;
   margin:0 40px 0 2px;
-  background: url(../assets/images/head_logo.svg) center / cover;
+  background: url(../assets/images/head_logo.svg) center / contain no-repeat;
 }
 .level-left {
   display: flex;
 }
+.mobile-button {
+  display: none;
+}
+.home-button {
+  display: inline-block;
+  width: 31px;
+  height: 34px;
+  background: url(../assets/images/home-mobile.png) center / contain no-repeat;
+}
+
 @media screen and (max-width: 800px) {
   .logo-header {
     transform-origin: left center;
@@ -81,7 +131,8 @@ nav span.level-item:not(:last-child)::after {
 
     position: fixed;
     top:0;
-    width: calc( 100vw - 20px );
+    width: 100vw;
+    padding-right: 20px;
   }
   .logo-header {
     margin-right: 20px;
@@ -101,17 +152,71 @@ nav span.level-item:not(:last-child)::after {
   }
 }
 @media screen and (max-width: 500px) {
+
+  nav::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100vw;
+    height: 71px;
+    background-color: #B9192F;
+  }
   nav {
-    padding-top: 10px;
-    padding-bottom: 30px;
+    background-color: rgba(185,25,47, 0.9);
+    padding: 0;
+  }
+  .logo-header {
+    position: absolute;
+    left:10px;
+    top:10px;
+    transform: scale(1);
+    z-index: 1;
+  }
+  .level {
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+  .level .level-item {
+    display: none !important;
+  }
+  .level.is-opened .level-item  {
+    display: flex !important;
+  }
+  .mobile-button {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right:15px;
+    top:10px;
+    z-index: 2;
+  }
+  .level-left {
+    display: block;
+    margin-top: 71px;
+    border-top:#fcaca9 1px solid;
   }
   .level-right {
-    position: absolute;
-    bottom: 12px;
-    right: 3%;
+    display: block;
   }
-  .level-right a {
-    font-size: 14px;
+  .level-item {
+    padding: 5px 0;
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 52px;
+  }
+  .level-left .level-item:first-of-type {
+    padding-top: 10px;
+  }
+  .level-right .level-item:last-of-type {
+    padding-bottom: 10px;
+  }
+  nav span.level-item[data-v-1fd76d11]:not(:last-child)::after {
+    display: none;
   }
 }
 

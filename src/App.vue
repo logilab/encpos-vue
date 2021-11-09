@@ -143,6 +143,7 @@ p.header-baseline span {
   p.header-baseline {
     margin: auto;
     width: 60%;
+    text-align: center;
   }
 }
 
@@ -189,7 +190,14 @@ p.header-baseline span {
 
 @media screen and (max-width: 500px) {
   .layout-grid-container {
-    margin-top: 90px;
+    margin-top: 71px;
+  }
+  .layout-navbar {
+    position: fixed;
+    left:0;
+    top:0;
+    width: 100vw;
+    z-index: 10;
   }
 }
 </style>
