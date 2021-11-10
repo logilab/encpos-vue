@@ -644,11 +644,17 @@ export default {
       width: 30px;
       height: 30px;
     }
+    .controls > ul:first-of-type > li:nth-child(2) {
+      display: none;
+    }
     #article section.div {
       font-size: 14px;
       line-height: 24px;
     }
-
+    #article h1.head.textpart {
+      font-size: 20px;
+      line-height: 25px;
+    }
     #article section.div h2.head,
     #article section.div h3.head {
       font-size: 14px;
@@ -657,6 +663,10 @@ export default {
     #article section.div {
       padding-top: 10px;
     }
+    #article p.p {
+      text-align: left;
+    }
+
     .text-and-images-mode .document-views {
       display: block !important;
     }

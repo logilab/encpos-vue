@@ -137,6 +137,8 @@ p.header-baseline span {
     width: 90%;
     margin: auto;
     padding-bottom: 5px;
+    font-size: 25px;
+    line-height: 32px;
     text-align: center;
   }
 

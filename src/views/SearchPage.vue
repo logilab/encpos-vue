@@ -1073,6 +1073,7 @@ tr.row-details :deep( em ),
     gap:30px;
   }
   .toggle-list-and-pagination > div:first-child > .is-inline-block {
+    align-self: center;
     margin-bottom:20px !important;
   }
   .toggle-list-and-pagination .sort-options > span {

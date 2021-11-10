@@ -369,11 +369,28 @@ figure {
   aside.menu > .columns {
     flex-direction: column;
   }
+  aside.menu > .columns > .column:nth-child(1) {
+    width: 25% !important;
+    padding-right: 0;
+    margin-bottom: 50px;
+  }
+  aside.menu > .columns > .column:nth-child(2),
+  aside.menu > .columns > .column:nth-child(3) {
+    width: 100% !important;
+    padding-right: 0;
+    margin-bottom: 50px;
+  }
+  aside.menu > .columns > .column:nth-child(3) {
+    max-width: 75% !important;
+  }
   .thesis-links {
     margin-top: 40px;
   }
 }
 @media screen and (max-width: 800px) {
+  aside.menu > .columns > .column:nth-child(1) {
+    width: 50% !important;
+  }
   .document-metadata-header > a {
     max-width: calc( 100% - 30px );
   }
@@ -387,6 +404,8 @@ figure {
     width: 20px;
     right: 15px;
   }
+
+
 }
 
 </style>

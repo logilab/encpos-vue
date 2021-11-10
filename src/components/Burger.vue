@@ -58,6 +58,9 @@ export default {
 </script>
 
 <style>
+  a.navbar-burger {
+    border: none;
+  }
   .navbar-burger span {
     width: 33px;
     background-color: #FFFFFF;
