@@ -5,7 +5,7 @@
         <article class="tile is-child">
           <div class="is-flex is-flex-direction-row title-tile">
             <p class="title">Les positions de thèses<br />de l'École nationale des chartes</p>
-            <p class="header-baseline"><span>Position</span> : Lieu où est placée une chose, une personne, par rapport à un ensemble.</p>
+            <p class="header-baseline"><span>Position</span> : À l’origine, les positions prises et à défendre par l’élève, face au jury. Depuis, un résumé de la thèse soutenue.</p>
           </div>
         </article>
       </div>
