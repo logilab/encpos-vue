@@ -75,6 +75,9 @@ export default {
 
       if (data && data["member"]) {
         for (var these of data["member"]) {
+          if (these["@id"].includes("PREV") || these["@id"].includes("NEXT")){
+            continue;
+          }
           var title = these["dts:extensions"][htmlnamespace+":h1"];
           var author = these["dts:extensions"][dcnamespace+":creator"];
           try {
