@@ -93,12 +93,14 @@ export default {
       },
     };
 
+    const currentYear = new Date().getFullYear();
+
     const updateChart = () => {
       let labels = [];
       let data = [];
 
       //TODO: should fetch the upper bound
-      for (let i = 1849; i <= 2017; i++) {
+      for (let i = 1849; i <= currentYear; i++) {
         labels.push(i);
         let found = aggSearch.result.value.find(
           (bucket) => bucket["key"]["metadata.promotion_year"] === i
@@ -159,8 +161,8 @@ export default {
 }
 :deep(.carousel__prev),
 :deep(.carousel__next) {
-  background-color: #AAA292;
-  width:24px;
+  background-color: #aaa292;
+  width: 24px;
   height: 24px;
 }
 :deep(.carousel__prev) {
@@ -184,15 +186,15 @@ export default {
 }
 .carousel__pagination :deep(.carousel__pagination-button) {
   background-color: transparent;
-  border: solid 3px #AAA292;
+  border: solid 3px #aaa292;
   border-radius: 50%;
   width: 20px;
   height: 20px;
 }
 .carousel__pagination :deep(.carousel__pagination-button--active) {
-  background-color: #AAA292;
+  background-color: #aaa292;
 }
-.content ol:not([type]){
-  list-style: none 
+.content ol:not([type]) {
+  list-style: none;
 }
 </style>

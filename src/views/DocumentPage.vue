@@ -1,30 +1,54 @@
 <template>
-  <div
-          class="is-flex is-flex-direction-column"
-          :class="viewModeCssClass"
-  >
+  <div class="is-flex is-flex-direction-column" :class="viewModeCssClass">
     <div v-if="metadata">
       <liste-these-annee
-              v-if="metadata.date"
-              class="liste-theses-area app-width-padding"
-              :id="metadata.date"
-              :textid="$route.params.docId"
+        v-if="metadata.date"
+        class="liste-theses-area app-width-padding"
+        :id="metadata.date"
+        :textid="$route.params.docId"
       />
       <document-metadata :metadata="metadata" class="metadata-area app-width-margin" />
     </div>
     <div class="toc-area app-width-margin" :class="tocCssClass">
-      <div class="toc-area-header" >
+      <div class="toc-area-header">
         <a href="#" v-on:click="toggleTOCContent">SOMMAIRE</a>
         <a href="#" class="toggle-btn" v-on:click="toggleTOCContent"></a>
       </div>
       <div id="toc-area" class="toc-area-content toc-content" />
     </div>
     <nav class="controls is-flex app-width-margin">
-      <a href="" @click="toggleTOCMenu" class="toc-menu-toggle" :class="TOCMenuBtnCssClass">Sommaire</a>
-      <ul class="is-flex" >
-        <li><a href="" class="text-btn" aria-label="texte seul" @click="changeViewMode($event, 'text-mode')"></a></li>
-        <li><a href="" class="text-images-btn" aria-label="texte et images" @click="changeViewMode($event, 'text-and-images-mode')"></a></li>
-        <li><a href="" class="images-btn" aria-label="images seules" @click="changeViewMode($event, 'images-mode')"></a></li>
+      <a
+        href=""
+        @click="toggleTOCMenu"
+        class="toc-menu-toggle"
+        :class="TOCMenuBtnCssClass"
+        >Sommaire</a
+      >
+      <ul class="is-flex">
+        <li>
+          <a
+            href=""
+            class="text-btn"
+            aria-label="texte seul"
+            @click="changeViewMode($event, 'text-mode')"
+          ></a>
+        </li>
+        <li>
+          <a
+            href=""
+            class="text-images-btn"
+            aria-label="texte et images"
+            @click="changeViewMode($event, 'text-and-images-mode')"
+          ></a>
+        </li>
+        <li>
+          <a
+            href=""
+            class="images-btn"
+            aria-label="images seules"
+            @click="changeViewMode($event, 'images-mode')"
+          ></a>
+        </li>
       </ul>
       <ul class="is-flex">
         <li><a href="" class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
@@ -43,9 +67,6 @@
         </div>
       </div>
     </div>
-    <div v-if="metadata.iiifManifestUrl != ''" v-on:click="layout.setMiradorVisible(!layout.miradorVisible.value)" class="separation-area">
-      <i class="fas fa-book-open"></i>
-    </div>
   </div>
 </template>
 
@@ -60,7 +81,7 @@ import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
 
 import useMirador from "@/composables/use-mirador";
-import {computed} from "vue";
+import { computed } from "vue";
 
 const sources = [
   { name: "data_bnf", ext: "data.bnf.fr" },
@@ -102,7 +123,7 @@ export default {
     let state = reactive({
       isTOCOpened: false,
       isTOCMenuOpened: false,
-      viewMode: 'text-mode'
+      viewMode: "text-mode",
     });
 
     const manifestIsAvailable = ref(false);
@@ -130,7 +151,7 @@ export default {
     });
 
     const viewModeCssClass = computed(() => {
-      if (! layout.miradorVisible.value) {
+      if (!layout.miradorVisible.value) {
         return "text-mode text-mode-only";
       } else {
         return state.viewMode;
@@ -167,13 +188,15 @@ export default {
     const getMetadata = async (docId) => {
       const listmetadata = await getMetadataFromApi(docId);
 
-      var dcnamespace = Object.keys(listmetadata["@context"]).find(k => listmetadata["@context"][k].includes('dc/elements'));
+      var dcnamespace = Object.keys(listmetadata["@context"]).find((k) =>
+        listmetadata["@context"][k].includes("dc/elements")
+      );
       metadata.author = listmetadata["dts:extensions"][dcnamespace + ":creator"];
       metadata.download = listmetadata["dts:download"];
 
       const dublincore = listmetadata["dts:dublincore"];
-      console.log('---------');
-      console.log('dublincore', dublincore);
+      console.log("---------");
+      console.log("dublincore", dublincore);
       try {
         metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
         layout.setMiradorVisible(true);
@@ -187,8 +210,8 @@ export default {
       metadata.rights = dublincore["dct:rights"][0]["@id"];
       metadata.title = dublincore["dct:title"][0]["@value"];
 
-      console.log('metadata.iiifManifestUrl', metadata.iiifManifestUrl);
-      console.log('metadata', metadata);
+      console.log("metadata.iiifManifestUrl", metadata.iiifManifestUrl);
+      console.log("metadata", metadata);
 
       if (dublincore) {
         // reset the sources
@@ -225,7 +248,6 @@ export default {
       }
     };
 
-
     const setMirador = function () {
       fetch(metadata.iiifManifestUrl, {
         method: "HEAD",
@@ -239,7 +261,6 @@ export default {
           manifestIsAvailable.value = false;
         });
     };
-
 
     watch(
       () => metadata.iiifManifestUrl,
@@ -273,419 +294,417 @@ export default {
 </script>
 
 <style>
+.liste-theses-area {
+  background-color: #fbf8f4;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-bottom: 28px;
+}
+.metadata-area {
+  margin-bottom: 15px !important;
+}
+.metadata-area .columns {
+  margin: 0;
+}
+.toc-area {
+  width: 100%;
+  font-family: "Barlow", sans-serif !important;
+  margin-bottom: 30px !important;
+}
+.toc-area-header {
+  display: flex;
+  width: 100%;
+  padding: 20px;
+  background-color: #f1f1f1;
+  border-radius: 6px;
+  position: relative;
+}
+.toc-area-header > a {
+  text-decoration: none;
+  border: none;
+}
+.toc-area-content {
+  background-color: #e4e4e4;
+  border-radius: 0 0 6px 6px;
+  display: none;
+}
+.toc-area.is-opened .toc-area-header {
+  background-color: #f1f1f1;
+  border-radius: 6px 6px 0 0;
+}
+.toc-area.is-opened .toc-area-content {
+  display: block;
+}
+.toc-area .toc-area-content aside {
+  width: 100% !important;
+  padding: 20px 50px !important;
+}
+.toc-area .toc-area-content nav > ol.tree {
+  columns: 4;
+  gap: 40px;
+}
+.toc-content > aside > nav > nav > ol.tree > li {
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding: 0;
+}
+.toc-content > aside > nav > nav > ol.tree > li.more > a {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.toc-content > aside > nav > nav > ol.tree > li li {
+  padding: 0;
+  margin: 0 0 6px;
+  text-transform: none;
+}
+.toc-content > aside > nav > nav > ol.tree > li ol {
+  margin: 0;
+}
+.toc-content nav > ol.tree > li {
+  break-inside: avoid;
+}
+.toc-content nav > ol.tree li::before {
+  display: none;
+}
+.toc-content nav > .tree ol,
+.tree ul {
+  border: none !important;
+}
+.toc-content a:hover {
+  background-color: transparent !important;
+  border-radius: unset !important;
+  color: #000;
+  text-decoration: underline dotted !important;
+}
+.toc-area-aside a,
+.toc-area-content a {
+  font-family: "Barlow Semi Condensed", sans-serif !important;
+  font-weight: 400;
+  text-align: left;
+  line-height: 20px;
+  letter-spacing: 0;
+  border: none;
+  box-shadow: none;
+}
+.toc-area-content a {
+  font-size: 17px;
+  color: #252525;
+}
+.toc-area-aside a {
+  font-size: 16px;
+  color: #000;
+}
 
-  .liste-theses-area {
-    background-color: #FBF8F4;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    margin-bottom: 28px;
-  }
-  .metadata-area {
-    margin-bottom: 15px !important;
-  }
-  .metadata-area .columns {
-    margin: 0;
-  }
-  .toc-area {
-    width: 100%;
-    font-family: "Barlow", sans-serif !important;
-    margin-bottom: 30px !important;
-  }
-  .toc-area-header {
-    display: flex;
-    width: 100%;
-    padding: 20px;
-    background-color: #F1F1F1;
-    border-radius: 6px;
-    position: relative;
-  }
-  .toc-area-header > a {
-    text-decoration: none;
-    border: none;
-  }
-  .toc-area-content {
-    background-color: #E4E4E4;
-    border-radius: 0 0 6px 6px;
-    display: none;
-  }
-  .toc-area.is-opened .toc-area-header {
-    background-color: #F1F1F1;
-    border-radius: 6px 6px 0 0;
-  }
-  .toc-area.is-opened .toc-area-content {
-    display: block;
-  }
-  .toc-area .toc-area-content aside {
-    width: 100% !important;
-    padding: 20px 50px !important;
-  }
+/* toogle */
+.toggle-btn {
+  position: absolute;
+  right: 20px;
+  width: 27px;
+  height: 27px;
+  background: url(../assets/images/chevron_rouge.svg) center top -7px / cover no-repeat;
+  border: none;
+  text-decoration: none;
+}
+.toc-area.is-opened .toggle-btn {
+  background: url(../assets/images/croix.svg) center / cover no-repeat;
+}
+
+.controls {
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border-top: #b9192f 1px dashed;
+  border-bottom: #b8b8b8 1px solid;
+  padding: 12px 0 9px;
+}
+.controls a {
+  display: inline;
+  font-family: "Barlow", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #4a4a4a;
+  margin: 0;
+}
+.controls > a.toc-menu-toggle {
+  font-size: 14px;
+  color: #aeaeae;
+  padding: 6px 10px;
+  border: #aeaeae 1px solid;
+  border-radius: 4px;
+}
+.controls > a.toc-menu-toggle.is-opened {
+  color: #b9192f;
+  border-color: #b9192f;
+}
+.controls ul {
+  align-items: center;
+}
+.controls ul > li {
+  margin: 0;
+}
+.controls ul > li > a {
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  margin-right: 10px;
+}
+.controls ul > li > a.access_link {
+  vertical-align: center;
+  display: inline;
+  margin-left: 15px;
+}
+.controls a.text-btn {
+  background: url(../assets/images/b_text_off.svg) center / cover no-repeat;
+}
+.text-mode .controls a.text-btn {
+  background-image: url(../assets/images/b_text_on.svg);
+}
+.controls a.text-images-btn {
+  width: 80px;
+  background: url(../assets/images/b_text-image_off.svg) center / cover no-repeat;
+  margin: 0 25px 0 15px;
+}
+.text-and-images-mode .controls a.text-images-btn {
+  background-image: url(../assets/images/b_text-image_on.svg);
+}
+.controls a.images-btn {
+  background: url(../assets/images/b_image_off.svg) center / cover no-repeat;
+}
+.images-mode .controls a.images-btn {
+  background-image: url(../assets/images/b_image_on.svg);
+}
+.text-mode-only .controls a.text-btn {
+  pointer-events: none;
+}
+.text-mode-only .controls a.text-images-btn,
+.text-mode-only .controls a.images-btn {
+  pointer-events: none;
+  opacity: 0.2;
+}
+.controls a.pdf-btn {
+  background: url(../assets/images/b_PDF.svg) center / cover no-repeat;
+}
+.controls a.xml-btn {
+  background: url(../assets/images/b_XML.svg) center / cover no-repeat;
+}
+.document-area {
+  width: 100%;
+}
+.document-area #aside,
+.toc-area #aside {
+  position: unset;
+  float: none;
+  margin: 0;
+  background: none;
+  border: none;
+}
+.document-area #aside header,
+.toc-area #aside header {
+  display: none;
+}
+.document-views {
+  width: 100%;
+}
+.toc-area-aside {
+  display: none;
+}
+.toc-aside-is-opened .toc-area-aside {
+  display: flex;
+  width: 220px;
+}
+.toc-aside-is-opened .document-views {
+  flex: calc(100% - 220px);
+}
+.mirador-view {
+  position: relative;
+  min-height: 80vh;
+  max-height: 100vh;
+}
+.text-mode .text-view,
+.images-mode .mirador-view {
+  flex: 100% 0 0;
+  width: 100%;
+}
+.images-mode .text-view,
+.text-mode .mirador-view {
+  display: none;
+}
+.text-mode .mirador-view {
+  flex: 100% 0 0;
+}
+.text-and-images-mode .text-view,
+.text-and-images-mode .mirador-view {
+  flex: 50% 0 0;
+}
+
+#center {
+  width: 100%;
+  margin: 0 !important;
+}
+
+#article {
+  padding: 40px 10% 120px;
+  border-bottom: 1px dotted #ffffff;
+  min-height: 100%;
+}
+
+#article article {
+  margin: 0;
+}
+
+#article h1.head.textpart,
+#article .titlepage {
+  font-family: "Barlow", sans-serif !important;
+}
+
+#article h1.head.textpart {
+  padding: 0;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 33px;
+  text-transform: none;
+  color: #971716;
+  text-shadow: 1px 1px #dfdfdf;
+}
+
+#article .titlepage {
+  font-size: 18px;
+  line-height: 25px;
+}
+
+#article .titlepage hr {
+  width: 100%;
+  margin: 60px 0 45px;
+  border: dashed #b9192f 1px;
+}
+
+#article .titlepage,
+#article .titlepage .forename {
+  font-variant: small-caps;
+  text-transform: none;
+}
+
+#article .titlepage .surname {
+  text-transform: uppercase;
+}
+
+#article .titlepage .forename,
+#article .titlepage .surname {
+  font-size: 20px;
+  font-weight: 500;
+}
+#article .titlepage .name {
+  margin-bottom: 30px;
+}
+#article .titlepage .roleName {
+  font-size: 16px;
+  line-height: 22px;
+  text-transform: uppercase;
+  font-style: italic;
+  color: #777;
+}
+
+#article section.div {
+  border: none;
+  padding-bottom: 0;
+  padding-top: 40px;
+  font-family: "Libre Baskerville", serif !important;
+  font-size: 16px;
+  text-align: left;
+  font-weight: 400;
+  line-height: 28px;
+  color: #5f5f5f;
+}
+
+#article section.div h2.head {
+  line-height: 115%;
+  color: #971716;
+  border-bottom: none;
+  padding: 1em 0 0 0;
+  margin: 35px 0 43px 0px;
+  text-align: center;
+  font-variant: small-caps;
+}
+
+#article section.div h3.head {
+  color: #222222;
+  margin: 35px 0 28px 0;
+  border-bottom: 0px dotted;
+  text-align: center;
+  padding: 1em 0 0 1ex;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 1150px) {
   .toc-area .toc-area-content nav > ol.tree {
-    columns: 4;
-    gap: 40px;
-  }
-  .toc-content > aside > nav > nav > ol.tree > li {
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    padding: 0;
-  }
-  .toc-content > aside > nav > nav > ol.tree > li.more > a {
-    display: inline-block;
-    margin-bottom: 8px;
-  }
-  .toc-content > aside > nav > nav > ol.tree > li li {
-    padding: 0;
-    margin: 0 0 6px;
-    text-transform: none;
-  }
-  .toc-content > aside > nav > nav > ol.tree > li ol {
-    margin: 0;
-  }
-  .toc-content nav > ol.tree > li {
-    break-inside: avoid;
-  }
-  .toc-content nav > ol.tree li::before {
-    display: none;
-  }
-  .toc-content nav > .tree ol, .tree ul {
-    border: none !important;
-  }
-  .toc-content a:hover {
-    background-color: transparent !important;
-    border-radius: unset !important;
-    color: #000;
-    text-decoration: underline dotted !important;
-  }
-  .toc-area-aside a,
-  .toc-area-content a {
-    font-family: "Barlow Semi Condensed", sans-serif !important;
-    font-weight: 400;
-    text-align: left;
-    line-height: 20px;
-    letter-spacing: 0;
-    border:none;
-    box-shadow: none;
-  }
-  .toc-area-content a {
-    font-size: 17px;
-    color: #252525;
-  }
-  .toc-area-aside a {
-    font-size: 16px;
-    color: #000;
-  }
-
-  /* toogle */
-  .toggle-btn {
-    position: absolute;
-    right: 20px;
-    width: 27px;
-    height: 27px;
-    background: url(../assets/images/chevron_rouge.svg) center top -7px / cover no-repeat;
-    border: none;
-    text-decoration: none;
-  }
-  .toc-area.is-opened .toggle-btn {
-    background: url(../assets/images/croix.svg) center / cover no-repeat;
-  }
-
-  .controls {
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    border-top: #B9192F 1px dashed;
-    border-bottom: #B8B8B8 1px solid;
-    padding: 12px 0 9px;
-  }
-  .controls a {
-    display:inline;
-    font-family: "Barlow", sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    text-transform: uppercase;
-    color: #4A4A4A;
-    margin: 0;
+    columns: 2;
   }
   .controls > a.toc-menu-toggle {
-    font-size: 14px;
-    color: #AEAEAE;
-    padding: 6px 10px;
-    border: #AEAEAE 1px solid;
-    border-radius: 4px;
-  }
-  .controls > a.toc-menu-toggle.is-opened {
-    color: #B9192F;
-    border-color: #B9192F;
-  }
-  .controls ul {
-    align-items: center;
-  }
-  .controls ul > li {
-    margin: 0;
-  }
-  .controls ul > li > a {
-    display:inline-block;
-    width: 42px;
-    height: 42px;
-    margin-right: 10px;
+    margin-left: 20px;
   }
   .controls ul > li > a.access_link {
-    vertical-align: center;
-    display: inline;
-    margin-left: 15px;
+    margin-right: 20px;
   }
-  .controls a.text-btn {
-    background: url(../assets/images/b_text_off.svg) center / cover no-repeat;
+}
+@media screen and (max-width: 800px) {
+  #article {
+    padding: 40px 4% 120px;
   }
-  .text-mode .controls a.text-btn {
-    background-image: url(../assets/images/b_text_on.svg);
+  .toc-area .toc-area-content aside {
+    padding: 20px 20px !important;
   }
-  .controls a.text-images-btn {
-    width: 80px;
-    background: url(../assets/images/b_text-image_off.svg) center / cover no-repeat;
-    margin: 0 25px 0 15px;
+}
+@media screen and (max-width: 640px) {
+  .toc-area .toc-area-content nav > ol.tree {
+    columns: 1;
   }
-  .text-and-images-mode .controls a.text-images-btn {
-    background-image: url(../assets/images/b_text-image_on.svg);
+  .toggle-btn {
+    width: 20px;
+    right: 15px;
   }
-  .controls a.images-btn {
-    background: url(../assets/images/b_image_off.svg) center / cover no-repeat;
+  .controls {
+    flex-wrap: wrap;
   }
-  .images-mode .controls a.images-btn {
-    background-image: url(../assets/images/b_image_on.svg);
-  }
-  .text-mode-only .controls a.text-btn {
-    pointer-events: none;
-  }
-  .text-mode-only .controls a.text-images-btn,
-  .text-mode-only .controls a.images-btn {
-    pointer-events: none;
-    opacity: 0.2;
-  }
-  .controls a.pdf-btn {
-    background: url(../assets/images/b_PDF.svg) center / cover no-repeat;
-  }
-  .controls a.xml-btn {
-    background: url(../assets/images/b_XML.svg) center / cover no-repeat;
-  }
-  .document-area {
-    width: 100%;
-  }
-  .document-area #aside,
-  .toc-area #aside {
-    position: unset;
-    float: none;
-    margin: 0;
-    background: none;
-    border: none;
-  }
-  .document-area #aside header,
-  .toc-area #aside  header {
-    display: none;
-  }
-  .document-views {
-    width: 100%;
-  }
-  .toc-area-aside {
-    display: none;
-  }
-  .toc-aside-is-opened .toc-area-aside {
-    display: flex;
-    width: 220px;
-  }
-  .toc-aside-is-opened .document-views {
-    flex: calc( 100% - 220px );
-  }
-  .mirador-view {
-    position: relative;
-    min-height: 80vh;
-    max-height: 100vh;
-  }
-  .text-mode .text-view,
-  .images-mode .mirador-view {
+  .controls ul:first-of-type {
+    order: 3;
     flex: 100% 0 0;
     width: 100%;
+    justify-content: center;
+    padding: 20px 0 10px;
   }
-  .images-mode .text-view,
-  .text-mode .mirador-view {
+  .controls ul:last-of-type > li > a {
+    width: 30px;
+    height: 30px;
+  }
+  .controls > ul:first-of-type > li:nth-child(2) {
     display: none;
   }
-  .text-mode .mirador-view {
-    flex: 100% 0 0;
+  #article section.div {
+    font-size: 14px;
+    line-height: 24px;
+  }
+  #article h1.head.textpart {
+    font-size: 20px;
+    line-height: 25px;
+  }
+  #article section.div h2.head,
+  #article section.div h3.head {
+    font-size: 14px;
+    line-height: 24px;
+  }
+  #article section.div {
+    padding-top: 10px;
+  }
+  #article p.p {
+    text-align: left;
+  }
+
+  .text-and-images-mode .document-views {
+    display: block !important;
   }
   .text-and-images-mode .text-view,
   .text-and-images-mode .mirador-view {
-    flex: 50% 0 0;
   }
-
-  #center {
-    width: 100%;
-    margin:0 !important;
-  }
-
-  #article {
-    padding: 40px 10% 120px;
-    border-bottom: 1px dotted #FFFFFF;
-    min-height: 100%;
-  }
-
-  #article article {
-    margin: 0;
-  }
-
-  #article h1.head.textpart,
-  #article .titlepage {
-    font-family: "Barlow", sans-serif !important;
-  }
-
-  #article h1.head.textpart {
-    padding: 0;
-    font-size: 25px;
-    font-weight: 500;
-    line-height: 33px;
-    text-transform: none;
-    color: #971716;
-    text-shadow: 1px 1px #DFDFDF;
-  }
-
-  #article .titlepage {
-    font-size: 18px;
-    line-height: 25px;
-  }
-
-  #article .titlepage hr {
-    width: 100%;
-    margin: 60px 0 45px;
-    border: dashed #B9192F 1px;
-  }
-
-  #article .titlepage,
-  #article .titlepage .forename{
-    font-variant: small-caps;
-    text-transform: none;
-  }
-
-  #article .titlepage .surname {
-    text-transform: uppercase;
-  }
-
-  #article .titlepage .forename,
-  #article .titlepage .surname {
-    font-size: 20px;
-    font-weight: 500;
-  }
-  #article .titlepage .name {
-    margin-bottom: 30px;
-  }
-  #article .titlepage .roleName {
-    font-size: 16px;
-    line-height: 22px;
-    text-transform: uppercase;
-    font-style: italic;
-    color:#777;
-  }
-
-  #article section.div {
-    border: none;
-    padding-bottom: 0;
-    padding-top: 40px;
-    font-family: "Libre Baskerville", serif !important;
-    font-size: 16px;
-    text-align: left;
-    font-weight: 400;
-    line-height: 28px;
-    color: #5F5F5F;
-  }
-
-  #article section.div h2.head{
-    line-height: 115%;
-    color: #971716;
-    border-bottom: none;
-    padding: 1em 0 0 0;
-    margin: 35px 0 43px 0px;
-    text-align: center;
-    font-variant: small-caps;
-  }
-
-  #article section.div h3.head {
-    color: #222222;
-    margin: 35px 0 28px 0;
-    border-bottom: 0px dotted;
-    text-align: center;
-    padding: 1em 0 0 1ex;
-    font-weight: bold;
-  }
-
-  @media screen and (max-width: 1150px) {
-    .toc-area .toc-area-content nav > ol.tree {
-      columns:2;
-    }
-    .controls > a.toc-menu-toggle {
-      margin-left: 20px;
-    }
-    .controls ul > li > a.access_link {
-      margin-right: 20px;
-    }
-  }
-  @media screen and (max-width: 800px) {
-    #article {
-      padding: 40px 4% 120px;
-    }
-    .toc-area .toc-area-content aside {
-      padding: 20px 20px !important;
-    }
-  }
-  @media screen and (max-width: 640px) {
-    .toc-area .toc-area-content nav > ol.tree {
-      columns:1;
-    }
-    .toggle-btn {
-      width: 20px;
-      right: 15px;
-    }
-    .controls {
-      flex-wrap: wrap;
-    }
-    .controls ul:first-of-type {
-      order: 3;
-      flex: 100% 0 0;
-      width: 100%;
-      justify-content: center;
-      padding: 20px 0 10px;
-    }
-    .controls ul:last-of-type > li > a {
-      width: 30px;
-      height: 30px;
-    }
-    .controls > ul:first-of-type > li:nth-child(2) {
-      display: none;
-    }
-    #article section.div {
-      font-size: 14px;
-      line-height: 24px;
-    }
-    #article h1.head.textpart {
-      font-size: 20px;
-      line-height: 25px;
-    }
-    #article section.div h2.head,
-    #article section.div h3.head {
-      font-size: 14px;
-      line-height: 24px;
-    }
-    #article section.div {
-      padding-top: 10px;
-    }
-    #article p.p {
-      text-align: left;
-    }
-
-    .text-and-images-mode .document-views {
-      display: block !important;
-    }
-    .text-and-images-mode .text-view,
-    .text-and-images-mode .mirador-view {
-    }
-
-  }
-
+}
 </style>

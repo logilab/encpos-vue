@@ -4,8 +4,13 @@
       <div class="tile page-header app-width-padding">
         <article class="tile is-child">
           <div class="is-flex is-flex-direction-row title-tile">
-            <p class="title">Les positions de thèses<br />de l'École nationale des chartes</p>
-            <p class="header-baseline"><span>Position</span> : À l’origine, les positions prises et à défendre par l’élève, face au jury. Depuis, un résumé de la thèse soutenue.</p>
+            <p class="title">
+              Les positions de thèses<br />de l'École nationale des chartes
+            </p>
+            <p class="header-baseline">
+              <span>Position</span> : À l’origine, les positions prises et à défendre par
+              l’élève, face au jury. Depuis, un résumé de la thèse soutenue.
+            </p>
           </div>
         </article>
       </div>
@@ -45,7 +50,7 @@
                   <vue-slider
                     v-model="inputPromotionYearRange"
                     :min="1849"
-                    :max="2017"
+                    :max="currentYear"
                     :tooltip="'none'"
                     :disabled="search.loading.value"
                   ></vue-slider>
@@ -61,7 +66,7 @@
                   <vue-slider
                     v-model="inputTopicRange"
                     :min="-500"
-                    :max="2000"
+                    :max="currentYear"
                     :tooltip="'none'"
                     :disabled="search.loading.value"
                   ></vue-slider>
@@ -80,19 +85,14 @@
                   :width="120"
                 />
               </div>
-              <div
-                  v-if="search.result.value"
-                  class="results-count is-flex"
-              >
+              <div v-if="search.result.value" class="results-count is-flex">
                 <span>{{ search.totalCount.value }}</span>
                 <span>résultat(s)</span>
               </div>
-          </div>
+            </div>
           </div>
           <div class="tile is-child carousel-parent">
             <article class="tile is-child">
-              <p class="title has-text-weight-light">Le saviez vous ?</p>
-              <p class="subtitle">With some content</p>
               <div class="content">
                 <histogram />
               </div>
@@ -106,34 +106,50 @@
               <div class="field is-inline-block px-1">
                 <div class="control">
                   <Toggle
-                          id="ToggleTableau"
-                          on-label="Tableau"
-                          off-label="Déplié"
-                          v-model="isTableau"
-                          :width="120"
+                    id="ToggleTableau"
+                    on-label="Tableau"
+                    off-label="Déplié"
+                    v-model="isTableau"
+                    :width="120"
                   />
                 </div>
               </div>
-              <div v-if="isTableau === false & isFulltextSearch === true"
-                   class="field is-inline-block px-1">
+              <div
+                v-if="(isTableau === false) & (isFulltextSearch === true)"
+                class="field is-inline-block px-1"
+              >
                 <div class="control mb-6 block is-inline-block sort-options">
-                  <span>
-                    Tris
-                  </span>
-                  <div class="is-inline-block" >
+                  <span> Tris </span>
+                  <div class="is-inline-block">
                     <select name="tri" id="tri-select" v-model="inputSort">
                       <option value="">--Please choose an option--</option>
-                      <option v-if="inputSort.includes('-')" value="-metadata.author_name.keyword">Auteur</option>
+                      <option
+                        v-if="inputSort.includes('-')"
+                        value="-metadata.author_name.keyword"
+                      >
+                        Auteur
+                      </option>
                       <option v-else value="metadata.author_name.keyword">Auteur</option>
-                      <option v-if="inputSort.includes('-')" value="-metadata.promotion_year">Promotion</option>
+                      <option
+                        v-if="inputSort.includes('-')"
+                        value="-metadata.promotion_year"
+                      >
+                        Promotion
+                      </option>
                       <option v-else value="metadata.promotion_year">Promotion</option>
-                      <option v-if="inputSort.includes('-')" value="-metadata.topic_notAfter">
+                      <option
+                        v-if="inputSort.includes('-')"
+                        value="-metadata.topic_notAfter"
+                      >
                         Sujet du plus ancien au plus récent
                       </option>
                       <option v-else value="metadata.topic_notAfter">
                         Sujet du plus ancien au plus récent
                       </option>
-                      <option v-if="inputSort.includes('-')" value="-metadata.topic_notBefore">
+                      <option
+                        v-if="inputSort.includes('-')"
+                        value="-metadata.topic_notBefore"
+                      >
                         Sujet du plus récent au plus ancien
                       </option>
                       <option v-else value="metadata.topic_notBefore">
@@ -141,15 +157,15 @@
                       </option>
                     </select>
                     <span
-                            v-if="inputSort.includes('-')"
-                            class="icon button"
-                            @click="inputSort = inputSort.replace('-', '')"
+                      v-if="inputSort.includes('-')"
+                      class="icon button"
+                      @click="inputSort = inputSort.replace('-', '')"
                     >
-                    <i class="fas fa-arrow-up" />
-                  </span>
+                      <i class="fas fa-arrow-up" />
+                    </span>
                     <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
-                    <i class="fas fa-arrow-down" />
-                  </span>
+                      <i class="fas fa-arrow-down" />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -158,7 +174,10 @@
               <pagination />
             </div>
           </div>
-          <div class="block text-results" v-if="(isFulltextSearch === true) & (isTableau === false)">
+          <div
+            class="block text-results"
+            v-if="(isFulltextSearch === true) & (isTableau === false)"
+          >
             <div
               class="table is-hoverable is-narrow is-fulldwidth"
               v-if="search.result.value && search.result.value.length"
@@ -191,11 +210,12 @@
                       </div>
                       <div class="has-text-right is-inline-block position-infos">
                         <span class="year"
-                          >Promotion :
-                          {{ position.fields.metadata.promotion_year }}</span
-                        >|<span class="period">Période du sujet :
-                        {{ position.fields.metadata.topic_notBefore }} -
-                        {{ position.fields.metadata.topic_notAfter }}</span>
+                          >Promotion : {{ position.fields.metadata.promotion_year }}</span
+                        >|<span class="period"
+                          >Période du sujet :
+                          {{ position.fields.metadata.topic_notBefore }} -
+                          {{ position.fields.metadata.topic_notAfter }}</span
+                        >
                       </div>
                       <div v-if="position.highlight" class="position-highlight">
                         <span
@@ -225,86 +245,99 @@
                     @click="inputSort = '-metadata.author_name.keyword'"
                     v-if="inputSort === 'metadata.author_name.keyword'"
                   >
-                      <div class="sortable sort-alpha-down"><span>Nom</span></div>
+                    <div class="sortable sort-alpha-down"><span>Nom</span></div>
                   </th>
                   <th
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.author_name.keyword'"
                   >
-                      <div class="sortable sort-alpha-up"><span>Nom</span></div>
+                    <div class="sortable sort-alpha-up"><span>Nom</span></div>
                   </th>
-                  <th @click="inputSort = 'metadata.author_name.keyword'"
-                      v-else>
-                      <div class="sortable"><span>Nom</span></div>
+                  <th @click="inputSort = 'metadata.author_name.keyword'" v-else>
+                    <div class="sortable"><span>Nom</span></div>
                   </th>
                   <th>
-                      <div><span>Prénom</span></div>
+                    <div><span>Prénom</span></div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = '-metadata.promotion_year'"
                     v-if="inputSort === 'metadata.promotion_year'"
                   >
-                      <div class="sortable sort-numeric-down"><abbr title="Promotion" class="is-inline-block">Prom.</abbr></div>
+                    <div class="sortable sort-numeric-down">
+                      <abbr title="Promotion" class="is-inline-block">Prom.</abbr>
+                    </div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.promotion_year'"
                   >
-                      <div class="sortable sort-numeric-up"><abbr title="Promotion" class="is-inline-block">Prom.</abbr></div>
+                    <div class="sortable sort-numeric-up">
+                      <abbr title="Promotion" class="is-inline-block">Prom.</abbr>
+                    </div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = 'metadata.promotion_year'"
                     v-else
                   >
-                      <div class="sortable"><abbr title="Promotion" class="is-inline-block">Prom.</abbr></div>
+                    <div class="sortable">
+                      <abbr title="Promotion" class="is-inline-block">Prom.</abbr>
+                    </div>
                   </th>
                   <th>
-                      <div><span>Titre</span></div>
+                    <div><span>Titre</span></div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = '-metadata.topic_notBefore'"
                     v-if="inputSort === 'metadata.topic_notBefore'"
                   >
-                      <div class="sortable sort-numeric-down"><abbr title="Période du sujet">De </abbr></div>
+                    <div class="sortable sort-numeric-down">
+                      <abbr title="Période du sujet">De </abbr>
+                    </div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.topic_notBefore'"
                   >
-                      <div class="sortable sort-numeric-up"><abbr title="Période du sujet">De </abbr></div>
+                    <div class="sortable sort-numeric-up">
+                      <abbr title="Période du sujet">De </abbr>
+                    </div>
                   </th>
                   <th
                     class="largerTab"
                     @click="inputSort = 'metadata.topic_notBefore'"
                     v-else
                   >
-                      <div class="sortable"><abbr title="Période du sujet">De </abbr></div>
+                    <div class="sortable"><abbr title="Période du sujet">De </abbr></div>
                   </th>
                   <th
                     class="inline"
                     @click="inputSort = '-metadata.topic_notAfter'"
                     v-if="inputSort === 'metadata.topic_notAfter'"
                   >
-                      <div class="sortable sort-numeric-down"><abbr title="Période du sujet">A </abbr></div>
+                    <div class="sortable sort-numeric-down">
+                      <abbr title="Période du sujet">A </abbr>
+                    </div>
                   </th>
                   <th
                     class="inline"
                     @click="inputSort = ''"
                     v-else-if="inputSort === '-metadata.topic_notAfter'"
                   >
-                      <div class="sortable sort-numeric-up"><abbr title="Période du sujet">A </abbr></div>
+                    <div class="sortable sort-numeric-up">
+                      <abbr title="Période du sujet">A </abbr>
+                    </div>
                   </th>
                   <th
                     class="inline"
                     @click="inputSort = 'metadata.topic_notAfter'"
                     v-else
                   >
-                      <div class="sortable"><abbr title="Période du sujet">A </abbr></div>
+                    <div class="sortable"><abbr title="Période du sujet">A </abbr></div>
                   </th>
                   <th></th>
                   <th></th>
@@ -314,31 +347,58 @@
                 <template v-for="position in search.result.value" :key="position.id">
                   <tr class="row-infos" :class="positionCssClass(position)">
                     <td>
-                      <router-link :to="{ name: 'DocumentPage', params: { docId: position.id }, }">
-                      {{ position.fields.metadata.author_name }}
+                      <router-link
+                        :to="{ name: 'DocumentPage', params: { docId: position.id } }"
+                      >
+                        {{ position.fields.metadata.author_name }}
                       </router-link>
                     </td>
                     <td>{{ position.fields.metadata.author_firstname }}</td>
                     <td>{{ position.fields.metadata.promotion_year }}</td>
                     <td>
-                      <router-link :to="{ name: 'DocumentPage', params: { docId: position.id }, }">
+                      <router-link
+                        :to="{ name: 'DocumentPage', params: { docId: position.id } }"
+                      >
                         <span v-html="position.fields.metadata.title_rich"></span>
                       </router-link>
                     </td>
                     <td>{{ position.fields.metadata.topic_notBefore }}</td>
                     <td>{{ position.fields.metadata.topic_notAfter }}</td>
                     <td class="inline oeil">
-                      <router-link :to="{ name: 'DocumentPage', params: { docId: position.id }, }" />
+                      <router-link
+                        :to="{ name: 'DocumentPage', params: { docId: position.id } }"
+                      />
                     </td>
-                    <td v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline chevron-down">
-                        <a href="#" @click="rollActive($event, position.id)"></a>
+                    <td
+                      v-if="
+                        onrollActive.includes(position.id) &
+                        (isFulltextSearch === true) &
+                        (isTableau === true) &
+                        (position.highlight != null)
+                      "
+                      class="inline chevron-down"
+                    >
+                      <a href="#" @click="rollActive($event, position.id)"></a>
                     </td>
-                    <td v-else-if="(isFulltextSearch === true) & (isTableau === true) & position.highlight != null" class="inline chevron-up">
-                        <a href="#" @click="rollActive($event, position.id)"></a>
+                    <td
+                      v-else-if="
+                        (isFulltextSearch === true) &
+                        (isTableau === true) &
+                        (position.highlight != null)
+                      "
+                      class="inline chevron-up"
+                    >
+                      <a href="#" @click="rollActive($event, position.id)"></a>
                     </td>
                   </tr>
-                  <tr v-if="onrollActive.includes(position.id) & (isFulltextSearch === true) & (isTableau === true) & position.highlight != null"
-                      class="row-details"
+                  <tr
+                    v-if="
+                      onrollActive.includes(position.id) &
+                      (isFulltextSearch === true) &
+                      (isTableau === true) &
+                      (position.highlight != null)
+                    "
+                    class="row-details"
                   >
                     <td colspan="8">
                       <ul>
@@ -393,26 +453,30 @@ export default {
             `metadata.promotion_year:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}`
           );
         } else if (typeof inputTerm.value === "string") {
-          if(inputTerm.value.includes("metadata")){
-            inputTerm.value = inputTerm.value.split("+OR+")[0].replace("metadata.author_name:", "")
+          if (inputTerm.value.includes("metadata")) {
+            inputTerm.value = inputTerm.value
+              .split("+OR+")[0]
+              .replace("metadata.author_name:", "");
           }
-          console.log(inputTerm.value)
+          console.log(inputTerm.value);
           search.setTerm(
             `metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}`
           );
-          console.log(inputTerm.value)
+          console.log(inputTerm.value);
         }
       }
       search.execute();
       aggSearch.execute();
     }
 
+    const currentYear = new Date().getFullYear();
+
     function getInitialState() {
       // initial values
       const initialTerm = "Diplomatie";
-      const initialTopicRange = [-500, 2000];
+      const initialTopicRange = [-500, currentYear];
       //TODO: should fetch the upper bound
-      const initialPromotionYearRange = [1849, 2017];
+      const initialPromotionYearRange = [1849, currentYear];
       const initialSort = "";
       const initialIsFulltextSearch = false;
 
@@ -518,6 +582,7 @@ export default {
       inputTerm,
       inputPromotionYearRange,
       inputSort,
+      currentYear,
       onrollActive,
       VUE_APP_IIIF_IMAGES_URL,
       isTableau,
@@ -536,8 +601,13 @@ export default {
       }
     },
     positionCssClass: function (position) {
-      return this.onrollActive.includes(position.id) && (this.isFulltextSearch === true) && (this.isTableau === true) && (position.highlight != null) ? "is-selected":"";
-    }
+      return this.onrollActive.includes(position.id) &&
+        this.isFulltextSearch === true &&
+        this.isTableau === true &&
+        position.highlight != null
+        ? "is-selected"
+        : "";
+    },
   },
 };
 </script>
@@ -557,40 +627,40 @@ th {
   white-space: nowrap;
 }
 th > div {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    justify-content: flex-end;
-    border: none !important;
-    text-decoration: none !important;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: none !important;
+  text-decoration: none !important;
 }
 th > div > span {
   display: inline-block;
 }
 th > div.sortable {
-    cursor: pointer;
+  cursor: pointer;
 }
 th > div::before {
-    content:'';
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    margin-bottom: 5px;
+  content: "";
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 5px;
 }
 th > div.sortable::before {
-    background: url(../assets/images/b_tri.svg) center / cover no-repeat;
+  background: url(../assets/images/b_tri.svg) center / cover no-repeat;
 }
 th > div.sort-alpha-down::before {
-    background-image: url(../assets/images/b_tri_AZ.svg);
+  background-image: url(../assets/images/b_tri_AZ.svg);
 }
 th > div.sort-alpha-up::before {
-    background-image: url(../assets/images/b_tri_ZA.svg);
+  background-image: url(../assets/images/b_tri_ZA.svg);
 }
 th > div.sort-numeric-down::before {
-    background-image: url(../assets/images/b_tri_19.svg);
+  background-image: url(../assets/images/b_tri_19.svg);
 }
 th > div.sort-numeric-up::before {
-    background-image: url(../assets/images/b_tri_91.svg);
+  background-image: url(../assets/images/b_tri_91.svg);
 }
 tr td.oeil a,
 tr td.chevron-down a,
@@ -598,7 +668,7 @@ tr td.chevron-up a {
   display: block;
   width: 35px;
   text-decoration: none !important;
-  border-bottom:none !important;
+  border-bottom: none !important;
 }
 tr td.oeil a:hover,
 tr td.chevron-down a:hover,
@@ -616,11 +686,11 @@ tr td.oeil a {
 }
 tr td.chevron-up a::before,
 tr td.chevron-down a::before {
-    content: '';
-    display: inline-block;
-    width: 27px;
-    height: 20px;
-    transform-origin: 50%;
+  content: "";
+  display: inline-block;
+  width: 27px;
+  height: 20px;
+  transform-origin: 50%;
 }
 tr td.chevron-down a::before {
   background: url(../assets/images/croix_blc.svg) center / contain no-repeat;
@@ -653,7 +723,7 @@ tr td.chevron-up a::before {
   font-family: "Barlow", sans-serif;
   font-size: 16px;
   font-weight: 500;
-  color: #ADADAD;
+  color: #adadad;
 }
 .toggle-list-and-pagination .sort-options > span {
   text-transform: uppercase;
@@ -662,7 +732,7 @@ tr td.chevron-up a::before {
 .toggle-list-and-pagination .sort-options select {
   background: transparent;
   inset: unset;
-  border: #D9D8D3 solid 1px;
+  border: #d9d8d3 solid 1px;
   padding: 3px 5px 5px 10px;
   margin-right: 10px;
 }
@@ -676,10 +746,10 @@ tr td.chevron-up a::before {
   font-style: normal;
   line-height: 47px;
   font-weight: 400;
-  color: #B9192F;
+  color: #b9192f;
   margin-bottom: 0;
   text-align: left;
-  text-indent:0;
+  text-indent: 0;
 }
 .carousel-parent article .subtitle {
   font-size: 25px;
@@ -700,7 +770,7 @@ tr td.chevron-up a::before {
 .search-form-and-carousel {
   gap: 20px;
   padding-bottom: 50px !important;
-  border-bottom: solid 1px #B8B8B8;
+  border-bottom: solid 1px #b8b8b8;
   margin-bottom: 24px !important;
 }
 .search-form {
@@ -713,7 +783,7 @@ tr td.chevron-up a::before {
   margin-bottom: 0;
 }
 .search-form > *:not(:first-child) {
-  background-color: #E4E4E4;
+  background-color: #e4e4e4;
   margin-bottom: 0;
 }
 .search-form > *:last-child {
@@ -727,7 +797,7 @@ tr td.chevron-up a::before {
   padding-top: 6px;
 }
 .search-form button.search.button.is-light {
-  background: #B9192F url(../assets/images/bouton_loupe.svg);
+  background: #b9192f url(../assets/images/bouton_loupe.svg);
   border: none;
   border-radius: 4px !important;
   font-size: 0;
@@ -737,7 +807,7 @@ tr td.chevron-up a::before {
 }
 .search-form-footer {
   font-family: "Barlow", sans-serif;
-  background-color: #F0F0F0 !important;
+  background-color: #f0f0f0 !important;
   justify-content: space-between;
   align-items: center;
 }
@@ -759,12 +829,12 @@ tr td.chevron-up a::before {
   font-size: 50px;
   line-height: 50px;
   font-weight: 700;
-  color: #7E7E7E;
+  color: #7e7e7e;
 }
 .search-form-footer .results-count > span:last-child {
   font-size: 12px;
   font-weight: 500;
-  color: #4A4A4A;
+  color: #4a4a4a;
   text-transform: uppercase;
 }
 /* toggle */
@@ -774,29 +844,29 @@ tr td.chevron-up a::before {
   display: flex;
   width: auto;
   text-transform: uppercase;
-  background-color: #DDDDDD !important;
+  background-color: #dddddd !important;
   padding: 18px 0;
   border-radius: 17.5px;
   font-family: "Barlow", sans-serif;
   font-size: 14px;
 }
-.toggle-input :deep( input + label span ) {
+.toggle-input :deep(input + label span) {
   padding: 0 15px;
   line-height: 36px;
 }
-.toggle-input :deep( input + label .toggle-on),
-.toggle-input :deep( input + label .toggle-off) {
+.toggle-input :deep(input + label .toggle-on),
+.toggle-input :deep(input + label .toggle-off) {
   display: inline-block;
   color: #828282;
 }
-.toggle-input :deep( input:not(:checked) + label .toggle-off ),
-.toggle-input :deep( input:checked + label .toggle-on ) {
+.toggle-input :deep(input:not(:checked) + label .toggle-off),
+.toggle-input :deep(input:checked + label .toggle-on) {
   margin: 0;
-  background-color: #B9192F !important;
+  background-color: #b9192f !important;
   border-radius: 17.5px;
-  color: #FFF;
+  color: #fff;
 }
-.toggle-input :deep( label::before ) {
+.toggle-input :deep(label::before) {
   display: none;
 }
 
@@ -808,7 +878,7 @@ tr td.chevron-up a::before {
 }
 .sliders label {
   font-size: 16px;
-  color: #4A4A4A;
+  color: #4a4a4a;
   margin-bottom: 10px;
 }
 .sliders span {
@@ -832,31 +902,31 @@ tr td.chevron-up a::before {
   padding: 0 10px !important;
   height: 3px !important;
 }
-.vue-slider :deep( .vue-slider-dot ) {
+.vue-slider :deep(.vue-slider-dot) {
   width: 18px !important;
   height: 18px !important;
 }
-.vue-slider:hover :deep( .vue-slider-rail ),
-.vue-slider :deep( .vue-slider-rail ) {
-  background-color: #FFFFFF;
+.vue-slider:hover :deep(.vue-slider-rail),
+.vue-slider :deep(.vue-slider-rail) {
+  background-color: #ffffff;
 }
-.vue-slider :deep( .vue-slider:hover .vue-slider-process ),
-.vue-slider :deep( .vue-slider-process ) {
-  background-color: #B9192F !important;
+.vue-slider :deep(.vue-slider:hover .vue-slider-process),
+.vue-slider :deep(.vue-slider-process) {
+  background-color: #b9192f !important;
 }
-.vue-slider :deep( .vue-slider-dot-handle:hover ),
-.vue-slider :deep( .vue-slider-dot-handle-focus ),
-.vue-slider :deep( .vue-slider-dot-handle ) {
-  border-color: #B9192F !important;
+.vue-slider :deep(.vue-slider-dot-handle:hover),
+.vue-slider :deep(.vue-slider-dot-handle-focus),
+.vue-slider :deep(.vue-slider-dot-handle) {
+  border-color: #b9192f !important;
 }
-.vue-slider :deep( .vue-slider-dot-handle-focus ) {
-  box-shadow: 0 0 0 5px rgba(185,25,47,0.2);
+.vue-slider :deep(.vue-slider-dot-handle-focus) {
+  box-shadow: 0 0 0 5px rgba(185, 25, 47, 0.2);
 }
 
 /* carousel */
 .carousel-parent {
   flex: 355px 0 0;
-  background-color: #F6F2ED;
+  background-color: #f6f2ed;
   padding: 10px;
   border-radius: 6px;
 }
@@ -872,7 +942,7 @@ tr td.chevron-up a::before {
   font-weight: 700 !important;
   font-style: italic;
   text-transform: none;
-  color: #5B5B5B;
+  color: #5b5b5b;
   margin: 0;
 }
 .carousel-parent article .subtitle {
@@ -887,10 +957,10 @@ tr td.chevron-up a::before {
 .carousel-parent article .content > div {
   height: 100%;
 }
-.carousel-parent article :deep( canvas ) {
+.carousel-parent article :deep(canvas) {
   max-width: 100%;
 }
-.carousel-parent article :deep( .carousel ) {
+.carousel-parent article :deep(.carousel) {
   height: 100%;
 }
 
@@ -902,7 +972,7 @@ tr td.chevron-up a::before {
   min-height: 600px;
 }
 .table thead {
-  background-color: #F0F0F0;
+  background-color: #f0f0f0;
 }
 .table thead th {
   padding: 15px 0 12px 20px;
@@ -910,26 +980,26 @@ tr td.chevron-up a::before {
   text-transform: uppercase;
 }
 .table tr.row-infos.is-selected {
-  background-color: #A3A3A3 !important;
+  background-color: #a3a3a3 !important;
 }
 tr.row-infos > td {
   padding: 14px 0 14px 20px;
   font-size: 16px;
   font-weight: 500;
   line-height: 22px;
-  color:#666666;
+  color: #666666;
   border: none;
-  border-top: #B9192F 1px dashed;
+  border-top: #b9192f 1px dashed;
 }
 tr.row-infos > td a {
-  color:#666666;
+  color: #666666;
 }
 tr.row-infos.is-selected > td > a,
 tr.row-infos.is-selected > td {
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 tr.row-infos:last-child > td {
-  border-bottom: #B9192F 3px solid;
+  border-bottom: #b9192f 3px solid;
 }
 tr.row-infos > td:nth-child(1) {
   text-transform: uppercase;
@@ -944,7 +1014,7 @@ tr.row-infos > td:nth-child(4) > a {
   font-size: 18px;
   font-weight: 400 !important;
   line-height: 24px;
-  color: #4A4A4A;
+  color: #4a4a4a;
   text-decoration: none;
   border: none;
 }
@@ -952,20 +1022,20 @@ tr.row-infos:hover {
   cursor: pointer;
 }
 tr.row-details {
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
 }
-tr.row-details :deep( td ) {
+tr.row-details :deep(td) {
   border: inherit;
 }
-tr.row-details :deep( ul ) {
+tr.row-details :deep(ul) {
   padding: 25px 25px 40px;
 }
-tr.row-details :deep( li ) {
+tr.row-details :deep(li) {
   font-family: "Libre Baskerville", serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 28px;
-  color: #5F5F5F;
+  color: #5f5f5f;
 }
 /* search text results */
 .text-results .table {
@@ -974,11 +1044,11 @@ tr.row-details :deep( li ) {
 .text-results .table > a {
   display: block;
   padding-top: 15px;
-  border-top: #B9192F 1px dashed;
+  border-top: #b9192f 1px dashed;
   font-family: "Barlow Semi Condensed", sans-serif;
 }
 .text-results .table > a:last-child {
-  border-bottom: #B9192F 3px solid;
+  border-bottom: #b9192f 3px solid;
 }
 .text-results .table > a .columns.mb-6 {
   margin-bottom: 10px !important;
@@ -1014,12 +1084,12 @@ tr.row-details :deep( li ) {
   font-size: 16px;
   font-weight: 400;
   line-height: 28px;
-  color: #5F5F5F;
+  color: #5f5f5f;
   margin-top: 15px;
 }
-tr.row-details :deep( em ),
-.text-results .table > a :deep( em ) {
-  background-color: #FFEC00;
+tr.row-details :deep(em),
+.text-results .table > a :deep(em) {
+  background-color: #ffec00;
   border-radius: 3px;
   font-style: normal;
   padding: 4px 5px;
@@ -1068,21 +1138,20 @@ tr.row-details :deep( em ),
   }
 }
 @media screen and (max-width: 800px) {
-
   .tiles-section {
     padding-bottom: 40px;
   }
   .toggle-list-and-pagination > div {
     flex-direction: column;
     align-items: flex-start;
-    gap:30px;
+    gap: 30px;
   }
   .toggle-list-and-pagination > div:first-child > .is-inline-block {
     align-self: center;
-    margin-bottom:20px !important;
+    margin-bottom: 20px !important;
   }
   .toggle-list-and-pagination .sort-options > span {
-    margin-left:0;
+    margin-left: 0;
   }
   .text-results .table > a .columns.mb-6 {
     margin: 10px 0;
@@ -1121,13 +1190,13 @@ tr.row-details :deep( em ),
     padding-right: 12px;
   }
   .table-container tr.row-infos {
-    border-top: #B9192F 1px dashed;
+    border-top: #b9192f 1px dashed;
     padding: 10px 20px;
     position: relative;
   }
   .table-container tr.row-infos:last-child {
     padding-bottom: 20px;
-    border-bottom: #BA0F29 solid 3px;
+    border-bottom: #ba0f29 solid 3px;
   }
   .table-container tr.row-details td {
     padding: 0;
@@ -1145,7 +1214,7 @@ tr.row-details :deep( em ),
     padding: 0;
   }
   tr.row-infos.is-selected > td::before {
-    color: #FFF !important;
+    color: #fff !important;
   }
   tr.row-infos > td:nth-child(1) {
     /* Nom */
@@ -1173,7 +1242,7 @@ tr.row-details :deep( em ),
     /* Titre */
     order: 3;
     flex: 100% 0 0;
-    padding:4px 50px 0 0;
+    padding: 4px 50px 0 0;
   }
   tr.row-infos > td:nth-child(4) > a {
     font-weight: 600 !important;
@@ -1232,5 +1301,4 @@ tr.row-details :deep( em ),
     right: 0;
   }
 }
-
 </style>
