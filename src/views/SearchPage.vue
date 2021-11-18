@@ -393,9 +393,14 @@ export default {
             `metadata.promotion_year:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}`
           );
         } else if (typeof inputTerm.value === "string") {
+          if(inputTerm.value.includes("metadata")){
+            inputTerm.value = inputTerm.value.split("+OR+")[0].replace("metadata.author_name:", "")
+          }
+          console.log(inputTerm.value)
           search.setTerm(
             `metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}`
           );
+          console.log(inputTerm.value)
         }
       }
       search.execute();

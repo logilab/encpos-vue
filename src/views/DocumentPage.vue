@@ -543,6 +543,8 @@ export default {
     font-weight: 500;
     line-height: 33px;
     text-transform: none;
+    color: #971716;
+    text-shadow: 1px 1px #DFDFDF;
   }
 
   #article .titlepage {
@@ -557,11 +559,15 @@ export default {
   }
 
   #article .titlepage,
-  #article .titlepage .forename,
-  #article .titlepage .surname {
-    font-variant: inherit;
+  #article .titlepage .forename{
+    font-variant: small-caps;
     text-transform: none;
   }
+
+  #article .titlepage .surname {
+    text-transform: uppercase;
+  }
+
   #article .titlepage .forename,
   #article .titlepage .surname {
     font-size: 20px;
@@ -572,9 +578,9 @@ export default {
   }
   #article .titlepage .roleName {
     font-size: 16px;
-    font-style: normal;
     line-height: 22px;
     text-transform: uppercase;
+    font-style: italic;
     color:#777;
   }
 
@@ -590,17 +596,23 @@ export default {
     color: #5F5F5F;
   }
 
-  #article section.div h2.head,
+  #article section.div h2.head{
+    line-height: 115%;
+    color: #971716;
+    border-bottom: none;
+    padding: 1em 0 0 0;
+    margin: 35px 0 43px 0px;
+    text-align: center;
+    font-variant: small-caps;
+  }
+
   #article section.div h3.head {
-    padding: 0;
-    margin-top: 0;
-    font-family: "Libre Baskerville", serif !important;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 28px;
-    color: #5F5F5F;
-    text-align: left;
-    text-transform: uppercase;
+    color: #222222;
+    margin: 35px 0 28px 0;
+    border-bottom: 0px dotted;
+    text-align: center;
+    padding: 1em 0 0 1ex;
+    font-weight: bold;
   }
 
   @media screen and (max-width: 1150px) {

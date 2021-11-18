@@ -42,6 +42,7 @@
     font-family: Georgia, "Bitstream Vera Serif", Times, serif;
 }
 
+
 #reading-container {
     width: 75%;
     border-left: #C9C6BB 1px solid;
@@ -132,4 +133,5 @@ article > header > h1, h2 {
 .num sup, .uc sup{
     text-transform: none;
 }
+
 
