@@ -219,13 +219,11 @@
                       </div>
                       <div v-if="position.highlight" class="position-highlight">
                         <span
-                          v-for="(phrase, index) in position.highlight.content"
+                          v-for="(phrase) in position.highlight.content"
                           :key="phrase"
                         >
                           <span v-html="phrase"></span
-                          ><span v-if="index !== position.highlight.content.length - 1">
-                            -
-                          </span>
+                          >
                         </span>
                       </div>
                     </div>
@@ -1023,6 +1021,14 @@ tr.row-infos:hover {
 }
 tr.row-details {
   background-color: #f6f6f6;
+}
+.position-highlight span,
+tr.row-details li {
+  display: inline;
+}
+.position-highlight span:not(:last-child)::after,
+tr.row-details li:not(:last-child)::after {
+  content: ' ••• '
 }
 tr.row-details :deep(td) {
   border: inherit;
