@@ -44,12 +44,20 @@
                 <div class="control">
                   <label>Promotions</label>
                   <span>Entre</span>
-                  <span class="year">{{ inputPromotionYearRange[0] }}</span>
+                  <input
+                    type="number"
+                    class="year"
+                    v-model.number="inputPromotionYearRangeStart"
+                  />
                   <span>et</span>
-                  <span class="year">{{ inputPromotionYearRange[1] }}</span>
+                  <input
+                    type="number"
+                    class="year"
+                    v-model.number="inputPromotionYearRangeEnd"
+                  />
                   <vue-slider
                     v-model="inputPromotionYearRange"
-                    :min="1849"
+                    :min="minPromotionYear"
                     :max="currentYear"
                     :tooltip="'none'"
                     :disabled="search.loading.value"
@@ -60,12 +68,22 @@
                 <div class="control">
                   <label>Période du sujet</label>
                   <span>Entre</span>
-                  <span class="year">{{ inputTopicRange[0] }}</span>
+                  <input 
+                    type="number" 
+                    class="year" 
+                    v-model="inputTopicRangeStart"
+                    v-on:blur="onBlurCheckTopicRangeStart($event)"
+                  />
                   <span>et</span>
-                  <span class="year">{{ inputTopicRange[1] }}</span>
+                  <input
+                    type="number"
+                    class="year"
+                    v-model="inputTopicRangeEnd"
+                    v-on:blur="onBlurCheckTopicRangeEnd($event)"
+                  />
                   <vue-slider
                     v-model="inputTopicRange"
-                    :min="-500"
+                    :min="minTopicYear"
                     :max="currentYear"
                     :tooltip="'none'"
                     :disabled="search.loading.value"
@@ -223,13 +241,11 @@
                       </div>
                       <div v-if="position.highlight" class="position-highlight">
                         <span
-                          v-for="(phrase, index) in position.highlight.content"
+                          v-for="(phrase) in position.highlight.content"
                           :key="phrase"
                         >
                           <span v-html="phrase"></span
-                          ><span v-if="index !== position.highlight.content.length - 1">
-                            -
-                          </span>
+                          >
                         </span>
                       </div>
                     </div>
@@ -424,7 +440,7 @@
 
 <script>
 // @ is an alias to /src
-import { inject, ref, watch } from "vue";
+import {computed, inject, ref, watch} from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 import Pagination from "@/components/Pagination";
@@ -473,6 +489,8 @@ export default {
       aggSearch.execute();
     }
 
+    const minPromotionYear = 1849;
+    const minTopicYear = -500;
     const currentYear = new Date().getFullYear();
 
     function getInitialState() {
@@ -480,7 +498,7 @@ export default {
       const initialTerm = "Diplomatie";
       const initialTopicRange = [-500, currentYear];
       //TODO: should fetch the upper bound
-      const initialPromotionYearRange = [1849, currentYear];
+      const initialPromotionYearRange = [minPromotionYear, currentYear];
       const initialSort = "";
       const initialIsFulltextSearch = false;
 
@@ -506,11 +524,90 @@ export default {
 
     const initialState = getInitialState();
     const inputTerm = ref(initialState.term);
-    const inputTopicRange = ref(initialState.topicRange);
-    const inputPromotionYearRange = ref(initialState.promotionYearRange);
     const inputSort = ref(initialState.sort);
     const onrollActive = ref([]);
     const isFulltextSearch = ref(initialState.isFulltextSearch);
+
+
+    // Promotion Range : input v-model and validation
+
+    const inputPromotionYearRange = ref(initialState.promotionYearRange);
+
+    const promotionYearValueValidation = function(val, defaultValue) {
+      const valStr = String(val);
+      if ((valStr.length === 0) || isNaN(val)) {
+        return defaultValue;
+      } else if (valStr.length >= 4) {
+        return Math.max(minPromotionYear, Math.min(currentYear, val));
+      }
+    };
+
+    const inputPromotionYearRangeStart = computed({
+      get: () => inputPromotionYearRange.value[0],
+      set: (val) => {
+        const validatedVal = promotionYearValueValidation(val, minPromotionYear);
+        if (validatedVal) {
+          inputPromotionYearRange.value = [validatedVal, inputPromotionYearRange.value[1]];
+        }
+      }
+    });
+
+    const inputPromotionYearRangeEnd = computed({
+      get: () => inputPromotionYearRange.value[1],
+      set: (val) => {
+        const validatedVal = promotionYearValueValidation(val, currentYear);
+        if (validatedVal) {
+          inputPromotionYearRange.value = [inputPromotionYearRange.value[0], validatedVal];
+        }
+      }
+    });
+
+    // Topic Range : input v-model and validation
+
+    const inputTopicRange = ref(initialState.topicRange);
+
+    const topicYearValueValidation = function(val, defaultValue) {
+      const valStr = String(val);
+      if ((valStr.length > 0) && isNaN(val)) {
+        return defaultValue;
+      } else {
+        return Math.max(minTopicYear, Math.min(currentYear, val));
+      }
+    };
+
+    const inputTopicRangeStart = computed({
+      get: () => inputTopicRange.value[0],
+      set: (val) => {
+        const validatedVal = topicYearValueValidation(val, minTopicYear);
+        if (validatedVal) {
+          inputTopicRange.value = [validatedVal, inputTopicRange.value[1]];
+        }
+      }
+    });
+
+    const inputTopicRangeEnd = computed({
+      get: () => inputTopicRange.value[1],
+      set: (val) => {
+        const validatedVal = topicYearValueValidation(val, currentYear);
+        if (validatedVal) {
+          inputTopicRange.value = [inputTopicRange.value[0], validatedVal];
+        }
+      }
+    });
+
+    const onBlurCheckTopicRangeStart = function($event) {
+      if (($event.target.value === '') || isNaN($event.target.value)) {
+        inputTopicRange.value = [minTopicYear, inputTopicRange.value[1]];
+      }
+    };
+
+    const onBlurCheckTopicRangeEnd = function($event) {
+      if (($event.target.value === '') || isNaN($event.target.value)) {
+        inputTopicRange.value = [inputTopicRange.value[0], currentYear];
+      }
+    };
+
+
 
     search.setTerm(inputTerm.value);
     search.setRange(
@@ -581,10 +678,18 @@ export default {
       search,
       aggSearch,
       executeSearches,
-      inputTopicRange,
       isFulltextSearch,
       inputTerm,
+      minTopicYear,
+      minPromotionYear,
       inputPromotionYearRange,
+      inputPromotionYearRangeStart,
+      inputPromotionYearRangeEnd,
+      inputTopicRange,
+      inputTopicRangeStart,
+      inputTopicRangeEnd,
+      onBlurCheckTopicRangeStart,
+      onBlurCheckTopicRangeEnd,
       inputSort,
       currentYear,
       onrollActive,
@@ -889,6 +994,32 @@ tr td.chevron-up a::before {
   font-size: 14px;
   color: #979797;
 }
+.sliders input[type=number].year {
+  inset: unset;
+  border: none;
+  text-shadow: none;
+  -moz-appearance:textfield;
+  background-color: #fff;
+
+  max-width: 70px;
+  padding: 2px 0;
+  margin: 0 15px;
+
+  font-family: "Barlow", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #979797;
+  text-transform: uppercase;
+  text-align: center;
+}
+.sliders input[type=number].year:focus {
+  outline:solid 2px #b9192f;
+}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 .sliders span.year {
   background-color: #fff;
   padding: 2px 20px;
@@ -1028,6 +1159,14 @@ tr.row-infos:hover {
 tr.row-details {
   background-color: #f6f6f6;
 }
+.position-highlight span,
+tr.row-details li {
+  display: inline;
+}
+.position-highlight span:not(:last-child)::after,
+tr.row-details li:not(:last-child)::after {
+  content: ' ••• '
+}
 tr.row-details :deep(td) {
   border: inherit;
 }
@@ -1122,6 +1261,19 @@ tr.row-details :deep(em),
   .toggle-list-and-pagination > div:last-child {
     align-self: center;
   }
+  .text-results .table > a {
+    padding-top: 0;
+  }
+  .text-results .table > a .columns.mb-6 {
+    margin: 10px 0;
+  }
+  .text-results .table > a > .columns > .column:first-child {
+    display: none;
+  }
+  .text-results .table > a > .columns > .column:last-child,
+  .text-results .table > a .position-title {
+    width: 100%;
+  }
 }
 
 @media screen and (max-width: 900px) {
@@ -1156,9 +1308,6 @@ tr.row-details :deep(em),
   }
   .toggle-list-and-pagination .sort-options > span {
     margin-left: 0;
-  }
-  .text-results .table > a .columns.mb-6 {
-    margin: 10px 0;
   }
   .table,
   .table tr {
@@ -1295,7 +1444,7 @@ tr.row-details :deep(em),
   .table-container thead tr > th:nth-child(6) {
     padding-right: 10px;
   }
-  .table-container tr.row-infos[data-v-138752de] {
+  .table-container tr.row-infos {
     padding: 10px 40px 10px 10px;
   }
   tr.row-infos > td:nth-child(7) {
