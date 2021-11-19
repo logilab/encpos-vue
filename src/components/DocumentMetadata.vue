@@ -1,6 +1,6 @@
 <template>
   <div class="document-metadata" :class="metaDataCssClass">
-    <div class="document-metadata-header" >
+    <div class="document-metadata-header">
       <a href="#" v-on:click="toggleContent">
         <span class="metadata-header-author">{{ metadata.author }}</span>
         <span class="metadata-header-title">{{ metadata.title }}</span>
@@ -9,56 +9,52 @@
     </div>
     <aside class="menu">
       <Suspense>
-        <div class="columns is-multiline" >
+        <div class="columns is-multiline">
           <div class="column is-2">
             <div v-if="authorThumbnailUrl">
               <figure class="image" style="max-width: 100%">
                 <img :src="authorThumbnailUrl" />
               </figure>
             </div>
-            <div v-else class="author-default-thumbnail"/>
+            <div v-else class="author-default-thumbnail" />
           </div>
-          <div class="column is-4 thesis-infos is-flex is-flex-direction-column">
-            <div>
-              <h2 class="title">La position</h2>
+          <div class="column is-7 thesis-infos is-flex is-flex-direction-column">
+            <section v-if="metadata.coverage">
+              <h2 class="title">Position</h2>
               <ul>
-                <li
-                        v-if="metadata.date && metadata.page"
-                        class="block"
-                        style="text-justify: none;"
-                >Positions des thèses soutenues par les élèves de la promotion de {{ metadata.date }} pour obtenir le diplôme d'archiviste paléographe, p.{{ metadata.page }}</li>
-                <li
-                        v-if="metadata.coverage"
-                        class="block"
-                        style="text-justify: none; "
-                ><span>Période du sujet</span>  : {{ metadata.coverage }}</li>
-                <template v-if="typeof metadata.download ==='object'">
-              <span
-                      v-for="link in metadata.download" :key="link"
-                      class="block"
-                      style="text-justify: none;"
-              >chev
-                <a v-if="link.includes('PDF')" v-bind:href="link">Voir le pdf </a>
-                <a v-if="link.includes('xml')" v-bind:href="link">Voir le xml </a>
-              </span>
-                </template>
-                <template v-else>
-                  <a v-if="metadata.download.includes('xml')" v-bind:href="metadata.download">Voir le xml </a>
-                </template>
-                <span><a v-bind:href="metadata.rights">(licence cc. BY-NC-ND 3.0)</a></span>
-                <br />
+                <li v-if="metadata.coverage" class="block" style="text-justify: none">
+                  <span>Période du sujet</span> : {{ metadata.coverage }}
+                </li>
               </ul>
-            </div>
-            <div>
+            </section>
+            <section>
               <h2 class="title">Citer</h2>
-            </div>
+              <ul>
+                <li class="block" style="text-justify: none">
+                  <span style="font-variant: all-small-caps">{{ metadata.author }}</span
+                  >, « {{ metadata.title }} », in
+                  <span style="font-style: italic"
+                    >Positions des thèses soutenues par les élèves de la promotion de
+                    {{ metadata.date }} pour obtenir le diplôme d'archiviste
+                    paléographe</span
+                  >, École nationale des chartes, Paris, {{ metadata.date }}, p.
+                  {{ metadata.page }}.
+                </li>
+
+                <li>
+                  <span
+                    >Licence : <a v-bind:href="metadata.rights">cc. BY-NC-ND 3.0</a></span
+                  >
+                </li>
+              </ul>
+            </section>
           </div>
-          <div class="column is-4 thesis-links" >
+          <div class="column thesis-links">
             <h2 class="title">Liens externes</h2>
             <div class="is-flex is-flex-direction-column">
               <div>
                 <p class="title">Auteur</p>
-                <div class="columns is-multiline is-mobile block" >
+                <div class="columns is-multiline is-mobile block">
                   <div v-if="metadata.wikipedia" class="column is-one-quarter">
                     <figure class="image is-48x48">
                       <a v-bind:href="metadata.wikipedia">
@@ -134,9 +130,8 @@
                       </a>
                     </figure>
                   </div>
+                </div>
               </div>
-            </div>
-
             </div>
           </div>
         </div>
@@ -148,9 +143,9 @@
 </template>
 
 <script>
-  import {computed, reactive, ref, toRefs, watch} from "vue";
+import { computed, reactive, ref, toRefs, watch } from "vue";
 import md5 from "md5";
-import  $rdf from "rdflib";
+import $rdf from "rdflib";
 
 export default {
   name: "DocumentMetadata",
@@ -161,12 +156,12 @@ export default {
 
   setup(props) {
     let state = reactive({
-      isOpened: false
+      isOpened: false,
     });
     const { metadata } = toRefs(props);
     let authorThumbnailUrl = ref(null);
 
-    console.log('state.metadata', metadata)
+    console.log("state.metadata", metadata);
 
     const fetchAuthorThumbnailUrl = async (options = {}) => {
       if (metadata.value.wikidata) {
@@ -182,8 +177,9 @@ export default {
         const document = await response.json();
 
         if (document.claims.P18) {
-          let wikidata_link = document.claims.P18[0]["mainsnak"]["datavalue"]["value"]
-            .replaceAll(" ", "_");
+          let wikidata_link = document.claims.P18[0]["mainsnak"]["datavalue"][
+            "value"
+          ].replaceAll(" ", "_");
 
           const _sum = md5(wikidata_link);
           wikidata_link = `https://upload.wikimedia.org/wikipedia/commons/${_sum[0]}/${_sum[0]}${_sum[1]}/${wikidata_link}`;
@@ -202,14 +198,14 @@ export default {
       if (metadata.value.data_bnf) {
         const httpsUrl = metadata.value.data_bnf.replace("http:", "https:");
         //console.log("extra metadata:", httpsUrl);
-        console.log(decodeURIComponent(`${httpsUrl}.json`))
+        console.log(decodeURIComponent(`${httpsUrl}.json`));
         const response = await fetch(`${httpsUrl}.json`, {
           method: "GET",
-          redirect: 'follow',
+          redirect: "follow",
           mode: "cors",
         });
         //const document = await response.text();
-        console.log(response.uri.href)
+        console.log(response.uri.href);
         console.log("fetch biblio data", response.json());
       }
     };
@@ -223,7 +219,7 @@ export default {
       state.isOpened = !state.isOpened;
     };
 
-    const fetchRDF = async () =>{
+    const fetchRDF = async () => {
       const store = $rdf.graph();
       const me = store.sym(metadata.value.idref);
       console.log(me);
@@ -259,7 +255,7 @@ export default {
   display: flex;
   width: 100%;
   padding: 20px;
-  background-color: #E4E4E4;
+  background-color: #e4e4e4;
   border-radius: 6px;
   position: relative;
 
@@ -273,7 +269,7 @@ export default {
 }
 .document-metadata-header span.metadata-header-author {
   margin-right: 40px;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 .document-metadata-header span.metadata-header-title {
   color: #929292;
@@ -308,8 +304,8 @@ ul {
 }
 aside.menu > .columns {
   padding: 25px 20px 40px;
-  border-top:solid 2px #FCFCFC;
-  background-color: #E4E4E4;
+  border-top: solid 2px #fcfcfc;
+  background-color: #e4e4e4;
   border-radius: 0 0 6px 6px;
 }
 aside.menu > .columns > .column {
@@ -334,7 +330,7 @@ aside.menu > .columns > .column:nth-child(3) {
 .title {
   text-indent: 0;
   margin-bottom: 0;
-  color: #4A4A4A;
+  color: #4a4a4a;
 }
 h2.title {
   text-align: left;
@@ -392,7 +388,7 @@ figure {
     width: 50% !important;
   }
   .document-metadata-header > a {
-    max-width: calc( 100% - 30px );
+    max-width: calc(100% - 30px);
   }
   .document-metadata-header span.metadata-header-title,
   .document-metadata-header span.metadata-header-author {
@@ -404,8 +400,5 @@ figure {
     width: 20px;
     right: 15px;
   }
-
-
 }
-
 </style>
