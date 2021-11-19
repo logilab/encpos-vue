@@ -1,7 +1,10 @@
 <template>
   <div class="list-content" :class="listCssClass">
     <div class="list-header is-flex">
-      <p class="menu-label"><span @click="toggleContent">Thèses de l'année</span> : <span class="year">{{ annee }}</span></p>
+      <p class="menu-label">
+        <span @click="toggleContent">Thèses de l'année</span> :
+        <span class="year">{{ annee }}</span>
+      </p>
       <vue-slider
         v-model="annee"
         :vData="listProm"
@@ -10,7 +13,9 @@
       ></vue-slider>
       <nav v-if="isNotInitialAnnee">
         <button v-on:click="downOneAnne">-</button>
-        <button v-on:click="reinitalise">Retour à l'année en cours <span>{{ id }}</span></button>
+        <button v-on:click="reinitalise">
+          Retour à l'année en cours <span>{{ id }}</span>
+        </button>
         <button v-on:click="addOneAnne">+</button>
       </nav>
       <a href="#" class="toggle-btn" @click="toggleContent"></a>
@@ -24,8 +29,7 @@
                 <div class="thesis-author">{{ these[1] }}</div>
                 <div class="thesis-title" v-html="these[2]"></div>
               </b>
-              <router-link :to="these[0]" v-else
-                >
+              <router-link :to="these[0]" v-else>
                 <div v-on:click="gotoTop">
                   <div class="thesis-author">{{ these[1] }}</div>
                   <div v-html="these[2]"></div>
@@ -46,7 +50,7 @@
 </template>
 
 <script>
-import {ref, reactive, toRefs, watch, computed} from "vue";
+import { ref, reactive, toRefs, watch, computed } from "vue";
 import { getPositionAnneeFromApi, getMetadataENCPOSFromApi } from "@/api/document";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
@@ -58,28 +62,32 @@ export default {
   components: {
     VueSlider,
   },
-  setup(props) {
+  async setup(props) {
     let state = reactive({
-      isOpened: false
+      isOpened: false,
     });
     const { id } = toRefs(props);
 
     var annee = ref(id.value.toString());
     const listProm = ref([]);
-    
+
     const getPositionThese = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
-      var htmlnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('html'))
-      var dcnamespace = Object.keys(data["@context"]).find(k => data["@context"][k].includes('dc/elements')); 
+      var htmlnamespace = Object.keys(data["@context"]).find((k) =>
+        data["@context"][k].includes("html")
+      );
+      var dcnamespace = Object.keys(data["@context"]).find((k) =>
+        data["@context"][k].includes("dc/elements")
+      );
 
       if (data && data["member"]) {
         for (var these of data["member"]) {
-          if (these["@id"].includes("PREV") || these["@id"].includes("NEXT")){
+          if (these["@id"].includes("PREV") || these["@id"].includes("NEXT")) {
             continue;
           }
-          var title = these["dts:extensions"][htmlnamespace+":h1"];
-          var author = these["dts:extensions"][dcnamespace+":creator"];
+          var title = these["dts:extensions"][htmlnamespace + ":h1"];
+          var author = these["dts:extensions"][dcnamespace + ":creator"];
           try {
             const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
             metadata[page] = [these["@id"], author, title];
@@ -96,18 +104,22 @@ export default {
 
     const getCollectionThese = async () => {
       const data = await getMetadataENCPOSFromApi();
-      let listPromo = []
-      for (var member of data.member){
-        listPromo.push(member['@id'].replace('ENCPOS_',''))
+      let annees = [];
+      for (var member of data.member) {
+        let annee = member["@id"].replace("ENCPOS_", "");
+        annees.push(annee);
       }
-      listPromo.sort();
-      listProm.value = listPromo;
-    }
+      annees.sort();
+      listProm.value = annees;
+    };
 
-    getPositionThese();
-    getCollectionThese();
-    watch(annee, getPositionThese, getCollectionThese);
+    watch(annee, async () => {
+      getPositionThese();
+      await getCollectionThese();
+    });
 
+    await getPositionThese();
+    await getCollectionThese();
 
     const listCssClass = computed(() => {
       return state.isOpened ? "is-opened" : "";
@@ -123,8 +135,10 @@ export default {
     });
 
     const downOneAnne = function () {
-      if (listProm.value.indexOf(annee.value.toString()) != '0'){
-        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) - 1].toString();
+      if (listProm.value.indexOf(annee.value.toString()) != "0") {
+        annee.value = listProm.value[
+          listProm.value.indexOf(annee.value.toString()) - 1
+        ].toString();
       }
       return annee;
     };
@@ -135,8 +149,13 @@ export default {
     };
 
     const addOneAnne = function () {
-      if (listProm.value.indexOf(annee.value.toString()) != listProm.value.length.toString() - 1){
-        annee.value = listProm.value[listProm.value.indexOf(annee.value.toString()) + 1].toString();
+      if (
+        listProm.value.indexOf(annee.value.toString()) !=
+        listProm.value.length.toString() - 1
+      ) {
+        annee.value = listProm.value[
+          listProm.value.indexOf(annee.value.toString()) + 1
+        ].toString();
       }
       return annee;
     };
@@ -156,221 +175,221 @@ export default {
       reinitalise,
       downOneAnne,
       gotoTop,
-      listProm
+      listProm,
     };
   },
 };
 </script>
 
 <style scoped>
-  nav button,
-  .list-header p.menu-label {
-    font-family: "Barlow", sans-serif !important;
-    font-size: 15px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0;
-  }
-  .list-header {
-    align-items: center;
-    background-color: #B8B5AD;
-    padding: 20px 0 20px;
-    border-radius: 6px;
-    position: relative;
-  }
-  .list-content.is-opened .list-header {
-    border-radius: 6px 6px 0 0;
-  }
-  .list-header p.menu-label {
-    color: #4A4A4A;
-  }
-  .list-body {
-    display: none;
-    padding: 30px 20px;
-    background-color: #E5E3DE;
-    border-radius: 0 0 6px 6px;
-  }
-  .list-content.is-opened .list-body {
-    display: block;
-  }
-  .list-header {
-    padding-left: 20px;
-  }
+nav button,
+.list-header p.menu-label {
+  font-family: "Barlow", sans-serif !important;
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+.list-header {
+  align-items: center;
+  background-color: #b8b5ad;
+  padding: 20px 0 20px;
+  border-radius: 6px;
+  position: relative;
+}
+.list-content.is-opened .list-header {
+  border-radius: 6px 6px 0 0;
+}
+.list-header p.menu-label {
+  color: #4a4a4a;
+}
+.list-body {
+  display: none;
+  padding: 30px 20px;
+  background-color: #e5e3de;
+  border-radius: 0 0 6px 6px;
+}
+.list-content.is-opened .list-body {
+  display: block;
+}
+.list-header {
+  padding-left: 20px;
+}
 
-  p.menu-label {
-    margin-bottom: 0;
-    text-indent: 0;
-  }
-  .menu-label span:first-child {
-    cursor: pointer;
-  }
-  .menu-label span.year {
-    background-color: #FFF;
-    font-size: 14px;
-    color: #8B8A7E;
-    padding: 1px 20px;
-    margin: 0 10px;
-  }
-  nav button {
-    border: none;
-    background: none;
-    color: #FFFFFF;
-  }
-  nav button:not(:nth-child(2)) {
-    display: none;
-  }
-  nav button > span {
-    border: #FFFFFF solid 1px;
-    border-radius: 4px;
-    padding: 4px 20px;
-    margin-left: 10px;
-  }
+p.menu-label {
+  margin-bottom: 0;
+  text-indent: 0;
+}
+.menu-label span:first-child {
+  cursor: pointer;
+}
+.menu-label span.year {
+  background-color: #fff;
+  font-size: 14px;
+  color: #8b8a7e;
+  padding: 1px 20px;
+  margin: 0 10px;
+}
+nav button {
+  border: none;
+  background: none;
+  color: #ffffff;
+}
+nav button:not(:nth-child(2)) {
+  display: none;
+}
+nav button > span {
+  border: #ffffff solid 1px;
+  border-radius: 4px;
+  padding: 4px 20px;
+  margin-left: 10px;
+}
 
-  /* slider */
-  .vue-slider {
-    min-width: 200px;
-    margin-right: 10px;
+/* slider */
+.vue-slider {
+  min-width: 200px;
+  margin-right: 10px;
+}
+.vue-slider.vue-slider-ltr {
+  margin-top: 2px !important;
+  padding: 0 10px !important;
+  height: 3px !important;
+}
+.vue-slider :deep(.vue-slider-dot) {
+  width: 18px !important;
+  height: 18px !important;
+}
+.vue-slider:hover :deep(.vue-slider-rail),
+.vue-slider :deep(.vue-slider-rail) {
+  background-color: #ffffff;
+}
+.vue-slider :deep(.vue-slider:hover .vue-slider-process),
+.vue-slider :deep(.vue-slider-process) {
+  background-color: #b9192f !important;
+}
+.vue-slider :deep(.vue-slider-dot-handle:hover),
+.vue-slider :deep(.vue-slider-dot-handle-focus),
+.vue-slider :deep(.vue-slider-dot-handle) {
+  border-color: #b9192f !important;
+}
+.vue-slider :deep(.vue-slider-dot-handle-focus) {
+  box-shadow: 0 0 0 5px rgba(185, 25, 47, 0.2);
+}
+
+/* toogle */
+.toggle-btn {
+  position: absolute;
+  right: 20px;
+  width: 27px;
+  height: 27px;
+  background: url(../assets/images/chevron_blanc.svg) center top -3px / cover no-repeat;
+  border: none;
+  text-decoration: none;
+}
+.list-content.is-opened .toggle-btn {
+  background: url(../assets/images/croix_blc.svg) center / cover no-repeat;
+}
+.menu-list-scrollable {
+  padding: 10px 20px 10px 0;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+*.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #b9192f #ceccc8;
+}
+/* Works on Chrome/Edge/Safari */
+*.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+*.thin-scroll::-webkit-scrollbar-track {
+  background: #ceccc8;
+}
+*.thin-scroll::-webkit-scrollbar-thumb {
+  background-color: #b9192f;
+}
+
+.menu-list {
+  counter-reset: thesis-counter;
+  columns: 3;
+}
+
+.thesis-author {
+  font-weight: 600;
+}
+.thesis-author::before {
+  content: counter(thesis-counter);
+  counter-increment: thesis-counter;
+  color: #b9192f;
+  margin-right: 5px;
+}
+.menu-list li ul {
+  padding-left: 0;
+}
+.menu-list > li {
+  margin-bottom: 20px;
+  break-inside: avoid;
+}
+.menu-list li > ul {
+  border: none;
+  display: block;
+  margin: 0;
+}
+.menu-list > li {
+  flex: 33.333% 0 0;
+}
+.menu-list b,
+.menu-list a {
+  border: none;
+  padding: 0;
+  font-family: "Barlow Semi Condensed", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #161616;
+  text-transform: none;
+}
+.menu-list b {
+  font-weight: 600;
+}
+ol,
+ul {
+  list-style: none;
+}
+
+@media screen and (max-width: 1150px) {
+  .menu-list {
+    columns: 2;
+  }
+}
+@media screen and (max-width: 800px) {
+  .list-header {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
   }
   .vue-slider.vue-slider-ltr {
-    margin-top: 2px !important;
-    padding: 0 10px !important;
-    height: 3px !important;
+    margin-top: 5px !important;
+    padding: 0 !important;
+    width: calc(100% - 70px) !important;
   }
-  .vue-slider :deep( .vue-slider-dot ) {
-    width: 18px !important;
-    height: 18px !important;
+  .list-body {
+    padding: 8px 5px 30px 20px;
   }
-  .vue-slider:hover :deep( .vue-slider-rail ),
-  .vue-slider :deep( .vue-slider-rail ) {
-    background-color: #FFFFFF;
+}
+@media screen and (max-width: 640px) {
+  .liste-theses-area {
+    padding-top: 30px;
+    padding-bottom: 30px;
   }
-  .vue-slider :deep( .vue-slider:hover .vue-slider-process ),
-  .vue-slider :deep( .vue-slider-process ) {
-    background-color: #B9192F !important;
-  }
-  .vue-slider :deep( .vue-slider-dot-handle:hover ),
-  .vue-slider :deep( .vue-slider-dot-handle-focus ),
-  .vue-slider :deep( .vue-slider-dot-handle ) {
-    border-color: #B9192F !important;
-  }
-  .vue-slider :deep( .vue-slider-dot-handle-focus ) {
-    box-shadow: 0 0 0 5px rgba(185,25,47,0.2);
-  }
-
-  /* toogle */
-  .toggle-btn {
-    position: absolute;
-    right: 20px;
-    width: 27px;
-    height: 27px;
-    background: url(../assets/images/chevron_blanc.svg) center top -3px / cover no-repeat;
-    border: none;
-    text-decoration: none;
-  }
-  .list-content.is-opened .toggle-btn {
-    background: url(../assets/images/croix_blc.svg) center / cover no-repeat;
-  }
-  .menu-list-scrollable {
-    padding: 10px 20px 10px 0;
-    max-height: 50vh;
-    overflow-y:auto;
-  }
-
-  *.thin-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: #B9192F #CECCC8;
-  }
-  /* Works on Chrome/Edge/Safari */
-  *.thin-scroll::-webkit-scrollbar {
-    width: 8px;
-  }
-  *.thin-scroll::-webkit-scrollbar-track {
-    background: #CECCC8;
-  }
-  *.thin-scroll::-webkit-scrollbar-thumb {
-    background-color: #B9192F;
-  }
-
   .menu-list {
-    counter-reset: thesis-counter;
-    columns: 3;
+    columns: 1;
   }
-
-  .thesis-author {
-    font-weight: 600;
+  .toggle-btn {
+    width: 20px;
+    right: 15px;
   }
-  .thesis-author::before {
-    content: counter(thesis-counter);
-    counter-increment: thesis-counter;
-    color: #B9192F;
-    margin-right: 5px;
-  }
-  .menu-list li ul {
-    padding-left: 0;
-  }
-  .menu-list > li {
-    margin-bottom: 20px;
-    break-inside: avoid;
-  }
-  .menu-list li > ul {
-    border: none;
-    display: block;
-    margin: 0;
-  }
-  .menu-list > li {
-    flex: 33.333% 0 0;
-  }
-  .menu-list b,
-  .menu-list a {
-    border: none;
-    padding: 0;
-    font-family: "Barlow Semi Condensed", sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 25px;
-    color: #161616;
-    text-transform: none;
-  }
-  .menu-list b {
-    font-weight: 600;
-  }
-  ol,
-  ul {
-    list-style: none;
-  }
-
-  @media screen and (max-width: 1150px) {
-    .menu-list {
-      columns:2;
-    }
-  }
-  @media screen and (max-width: 800px) {
-    .list-header {
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      gap: 20px;
-    }
-    .vue-slider.vue-slider-ltr {
-      margin-top: 5px !important;
-      padding: 0 !important;
-      width: calc( 100% - 70px ) !important;
-    }
-    .list-body {
-      padding: 8px 5px 30px 20px;
-    }
-  }
-  @media screen and (max-width: 640px) {
-    .liste-theses-area {
-      padding-top: 30px;
-      padding-bottom: 30px;
-    }
-    .menu-list {
-      columns:1;
-    }
-    .toggle-btn {
-      width: 20px;
-      right: 15px;
-    }
-  }
+}
 </style>
