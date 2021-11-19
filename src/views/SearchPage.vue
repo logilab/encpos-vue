@@ -122,38 +122,42 @@
                   <span> Tris </span>
                   <div class="is-inline-block">
                     <select name="tri" id="tri-select" v-model="inputSort">
-                      <option value="">--Please choose an option--</option>
+                      <option value="">Pertinence</option>
                       <option
-                        v-if="inputSort.includes('-')"
-                        value="-metadata.author_name.keyword"
+                        :value="
+                          inputSort.includes('-')
+                            ? '-metadata.author_name.keyword'
+                            : 'metadata.author_name.keyword'
+                        "
                       >
                         Auteur
                       </option>
-                      <option v-else value="metadata.author_name.keyword">Auteur</option>
                       <option
-                        v-if="inputSort.includes('-')"
-                        value="-metadata.promotion_year"
+                        :value="
+                          inputSort.includes('-')
+                            ? '-metadata.promotion_year'
+                            : 'metadata.promotion_year'
+                        "
                       >
                         Promotion
                       </option>
-                      <option v-else value="metadata.promotion_year">Promotion</option>
                       <option
-                        v-if="inputSort.includes('-')"
-                        value="-metadata.topic_notAfter"
+                        :value="
+                          inputSort.includes('-')
+                            ? '-metadata.topic_notBefore'
+                            : 'metadata.topic_notBefore'
+                        "
                       >
-                        Sujet du plus ancien au plus récent
-                      </option>
-                      <option v-else value="metadata.topic_notAfter">
-                        Sujet du plus ancien au plus récent
+                        Période du sujet (borne inf.)
                       </option>
                       <option
-                        v-if="inputSort.includes('-')"
-                        value="-metadata.topic_notBefore"
+                        :value="
+                          inputSort.includes('-')
+                            ? '-metadata.topic_notAfter'
+                            : 'metadata.topic_notAfter'
+                        "
                       >
-                        Sujet du plus récent au plus ancien
-                      </option>
-                      <option v-else value="metadata.topic_notBefore">
-                        Sujet du plus récent au plus ancien
+                        Période du sujet (borne sup.)
                       </option>
                     </select>
                     <span
