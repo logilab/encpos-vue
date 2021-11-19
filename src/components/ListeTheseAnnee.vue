@@ -71,7 +71,7 @@ export default {
     var annee = ref(id.value.toString());
     const listProm = ref([]);
 
-    const getPositionThese = async () => {
+    const getPositionsForCurrentYear = async () => {
       let metadata = {};
       const data = await getPositionAnneeFromApi(annee.value);
       var htmlnamespace = Object.keys(data["@context"]).find((k) =>
@@ -98,11 +98,9 @@ export default {
       }
 
       state.metadata = metadata;
-
-      // console.log('state.metadata', state.metadata)
     };
 
-    const getCollectionThese = async () => {
+    const getAllPositionsYears = async () => {
       const data = await getMetadataENCPOSFromApi();
       let annees = [];
       for (var member of data.member) {
@@ -113,13 +111,9 @@ export default {
       listProm.value = annees;
     };
 
-    watch(annee, async () => {
-      await getPositionThese();
-      await getCollectionThese();
-    });
+    watch(annee, getPositionsForCurrentYear);
 
-    await getPositionThese();
-    await getCollectionThese();
+    await Promise.all([getPositionsForCurrentYear(), getAllPositionsYears()]);
 
     const listCssClass = computed(() => {
       return state.isOpened ? "is-opened" : "";
@@ -170,7 +164,6 @@ export default {
       toggleContent,
       isNotInitialAnnee,
       addOneAnne,
-      getPositionThese,
       annee,
       reinitalise,
       downOneAnne,
