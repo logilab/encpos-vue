@@ -114,7 +114,7 @@ export default {
     };
 
     watch(annee, async () => {
-      getPositionThese();
+      await getPositionThese();
       await getCollectionThese();
     });
 
