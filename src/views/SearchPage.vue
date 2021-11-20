@@ -68,9 +68,9 @@
                 <div class="control">
                   <label>Période du sujet</label>
                   <span>Entre</span>
-                  <input 
-                    type="number" 
-                    class="year" 
+                  <input
+                    type="number"
+                    class="year"
                     v-model="inputTopicRangeStart"
                     v-on:blur="onBlurCheckTopicRangeStart($event)"
                   />
@@ -109,10 +109,13 @@
               </div>
             </div>
           </div>
+
           <div class="tile is-child carousel-parent">
             <article class="tile is-child">
               <div class="content">
-                <histogram />
+                <carousel :items="['histogram']">
+                  <template v-slot:histogram><histogram /></template>
+                </carousel>
               </div>
             </article>
           </div>
@@ -240,12 +243,8 @@
                         >
                       </div>
                       <div v-if="position.highlight" class="position-highlight">
-                        <span
-                          v-for="(phrase) in position.highlight.content"
-                          :key="phrase"
-                        >
-                          <span v-html="phrase"></span
-                          >
+                        <span v-for="phrase in position.highlight.content" :key="phrase">
+                          <span v-html="phrase"></span>
                         </span>
                       </div>
                     </div>
@@ -440,13 +439,14 @@
 
 <script>
 // @ is an alias to /src
-import {computed, inject, ref, watch} from "vue";
+import { computed, inject, ref, watch } from "vue";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 import Pagination from "@/components/Pagination";
 import Toggle from "@vueform/toggle";
 
 import Histogram from "@/components/charts/Histogram";
+import Carousel from "@/components/Carousel";
 
 const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`;
 
@@ -456,6 +456,7 @@ export default {
     VueSlider,
     Pagination,
     Histogram,
+    Carousel,
     Toggle,
   },
   setup() {
@@ -528,14 +529,13 @@ export default {
     const onrollActive = ref([]);
     const isFulltextSearch = ref(initialState.isFulltextSearch);
 
-
     // Promotion Range : input v-model and validation
 
     const inputPromotionYearRange = ref(initialState.promotionYearRange);
 
-    const promotionYearValueValidation = function(val, defaultValue) {
+    const promotionYearValueValidation = function (val, defaultValue) {
       const valStr = String(val);
-      if ((valStr.length === 0) || isNaN(val)) {
+      if (valStr.length === 0 || isNaN(val)) {
         return defaultValue;
       } else if (valStr.length >= 4) {
         return Math.max(minPromotionYear, Math.min(currentYear, val));
@@ -547,9 +547,12 @@ export default {
       set: (val) => {
         const validatedVal = promotionYearValueValidation(val, minPromotionYear);
         if (validatedVal) {
-          inputPromotionYearRange.value = [validatedVal, inputPromotionYearRange.value[1]];
+          inputPromotionYearRange.value = [
+            validatedVal,
+            inputPromotionYearRange.value[1],
+          ];
         }
-      }
+      },
     });
 
     const inputPromotionYearRangeEnd = computed({
@@ -557,18 +560,21 @@ export default {
       set: (val) => {
         const validatedVal = promotionYearValueValidation(val, currentYear);
         if (validatedVal) {
-          inputPromotionYearRange.value = [inputPromotionYearRange.value[0], validatedVal];
+          inputPromotionYearRange.value = [
+            inputPromotionYearRange.value[0],
+            validatedVal,
+          ];
         }
-      }
+      },
     });
 
     // Topic Range : input v-model and validation
 
     const inputTopicRange = ref(initialState.topicRange);
 
-    const topicYearValueValidation = function(val, defaultValue) {
+    const topicYearValueValidation = function (val, defaultValue) {
       const valStr = String(val);
-      if ((valStr.length > 0) && isNaN(val)) {
+      if (valStr.length > 0 && isNaN(val)) {
         return defaultValue;
       } else {
         return Math.max(minTopicYear, Math.min(currentYear, val));
@@ -582,7 +588,7 @@ export default {
         if (validatedVal) {
           inputTopicRange.value = [validatedVal, inputTopicRange.value[1]];
         }
-      }
+      },
     });
 
     const inputTopicRangeEnd = computed({
@@ -592,22 +598,20 @@ export default {
         if (validatedVal) {
           inputTopicRange.value = [inputTopicRange.value[0], validatedVal];
         }
-      }
+      },
     });
 
-    const onBlurCheckTopicRangeStart = function($event) {
-      if (($event.target.value === '') || isNaN($event.target.value)) {
+    const onBlurCheckTopicRangeStart = function ($event) {
+      if ($event.target.value === "" || isNaN($event.target.value)) {
         inputTopicRange.value = [minTopicYear, inputTopicRange.value[1]];
       }
     };
 
-    const onBlurCheckTopicRangeEnd = function($event) {
-      if (($event.target.value === '') || isNaN($event.target.value)) {
+    const onBlurCheckTopicRangeEnd = function ($event) {
+      if ($event.target.value === "" || isNaN($event.target.value)) {
         inputTopicRange.value = [inputTopicRange.value[0], currentYear];
       }
     };
-
-
 
     search.setTerm(inputTerm.value);
     search.setRange(
@@ -669,7 +673,7 @@ export default {
       });
     });
 
-    watch(isTableau);
+    //watch(isTableau);
 
     // run the initial searches
     executeSearches();
@@ -994,11 +998,11 @@ tr td.chevron-up a::before {
   font-size: 14px;
   color: #979797;
 }
-.sliders input[type=number].year {
+.sliders input[type="number"].year {
   inset: unset;
   border: none;
   text-shadow: none;
-  -moz-appearance:textfield;
+  -moz-appearance: textfield;
   background-color: #fff;
 
   max-width: 70px;
@@ -1012,11 +1016,11 @@ tr td.chevron-up a::before {
   text-transform: uppercase;
   text-align: center;
 }
-.sliders input[type=number].year:focus {
-  outline:solid 2px #b9192f;
+.sliders input[type="number"].year:focus {
+  outline: solid 2px #b9192f;
 }
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -1165,7 +1169,7 @@ tr.row-details li {
 }
 .position-highlight span:not(:last-child)::after,
 tr.row-details li:not(:last-child)::after {
-  content: ' ••• '
+  content: " ••• ";
 }
 tr.row-details :deep(td) {
   border: inherit;
