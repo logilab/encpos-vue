@@ -1139,9 +1139,12 @@ input[type="number"]::-webkit-inner-spin-button {
   border-radius: 6px;
   padding: 10px;
 }
+.carousel-parent h2 {
+  padding-top: 0;
+}
 .search-minimized .carousel-parent {
   flex: calc( 100% - 64px ) 0 0;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 .search-minimized .carousel-parent article {
 }
@@ -1149,8 +1152,9 @@ input[type="number"]::-webkit-inner-spin-button {
   padding-left: 30%;
 }
 .search-minimized .carousel-parent h2 {
-  padding-left: 0;
   text-align: left;
+  margin:0;
+  padding-left: 0;
 }
 .carousel-parent article {
   display: flex;
@@ -1525,6 +1529,9 @@ tr.row-details :deep(em),
   }
   .search-minimized .carousel-parent .content {
     padding-left: 0 !important;
+  }
+  .search-minimized .carousel-parent h2 {
+    text-align: center !important;
   }
 
   .search-minimized .search-form > div.minimized-controls {
