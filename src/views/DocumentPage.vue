@@ -59,10 +59,10 @@
     <div class="document-area is-flex app-width-margin" :class="tocMenuCssClass">
       <div id="toc-area-aside" class="toc-area-aside toc-content" />
       <div class="document-views is-flex">
-        <div class="text-view">
+        <div class="text-view" id="text-view">
           <document :id="$route.params.docId" :key="$route.params.docId" />
         </div>
-        <div class="mirador-view">
+        <div class="mirador-view" id="mirador-view"  :style="miradorViewCssStyle" >
           <div id="vue-mirador-container" />
         </div>
       </div>
@@ -81,7 +81,7 @@ import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
 
 import useMirador from "@/composables/use-mirador";
-import { computed } from "vue";
+import {computed, onMounted, onUnmounted} from "vue";
 
 const sources = [
   { name: "data_bnf", ext: "data.bnf.fr" },
@@ -158,6 +158,20 @@ export default {
       }
     });
 
+    // Mirador view sticky behavior
+    let miradorViewBoundingTop = ref(0);
+    const miradorViewCssStyle = computed(() => {
+      return { marginTop: miradorViewBoundingTop.value + 'px' };
+    });
+
+    const updateMiradorTopPosition = function() {
+      const textView = document.getElementById("text-view");
+      if (textView) {
+        const top = textView.getBoundingClientRect().top;
+        miradorViewBoundingTop.value = top < 0 ? - Math.floor(top) : 0;
+      }
+    };
+
     const changeViewMode = function (event, viewMode) {
       event.preventDefault();
       state.viewMode = viewMode;
@@ -179,6 +193,7 @@ export default {
       wikidata: null,
       wikipedia: null,
     });
+
     const miradorInstance = useMirador("vue-mirador-container", null, 0);
     // provide an uninitialized instance of Mirador
     provide("mirador", miradorInstance);
@@ -273,6 +288,16 @@ export default {
       getMetadata(to.params.docId);
     });
 
+    onMounted(() => {
+      const appView = document.getElementById("app");
+      appView.addEventListener('scroll', updateMiradorTopPosition);
+    });
+
+    onUnmounted(() => {
+      const appView = document.getElementById("app");
+      appView.removeEventListener('scroll', updateMiradorTopPosition);
+    });
+
     const route = useRoute();
     await getMetadata(route.params.docId);
 
@@ -285,6 +310,7 @@ export default {
       TOCMenuBtnCssClass,
       changeViewMode,
       viewModeCssClass,
+      miradorViewCssStyle,
       metadata,
       manifestIsAvailable,
       layout,

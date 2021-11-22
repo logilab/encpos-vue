@@ -1131,12 +1131,14 @@ input[type="number"]::-webkit-inner-spin-button {
 .carousel-parent {
   flex: 355px 0 0;
   background-color: #f6f2ed;
-  padding: 10px;
   border-radius: 6px;
+  padding: 10px;
 }
 .search-minimized .carousel-parent {
   flex: calc( 100% - 64px ) 0 0;
   padding-left: 20px;
+}
+.search-minimized .carousel-parent article {
 }
 .search-minimized .carousel-parent .content {
   padding-left: 30%;
