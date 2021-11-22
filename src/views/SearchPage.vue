@@ -15,7 +15,7 @@
         </article>
       </div>
       <div class="tile is-vertical app-width-margin">
-        <div class="tile is-parent search-form-and-carousel">
+        <div class="tile is-parent search-form-and-carousel" :class="searchMinimizedCssClass">
           <div class="tile is-child search-form">
             <!-- Input + submit button -->
             <div class="field has-addons">
@@ -108,12 +108,23 @@
                 <span>résultat(s)</span>
               </div>
             </div>
+            <!-- Minimized version -->
+            <div class="minimized-controls">
+              <button
+                class="button is-light is-medium search"
+                @click="expandSearchForm"
+              />
+              <button
+                class="button is-light is-medium expand-form-button"
+                @click="expandSearchForm"
+              />
+            </div>
           </div>
-
           <div class="tile is-child carousel-parent">
             <article class="tile is-child">
+              <h2>Le saviez-vous ?</h2>
               <div class="content">
-                <carousel :items="['histogram']">
+                <carousel :items="['histogram']" @click="minimizeSearchForm">
                   <template v-slot:histogram><histogram /></template>
                 </carousel>
               </div>
@@ -463,6 +474,7 @@ export default {
     const search = inject("search");
     const aggSearch = inject("agg-search");
     let isTableau = ref(true);
+    let isSearchMinimized = ref(true);
 
     function executeSearches() {
       if (isFulltextSearch.value) {
@@ -489,6 +501,18 @@ export default {
       search.execute();
       aggSearch.execute();
     }
+
+    const minimizeSearchForm = function (){
+      isSearchMinimized.value = true;
+    };
+
+    const expandSearchForm = function() {
+      isSearchMinimized.value = false;
+    };
+
+    const searchMinimizedCssClass = computed(() => {
+      return isSearchMinimized.value ? "search-minimized" : "";
+    });
 
     const minPromotionYear = 1849;
     const minTopicYear = -500;
@@ -682,6 +706,9 @@ export default {
       search,
       aggSearch,
       executeSearches,
+      minimizeSearchForm,
+      expandSearchForm,
+      searchMinimizedCssClass,
       isFulltextSearch,
       inputTerm,
       minTopicYear,
@@ -850,6 +877,14 @@ tr td.chevron-up a::before {
   margin-right: 10px;
 }
 
+.carousel-parent h2 {
+  font-family: "Noto Serif", serif;
+  font-size: 24px;
+  text-align: center;
+  font-weight: 700;
+  font-style: italic;
+  color: #5B5B5B;
+}
 .carousel-parent article .title,
 .carousel-parent article .subtitle {
   font-family: "Noto Serif", serif;
@@ -899,8 +934,34 @@ tr td.chevron-up a::before {
   background-color: #e4e4e4;
   margin-bottom: 0;
 }
-.search-form > *:last-child {
+.search-form > *.search-form-footer {
   padding: 24px !important;
+}
+.search-form > div.minimized-controls {
+  display: none;
+}
+.search-minimized .search-form > div.minimized-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  height: 100%;
+  background: none;
+}
+.search-minimized .search-form {
+  flex: 44px 0 0;
+  background: none;
+}
+.search-minimized .search-form > div:not(.minimized-controls) {
+  display: none !important;
+}
+.search-minimized .search-form > div.minimized-controls .search.button {
+  flex: 44px 0 0;
+}
+.search-minimized .search-form > div.minimized-controls .expand-form-button.button {
+  flex: calc( 100% - 49px ) 0 0;
+}
+.search-minimized .search-form > div.minimized-controls button.search.button.is-light {
+  margin-left: 0;
 }
 .search-form .input {
   box-shadow: none;
@@ -908,6 +969,10 @@ tr td.chevron-up a::before {
   height: auto;
   padding-bottom: 6px;
   padding-top: 6px;
+}
+.search-form button.expand-form-button.button {
+  background: #868686 url(../assets/images/chevron_blanc_recherche.svg) left 15px top 20px / 15px auto no-repeat;
+  border-radius: 4px !important;
 }
 .search-form button.search.button.is-light {
   background: #b9192f url(../assets/images/bouton_loupe.svg);
@@ -1068,6 +1133,17 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: #f6f2ed;
   padding: 10px;
   border-radius: 6px;
+}
+.search-minimized .carousel-parent {
+  flex: calc( 100% - 64px ) 0 0;
+  padding-left: 20px;
+}
+.search-minimized .carousel-parent .content {
+  padding-left: 30%;
+}
+.search-minimized .carousel-parent h2 {
+  padding-left: 0;
+  text-align: left;
 }
 .carousel-parent article {
   display: flex;
@@ -1439,6 +1515,22 @@ tr.row-details :deep(em),
 @media screen and (max-width: 768px) {
   .carousel-parent {
     margin-top: 20px !important;
+  }
+  .search-minimized .carousel-parent .content {
+    padding-left: 0 !important;
+  }
+
+  .search-minimized .search-form > div.minimized-controls {
+    display: none !important;
+  }
+  .search-minimized .search-form > div.minimized-controls {
+    display: none;
+  }
+  .search-minimized .search-form > div:not(.minimized-controls) {
+    display: flex !important;
+  }
+  .search-minimized .search-form {
+    flex: unset;
   }
 }
 @media screen and (max-width: 640px) {
