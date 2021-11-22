@@ -565,7 +565,6 @@ export default {
   line-height: 33px;
   text-transform: none;
   color: #971716;
-  text-shadow: 1px 1px #dfdfdf;
 }
 
 #article .titlepage {
@@ -634,6 +633,7 @@ export default {
   text-align: center;
   padding: 1em 0 0 1ex;
   font-weight: bold;
+  text-transform: none;
 }
 
 @media screen and (max-width: 1150px) {
