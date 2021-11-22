@@ -3,8 +3,15 @@
     <div class="list-header is-flex">
       <p class="menu-label">
         <span @click="toggleContent">Thèses de l'année</span> :
-        <span class="year">{{ annee }}</span>
+        <input
+                type="text"
+                class="year"
+                v-model="inputAnnee"
+        />
       </p>
+      <nav v-if="isNotInitialAnnee">
+        <button v-on:click="downOneAnne">-</button>
+      </nav>
       <vue-slider
         v-model="annee"
         :vData="listProm"
@@ -12,11 +19,12 @@
         :tooltip="'active'"
       ></vue-slider>
       <nav v-if="isNotInitialAnnee">
-        <button v-on:click="downOneAnne">-</button>
+        <button v-on:click="addOneAnne">+</button>
+      </nav>
+      <nav v-if="isNotInitialAnnee">
         <button v-on:click="reinitalise">
           Retour à l'année en cours <span>{{ id }}</span>
         </button>
-        <button v-on:click="addOneAnne">+</button>
       </nav>
       <a href="#" class="toggle-btn" @click="toggleContent"></a>
     </div>
@@ -154,6 +162,24 @@ export default {
       return annee;
     };
 
+    const inputAnnee = computed({
+      get: () => annee.value,
+      set: (val) => {
+        const valStr = val.toString().toLowerCase(); // special string value : 1942b
+        if (valStr.length >= 4) {
+          if (listProm.value.indexOf(valStr) !== -1) {
+            annee.value = valStr;
+          } else {
+            const valNum = parseInt(val);
+            const minDate = listProm.value[0];
+            const maxDate = listProm.value[listProm.value.length - 1];
+            annee.value = Math.min(maxDate, Math.max(minDate, valNum)).toString();
+            console.log(minDate, annee.value)
+          }
+        }
+      }
+    });
+
     const gotoTop = function () {
       scroll(0, 0);
     };
@@ -167,6 +193,7 @@ export default {
       annee,
       reinitalise,
       downOneAnne,
+      inputAnnee,
       gotoTop,
       listProm,
     };
@@ -175,6 +202,12 @@ export default {
 </script>
 
 <style scoped>
+nav:last-of-type {
+  margin-left: 30px;
+}
+nav button {
+  cursor: pointer;
+}
 nav button,
 .list-header p.menu-label {
   font-family: "Barlow", sans-serif !important;
@@ -223,13 +256,39 @@ p.menu-label {
   padding: 1px 20px;
   margin: 0 10px;
 }
+.menu-label input[type=text].year,
+.menu-label input[type=number].year {
+  inset: unset;
+  border: none;
+  text-shadow: none;
+  -moz-appearance:textfield;
+  background-color: #fff;
+
+  max-width: 70px;
+  padding: 2px 0;
+  margin: 0 15px;
+
+  font-family: "Barlow", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #979797;
+  text-transform: uppercase;
+  text-align: center;
+}
+.menu-label input[type=text].year:focus,
+.menu-label input[type=number].year:focus {
+  outline:solid 2px #b9192f;
+}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 nav button {
   border: none;
   background: none;
   color: #ffffff;
-}
-nav button:not(:nth-child(2)) {
-  display: none;
 }
 nav button > span {
   border: #ffffff solid 1px;
@@ -241,7 +300,6 @@ nav button > span {
 /* slider */
 .vue-slider {
   min-width: 200px;
-  margin-right: 10px;
 }
 .vue-slider.vue-slider-ltr {
   margin-top: 2px !important;
@@ -267,6 +325,9 @@ nav button > span {
 }
 .vue-slider :deep(.vue-slider-dot-handle-focus) {
   box-shadow: 0 0 0 5px rgba(185, 25, 47, 0.2);
+}
+.vue-slider :deep(.vue-slider-dot-tooltip-text) {
+  font-family: "Barlow", sans-serif;
 }
 
 /* toogle */
