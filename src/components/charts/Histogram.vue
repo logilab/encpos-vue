@@ -1,54 +1,26 @@
 <template>
-  <div>
-    <Carousel>
-      <Slide :key="1">
-        <div class="carousel__item">
-          <p>Début du Carrousel de test</p>
-        </div>
-      </Slide>
-      <Slide :key="2">
-        <div class="carousel__item">
-          <vue3-chart-js
-            v-show="
-              aggSearch.result.value &&
-              aggSearch.result.value.length &&
-              histoChart.data.datasets.length
-            "
-            :id="histoChart.id"
-            ref="chartRef"
-            :type="histoChart.type"
-            :data="histoChart.data"
-            :options="histoChart.options"
-          ></vue3-chart-js>
-        </div>
-      </Slide>
-      <Slide :key="3">
-        <div class="carousel__item">
-          <p>Fin du carrousel</p>
-        </div>
-      </Slide>
-      <template #addons>
-        <Navigation />
-        <Pagination />
-      </template>
-    </Carousel>
-  </div>
+  <vue3-chart-js
+    v-show="
+      aggSearch.result.value &&
+      aggSearch.result.value.length &&
+      histoChart.data.datasets.length
+    "
+    :id="histoChart.id"
+    ref="chartRef"
+    :type="histoChart.type"
+    :data="histoChart.data"
+    :options="histoChart.options"
+  ></vue3-chart-js>
 </template>
 
 <script>
 import { ref, inject, watch } from "vue";
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
-import { Carousel, Slide, Navigation, Pagination } from "vue3-carousel";
-import "vue3-carousel/dist/carousel.css";
 
 export default {
   name: "Histogram",
   components: {
     Vue3ChartJs,
-    Carousel,
-    Slide,
-    Navigation,
-    Pagination,
   },
   setup() {
     const aggSearch = inject("agg-search");
@@ -137,64 +109,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-.carousel__item {
-  min-height: 200px;
-  width: 80%;
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.carousel__slide {
-  padding: 10px;
-}
-.carousel {
-  padding-bottom: 30px;
-}
-.carousel :deep(p) {
-  text-align: center;
-}
-:deep(.carousel__viewport) {
-  height: 100%;
-}
-:deep(.carousel__prev),
-:deep(.carousel__next) {
-  background-color: #aaa292;
-  width: 24px;
-  height: 24px;
-}
-:deep(.carousel__prev) {
-  left: 18px;
-}
-:deep(.carousel__next) {
-  right: 18px;
-}
-:deep(.carousel__track) {
-  margin: 0;
-}
-.carousel__pagination {
-  margin: 0 !important;
-  align-items: center;
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-}
-.carousel__pagination :deep(li) {
-  margin: 0;
-}
-.carousel__pagination :deep(.carousel__pagination-button) {
-  background-color: transparent;
-  border: solid 3px #aaa292;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-}
-.carousel__pagination :deep(.carousel__pagination-button--active) {
-  background-color: #aaa292;
-}
-.content ol:not([type]) {
-  list-style: none;
-}
-</style>
+<style scoped></style>
