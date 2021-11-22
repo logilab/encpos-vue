@@ -922,6 +922,9 @@ tr td.chevron-up a::before {
   margin-bottom: 24px !important;
 }
 .search-form {
+    background-color: #f0f0f0 !important;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 .search-form > *:first-child {
   background-color: #868686;
@@ -986,6 +989,8 @@ tr td.chevron-up a::before {
 .search-form-footer {
   font-family: "Barlow", sans-serif;
   background-color: #f0f0f0 !important;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   justify-content: space-between;
   align-items: center;
 }
