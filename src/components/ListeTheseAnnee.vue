@@ -387,6 +387,7 @@ nav button > span {
   padding-left: 0;
 }
 .menu-list > li {
+  display: inline-block;
   margin-bottom: 20px;
   break-inside: avoid;
 }

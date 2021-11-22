@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class=" app-width-margin">
+    <div class="documentation-content">
       <div class="is-flex layout-main">
         <section class="toc" :class="menuCsscClass">
           <ul class="toc-lvl1">
@@ -830,9 +830,12 @@ export default {
 .tile.page-header {
   margin-bottom: 0 !important;
 }
+.documentation-content {
+  padding: 0 40px;
+}
 .main {
-  font-family: "Libre Baskerville", serif !important;
-  font-size: 16px;
+  font-family: "Barlow", sans-serif !important;
+  font-size: 18px;
   text-align: left;
   font-weight: 400;
   line-height: 28px;
@@ -976,20 +979,25 @@ article.documentation {
   background: url(../assets/images/mob_burger.svg) center / contain no-repeat;
 }
 @media screen and (max-width: 800px) {
+  .tile.page-header > .is-child {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
   .toggle-menu-btn {
     display: block;
     width: 20px;
     height: 30px;
     position: fixed;
     z-index: 3;
-    right:10px;
-    top:250px;
+    left:10px;
+    top:80px;
   }
   .toc {
     position: fixed;
+    left:0;
     top:0;
     z-index: 2;
-    padding-left:30px;
+    padding-left:60px;
     padding-right:30px;
     padding-top: 120px;
     background-color: rgba(255,255,255,0.95);
@@ -1011,7 +1019,7 @@ article.documentation {
   }
   .content {
     width: 100%;
-    padding: 0 20px 50px;
+    padding: 0 0 50px;
     z-index: 1;
   }
   .content .section {
@@ -1067,7 +1075,6 @@ article.documentation {
 }
 @media screen and (max-width: 500px) {
   .toggle-menu-btn {
-    top:340px;
   }
 }
 </style>
