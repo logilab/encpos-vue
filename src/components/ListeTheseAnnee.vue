@@ -10,7 +10,7 @@
         />
       </p>
       <div class="slider-prev-next-buttons is-flex is-align-items-center">
-        <nav v-if="isNotInitialAnnee">
+        <nav>
           <button v-on:click="downOneAnne">-</button>
         </nav>
         <vue-slider
@@ -19,7 +19,7 @@
           :lazy="true"
           :tooltip="'active'"
         ></vue-slider>
-        <nav v-if="isNotInitialAnnee">
+        <nav>
           <button v-on:click="addOneAnne">+</button>
         </nav>
       </div>
@@ -457,7 +457,7 @@ ul {
     padding-left: 10px;
   }
   .list-header > nav:last-of-type {
-    margin-top: 10px;
+    margin-top: 0px;
     width: auto;
   }
   .liste-theses-area {

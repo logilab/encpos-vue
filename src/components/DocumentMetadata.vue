@@ -291,6 +291,7 @@ export default {
 .document-metadata-header > a {
   text-decoration: none;
   border: none;
+  max-width: calc( 100% - 40px );
 }
 .document-metadata .menu {
   display: none;
