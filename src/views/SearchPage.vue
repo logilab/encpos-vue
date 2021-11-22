@@ -474,7 +474,7 @@ export default {
     const search = inject("search");
     const aggSearch = inject("agg-search");
     let isTableau = ref(true);
-    let isSearchMinimized = ref(true);
+    let isSearchMinimized = ref(false);
 
     function executeSearches() {
       if (isFulltextSearch.value) {
