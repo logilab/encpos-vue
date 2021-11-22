@@ -656,6 +656,11 @@ export default {
   }
 }
 @media screen and (max-width: 640px) {
+  .pb,
+  .controls > a.toc-menu-toggle,
+  .toc-area-aside {
+    display: none !important;
+  }
   .toc-area .toc-area-content nav > ol.tree {
     columns: 1;
   }
@@ -672,6 +677,10 @@ export default {
     width: 100%;
     justify-content: center;
     padding: 20px 0 10px;
+  }
+  .controls ul:last-of-type {
+    flex: 100% 0 0;
+    justify-content: center;
   }
   .controls ul:last-of-type > li > a {
     width: 30px;
