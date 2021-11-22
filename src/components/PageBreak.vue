@@ -4,7 +4,7 @@
       <div class="pb-label">
         <a :href="imageInfo"> {p. {{ canvasNum }}}</a>
       </div>
-      <div><img class="pb-thumnbail" @click="goToCanvas" :src="thumbnail" /></div>
+      <div><img class="pb-thumnbail" @click="goToCanvas($event)" :src="thumbnail" /></div>
     </article>
   </aside>
 </template>
@@ -21,16 +21,20 @@ export default {
     const mirador = inject("mirador");
     const layout = inject("variable-layout");
 
-    const goToCanvas = function () {
+    const goToCanvas = function ($event) {
       if (mirador) {
         mirador.setCanvasId(props.canvasId);
-        if(layout.miradorVisible != true){
-          layout.setMiradorVisible(true);
-        }
+        //if (layout.miradorVisible != true) {
+        //layout.setMiradorVisible(true);
+        layout.changeViewMode($event, "text-and-images-mode");
+        //}
       }
     };
 
-    const thumbnail = `${props.image.replace("/full/full/0/default.jpg", "/full/60,/0/default.jpg")}`;
+    const thumbnail = `${props.image.replace(
+      "/full/full/0/default.jpg",
+      "/full/60,/0/default.jpg"
+    )}`;
     const imageInfo = `${props.image.replace("/full/full/0/default.jpg", "")}`;
 
     return {
