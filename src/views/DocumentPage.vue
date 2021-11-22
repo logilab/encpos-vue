@@ -74,14 +74,12 @@
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
 import { getMetadataFromApi } from "@/api/document";
-import { watch, reactive, provide, ref, inject } from "vue/dist/vue.esm-bundler.js";
 
+import { computed, onMounted, onUnmounted, watch, reactive, provide, ref, inject } from "vue/dist/vue.esm-bundler.js";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
-
 import useMirador from "@/composables/use-mirador";
-import {computed, onMounted, onUnmounted} from "vue";
 
 const sources = [
   { name: "data_bnf", ext: "data.bnf.fr" },
@@ -120,43 +118,8 @@ export default {
     ListeTheseAnnee,
   },
   async setup() {
-    let state = reactive({
-      isTOCOpened: false,
-      isTOCMenuOpened: false,
-      viewMode: "text-mode",
-    });
-
     const manifestIsAvailable = ref(false);
 
-    const tocCssClass = computed(() => {
-      return state.isTOCOpened ? "is-opened" : "";
-    });
-
-    const tocMenuCssClass = computed(() => {
-      return state.isTOCMenuOpened ? "toc-aside-is-opened" : "";
-    });
-
-    const toggleTOCContent = function (event) {
-      event.preventDefault();
-      state.isTOCOpened = !state.isTOCOpened;
-    };
-
-    const toggleTOCMenu = function (event) {
-      event.preventDefault();
-      state.isTOCMenuOpened = !state.isTOCMenuOpened;
-    };
-
-    const TOCMenuBtnCssClass = computed(() => {
-      return state.isTOCMenuOpened ? "is-opened" : "";
-    });
-
-    const viewModeCssClass = computed(() => {
-      if (!layout.miradorVisible.value) {
-        return "text-mode text-mode-only";
-      } else {
-        return state.viewMode;
-      }
-    });
 
     // Mirador view sticky behavior
     let miradorViewBoundingTop = ref(0);
@@ -170,11 +133,6 @@ export default {
         const top = textView.getBoundingClientRect().top;
         miradorViewBoundingTop.value = top < 0 ? - Math.floor(top) : 0;
       }
-    };
-
-    const changeViewMode = function (event, viewMode) {
-      event.preventDefault();
-      state.viewMode = viewMode;
     };
 
     const metadata = reactive({
@@ -214,10 +172,10 @@ export default {
       console.log("dublincore", dublincore);
       try {
         metadata.iiifManifestUrl = dublincore["dct:source"][0]["@id"];
-        layout.setMiradorVisible(true);
+        layout.imageIsAvailable.value = true;
       } catch {
         metadata.iiifManifestUrl = "";
-        layout.setMiradorVisible(false);
+        layout.imageIsAvailable.value = false;
       }
       metadata.date = dublincore["dct:date"];
       metadata.page = dublincore["dct:extend"];
@@ -302,14 +260,13 @@ export default {
     await getMetadata(route.params.docId);
 
     return {
-      state,
-      tocCssClass,
-      toggleTOCContent,
-      tocMenuCssClass,
-      toggleTOCMenu,
-      TOCMenuBtnCssClass,
-      changeViewMode,
-      viewModeCssClass,
+      tocCssClass: layout.tocCssClass,
+      toggleTOCContent: layout.toggleTOCContent,
+      tocMenuCssClass: layout.tocMenuCssClass,
+      toggleTOCMenu: layout.toggleTOCMenu,
+      TOCMenuBtnCssClass: layout.TOCMenuBtnCssClass,
+      changeViewMode: layout.changeViewMode,
+      viewModeCssClass: layout.viewModeCssClass,
       miradorViewCssStyle,
       metadata,
       manifestIsAvailable,
