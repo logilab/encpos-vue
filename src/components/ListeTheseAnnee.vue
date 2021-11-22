@@ -9,18 +9,20 @@
                 v-model="inputAnnee"
         />
       </p>
-      <nav v-if="isNotInitialAnnee">
-        <button v-on:click="downOneAnne">-</button>
-      </nav>
-      <vue-slider
-        v-model="annee"
-        :vData="listProm"
-        :lazy="true"
-        :tooltip="'active'"
-      ></vue-slider>
-      <nav v-if="isNotInitialAnnee">
-        <button v-on:click="addOneAnne">+</button>
-      </nav>
+      <div class="slider-prev-next-buttons is-flex is-align-items-center">
+        <nav v-if="isNotInitialAnnee">
+          <button v-on:click="downOneAnne">-</button>
+        </nav>
+        <vue-slider
+          v-model="annee"
+          :vData="listProm"
+          :lazy="true"
+          :tooltip="'active'"
+        ></vue-slider>
+        <nav v-if="isNotInitialAnnee">
+          <button v-on:click="addOneAnne">+</button>
+        </nav>
+      </div>
       <nav v-if="isNotInitialAnnee">
         <button v-on:click="reinitalise">
           Retour à l'année en cours <span>{{ id }}</span>
@@ -202,9 +204,7 @@ export default {
 </script>
 
 <style scoped>
-nav:last-of-type {
-  margin-left: 30px;
-}
+
 nav button {
   cursor: pointer;
 }
@@ -297,6 +297,10 @@ nav button > span {
   margin-left: 10px;
 }
 
+.slider-prev-next-buttons {
+  margin-right: 30px;
+}
+
 /* slider */
 .vue-slider {
   min-width: 200px;
@@ -334,6 +338,7 @@ nav button > span {
 .toggle-btn {
   position: absolute;
   right: 20px;
+  top: 19px;
   width: 27px;
   height: 27px;
   background: url(../assets/images/chevron_blanc.svg) center top -3px / cover no-repeat;
@@ -417,13 +422,16 @@ ul {
     columns: 2;
   }
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 950px) {
   .list-header {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 20px;
+    flex-wrap: wrap;
   }
+  .list-header > nav:last-of-type {
+    margin-top: 20px;
+    width: 100%;
+  }
+}
+@media screen and (max-width: 800px) {
   .vue-slider.vue-slider-ltr {
     margin-top: 5px !important;
     padding: 0 !important;
@@ -433,7 +441,25 @@ ul {
     padding: 8px 5px 30px 20px;
   }
 }
+@media screen and (max-width: 800px) {
+}
 @media screen and (max-width: 640px) {
+  .list-header {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .slider-prev-next-buttons *:first-child {
+    padding-right: 10px;
+  }
+  .slider-prev-next-buttons *:last-child {
+    padding-left: 10px;
+  }
+  .list-header > nav:last-of-type {
+    margin-top: 10px;
+    width: auto;
+  }
   .liste-theses-area {
     padding-top: 30px;
     padding-bottom: 30px;
