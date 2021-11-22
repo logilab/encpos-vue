@@ -3,11 +3,7 @@
     <div class="list-header is-flex">
       <p class="menu-label">
         <span @click="toggleContent">Thèses de l'année</span> :
-        <input
-                type="text"
-                class="year"
-                v-model="inputAnnee"
-        />
+        <input type="text" class="year" v-model="inputAnnee" />
       </p>
       <div class="slider-prev-next-buttons is-flex is-align-items-center">
         <nav>
@@ -123,8 +119,6 @@ export default {
 
     watch(annee, getPositionsForCurrentYear);
 
-    await Promise.all([getPositionsForCurrentYear(), getAllPositionsYears()]);
-
     const listCssClass = computed(() => {
       return state.isOpened ? "is-opened" : "";
     });
@@ -176,11 +170,17 @@ export default {
             const minDate = listProm.value[0];
             const maxDate = listProm.value[listProm.value.length - 1];
             annee.value = Math.min(maxDate, Math.max(minDate, valNum)).toString();
-            console.log(minDate, annee.value)
+            console.log(minDate, annee.value);
           }
         }
-      }
+      },
     });
+
+    watch(inputAnnee, () => {
+      state.isOpened = true;
+    });
+
+    await Promise.all([getPositionsForCurrentYear(), getAllPositionsYears()]);
 
     const gotoTop = function () {
       scroll(0, 0);
@@ -204,7 +204,6 @@ export default {
 </script>
 
 <style scoped>
-
 nav button {
   cursor: pointer;
 }
@@ -256,12 +255,12 @@ p.menu-label {
   padding: 1px 20px;
   margin: 0 10px;
 }
-.menu-label input[type=text].year,
-.menu-label input[type=number].year {
+.menu-label input[type="text"].year,
+.menu-label input[type="number"].year {
   inset: unset;
   border: none;
   text-shadow: none;
-  -moz-appearance:textfield;
+  -moz-appearance: textfield;
   background-color: #fff;
 
   max-width: 70px;
@@ -275,12 +274,12 @@ p.menu-label {
   text-transform: uppercase;
   text-align: center;
 }
-.menu-label input[type=text].year:focus,
-.menu-label input[type=number].year:focus {
-  outline:solid 2px #b9192f;
+.menu-label input[type="text"].year:focus,
+.menu-label input[type="number"].year:focus {
+  outline: solid 2px #b9192f;
 }
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }

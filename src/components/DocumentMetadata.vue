@@ -37,8 +37,9 @@
                     >Positions des thèses soutenues par les élèves de la promotion de
                     {{ metadata.date }} pour obtenir le diplôme d'archiviste
                     paléographe</span
-                  >, École nationale des chartes, Paris, {{ metadata.date }}, p.
-                  {{ metadata.page }}.
+                  >, École nationale des chartes, Paris, {{ metadata.date
+                  }}<span v-if="metadata.page">, p. {{ metadata.page }}</span
+                  >.
                 </li>
 
                 <li>
@@ -291,7 +292,7 @@ export default {
 .document-metadata-header > a {
   text-decoration: none;
   border: none;
-  max-width: calc( 100% - 40px );
+  max-width: calc(100% - 40px);
 }
 .document-metadata .menu {
   display: none;
