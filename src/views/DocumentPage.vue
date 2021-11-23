@@ -594,6 +594,14 @@ export default {
   text-transform: none;
 }
 
+#article section.div h4.head {
+  text-align: center;
+  color: #999;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 1em 0 1ex 2ex;
+}
+
 @media screen and (max-width: 1150px) {
   .toc-area .toc-area-content nav > ol.tree {
     columns: 2;
