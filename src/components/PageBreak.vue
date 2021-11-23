@@ -2,7 +2,7 @@
   <aside class="media pb-component">
     <article class="pb">
       <div class="pb-label">
-        <a :href="imageInfo"> {p. {{ canvasNum }}}</a>
+        <a :href="imageInfo"></a>
       </div>
       <div><img class="pb-thumnbail" @click="goToCanvas($event)" :src="thumbnail" /></div>
     </article>
