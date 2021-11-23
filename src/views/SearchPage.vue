@@ -922,6 +922,9 @@ tr td.chevron-up a::before {
   margin-bottom: 24px !important;
 }
 .search-form {
+    background-color: #f0f0f0 !important;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 .search-form > *:first-child {
   background-color: #868686;
@@ -986,6 +989,8 @@ tr td.chevron-up a::before {
 .search-form-footer {
   font-family: "Barlow", sans-serif;
   background-color: #f0f0f0 !important;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   justify-content: space-between;
   align-items: center;
 }
@@ -1131,19 +1136,25 @@ input[type="number"]::-webkit-inner-spin-button {
 .carousel-parent {
   flex: 355px 0 0;
   background-color: #f6f2ed;
-  padding: 10px;
   border-radius: 6px;
+  padding: 10px;
+}
+.carousel-parent h2 {
+  padding-top: 0;
 }
 .search-minimized .carousel-parent {
   flex: calc( 100% - 64px ) 0 0;
-  padding-left: 20px;
+  padding-left: 10px;
+}
+.search-minimized .carousel-parent article {
 }
 .search-minimized .carousel-parent .content {
   padding-left: 30%;
 }
 .search-minimized .carousel-parent h2 {
-  padding-left: 0;
   text-align: left;
+  margin:0;
+  padding-left: 0;
 }
 .carousel-parent article {
   display: flex;
@@ -1518,6 +1529,9 @@ tr.row-details :deep(em),
   }
   .search-minimized .carousel-parent .content {
     padding-left: 0 !important;
+  }
+  .search-minimized .carousel-parent h2 {
+    text-align: center !important;
   }
 
   .search-minimized .search-form > div.minimized-controls {
