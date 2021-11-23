@@ -15,7 +15,10 @@
         </article>
       </div>
       <div class="tile is-vertical app-width-margin">
-        <div class="tile is-parent search-form-and-carousel" :class="searchMinimizedCssClass">
+        <div
+          class="tile is-parent search-form-and-carousel"
+          :class="searchMinimizedCssClass"
+        >
           <div class="tile is-child search-form">
             <!-- Input + submit button -->
             <div class="field has-addons">
@@ -122,7 +125,6 @@
           </div>
           <div class="tile is-child carousel-parent">
             <article class="tile is-child">
-              <h2>Le saviez-vous ?</h2>
               <div class="content">
                 <carousel :items="['histogram']" @click="minimizeSearchForm">
                   <template v-slot:histogram><histogram /></template>
@@ -141,13 +143,13 @@
                     id="ToggleTableau"
                     on-label="Tableau"
                     off-label="Déplié"
-                    v-model="isTableau"
+                    v-model="isResultTableMode"
                     :width="120"
                   />
                 </div>
               </div>
               <div
-                v-if="(isTableau === false) & (isFulltextSearch === true)"
+                v-if="!isResultTableMode && isFulltextSearch"
                 class="field is-inline-block px-1"
               >
                 <div class="control mb-6 block is-inline-block sort-options">
@@ -199,7 +201,12 @@
                     >
                       <i class="fas fa-arrow-up" />
                     </span>
-                    <span v-else class="icon button" @click="inputSort = `-${inputSort}`">
+                    <span
+                      v-else
+                      v-show="inputSort.length > 0"
+                      class="icon button"
+                      @click="inputSort = `-${inputSort}`"
+                    >
                       <i class="fas fa-arrow-down" />
                     </span>
                   </div>
@@ -210,10 +217,7 @@
               <pagination />
             </div>
           </div>
-          <div
-            class="block text-results"
-            v-if="(isFulltextSearch === true) & (isTableau === false)"
-          >
+          <div class="block text-results" v-if="isFulltextSearch && !isResultTableMode">
             <div
               class="table is-hoverable is-narrow is-fulldwidth"
               v-if="search.result.value && search.result.value.length"
@@ -401,32 +405,26 @@
                     </td>
                     <td
                       v-if="
-                        onrollActive.includes(position.id) &
-                        (isFulltextSearch === true) &
-                        (isTableau === true) &
-                        (position.highlight != null)
+                        isFulltextSearch &&
+                        isResultTableMode &&
+                        position.highlight !== null
                       "
-                      class="inline chevron-down"
-                    >
-                      <a href="#" @click="rollActive($event, position.id)"></a>
-                    </td>
-                    <td
-                      v-else-if="
-                        (isFulltextSearch === true) &
-                        (isTableau === true) &
-                        (position.highlight != null)
+                      class="inline"
+                      :class="
+                        !onrollActive.includes(position.id)
+                          ? 'chevron-up'
+                          : 'chevron-down'
                       "
-                      class="inline chevron-up"
                     >
                       <a href="#" @click="rollActive($event, position.id)"></a>
                     </td>
                   </tr>
                   <tr
                     v-if="
-                      onrollActive.includes(position.id) &
-                      (isFulltextSearch === true) &
-                      (isTableau === true) &
-                      (position.highlight != null)
+                      onrollActive.includes(position.id) &&
+                      isFulltextSearch &&
+                      isResultTableMode &&
+                      position.highlight !== null
                     "
                     class="row-details"
                   >
@@ -473,7 +471,7 @@ export default {
   setup() {
     const search = inject("search");
     const aggSearch = inject("agg-search");
-    let isTableau = ref(true);
+
     let isSearchMinimized = ref(false);
 
     function executeSearches() {
@@ -502,11 +500,11 @@ export default {
       aggSearch.execute();
     }
 
-    const minimizeSearchForm = function (){
+    const minimizeSearchForm = function () {
       isSearchMinimized.value = true;
     };
 
-    const expandSearchForm = function() {
+    const expandSearchForm = function () {
       isSearchMinimized.value = false;
     };
 
@@ -697,8 +695,6 @@ export default {
       });
     });
 
-    //watch(isTableau);
-
     // run the initial searches
     executeSearches();
 
@@ -710,6 +706,7 @@ export default {
       expandSearchForm,
       searchMinimizedCssClass,
       isFulltextSearch,
+      isResultTableMode: search.isResultTableMode,
       inputTerm,
       minTopicYear,
       minPromotionYear,
@@ -725,7 +722,6 @@ export default {
       currentYear,
       onrollActive,
       VUE_APP_IIIF_IMAGES_URL,
-      isTableau,
     };
   },
   methods: {
@@ -742,9 +738,9 @@ export default {
     },
     positionCssClass: function (position) {
       return this.onrollActive.includes(position.id) &&
-        this.isFulltextSearch === true &&
-        this.isTableau === true &&
-        position.highlight != null
+        this.isFulltextSearch &&
+        this.isResultTableMode &&
+        position.highlight !== null
         ? "is-selected"
         : "";
     },
@@ -883,7 +879,7 @@ tr td.chevron-up a::before {
   text-align: center;
   font-weight: 700;
   font-style: italic;
-  color: #5B5B5B;
+  color: #5b5b5b;
 }
 .carousel-parent article .title,
 .carousel-parent article .subtitle {
@@ -922,9 +918,9 @@ tr td.chevron-up a::before {
   margin-bottom: 24px !important;
 }
 .search-form {
-    background-color: #f0f0f0 !important;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
+  background-color: #f0f0f0 !important;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 .search-form > *:first-child {
   background-color: #868686;
@@ -961,7 +957,7 @@ tr td.chevron-up a::before {
   flex: 44px 0 0;
 }
 .search-minimized .search-form > div.minimized-controls .expand-form-button.button {
-  flex: calc( 100% - 49px ) 0 0;
+  flex: calc(100% - 49px) 0 0;
 }
 .search-minimized .search-form > div.minimized-controls button.search.button.is-light {
   margin-left: 0;
@@ -974,7 +970,8 @@ tr td.chevron-up a::before {
   padding-top: 6px;
 }
 .search-form button.expand-form-button.button {
-  background: #868686 url(../assets/images/chevron_blanc_recherche.svg) left 15px top 20px / 15px auto no-repeat;
+  background: #868686 url(../assets/images/chevron_blanc_recherche.svg) left 15px top 20px /
+    15px auto no-repeat;
   border-radius: 4px !important;
 }
 .search-form button.search.button.is-light {
@@ -1143,7 +1140,7 @@ input[type="number"]::-webkit-inner-spin-button {
   padding-top: 0;
 }
 .search-minimized .carousel-parent {
-  flex: calc( 100% - 64px ) 0 0;
+  flex: calc(100% - 64px) 0 0;
   padding-left: 10px;
 }
 .search-minimized .carousel-parent article {
@@ -1153,7 +1150,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .search-minimized .carousel-parent h2 {
   text-align: left;
-  margin:0;
+  margin: 0;
   padding-left: 0;
 }
 .carousel-parent article {

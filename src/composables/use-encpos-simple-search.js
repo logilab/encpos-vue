@@ -12,6 +12,9 @@ export default function useEncposSimpleSearch() {
         isFulltextSearch.value = t  
     }
 
+    const isResultTableMode = ref(true)
+
+  
     return {
         term: search.term,
         ranges: search.ranges,
@@ -19,6 +22,7 @@ export default function useEncposSimpleSearch() {
         pageNum: search.pageNum,
         pageSize: search.pageSize,
         isFulltextSearch : readonly(isFulltextSearch),
+        isResultTableMode,
         pageCount: search.pageCount,
         setTerm: search.setTerm,
         setRange: search.setRange,
