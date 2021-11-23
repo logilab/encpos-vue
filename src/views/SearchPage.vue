@@ -8,7 +8,7 @@
               Les positions de thèses<br />de l'École nationale des chartes
             </p>
             <p class="header-baseline">
-              <span>Position</span> : À l’origine, les positions prises et à défendre par
+              <span>Position</span> : à l’origine, les positions prises et à défendre par
               l’élève, face au jury. Depuis, un résumé de la thèse soutenue.
             </p>
           </div>
@@ -904,7 +904,7 @@ tr td.chevron-up a::before {
   border-radius: 3px;
 }
 
-/* 
+/*
   search form
 */
 .search {

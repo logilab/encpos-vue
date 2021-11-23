@@ -6,8 +6,8 @@
           <div class="is-flex is-flex-direction-row title-tile">
             <p class="title">Thèses de l'École nationale des chartes</p>
             <p class="header-baseline">
-              <span>Position</span> : Lieu où est placée une chose, une personne, par
-              rapport à un ensemble.
+              <span>Position</span> : à l’origine, les positions prises et à défendre par
+              l’élève, face au jury. Depuis, un résumé de la thèse soutenue.
             </p>
           </div>
         </div>
@@ -64,7 +64,7 @@
         <a href="#" @click="toggleMenu($event)" class="toggle-menu-btn">MENU</a>
         <section class="main container content">
           <section class="section" id="documentation-top">
-            <h1>Thèses</h1>
+            <h1>Documentation</h1>
             <p>
               Thèses, l’application de consultation des positions des thèses de l’École
               des chartes est ouverte en Libre accès (<em>Open Access</em>). Elle est
