@@ -179,15 +179,18 @@ export default {
       console.log(htmlnamespace)
       console.log(listmetadata)
       metadata.author = listmetadata["dts:extensions"][dcnamespace + ":creator"];
-
-      for (let meta of listmetadata["dts:download"]){
-        if (meta.includes(".PDF")){
-          metadata.downloadPDF = meta
+      if (Array.isArray(listmetadata["dts:download"])){
+        for (let meta of listmetadata["dts:download"]){
+          if (meta.includes(".PDF")){
+            metadata.downloadPDF = meta
+          }
+          if (meta.includes("document")){
+            metadata.downloadXML = meta
+          }
         }
-        if (meta.includes("document")){
-          metadata.downloadXML = meta
-        }
-      
+      } else {
+        metadata.downloadXML = listmetadata["dts:download"]
+        metadata.downloadPDF = null
       }
       metadata.download = listmetadata["dts:download"];
 
