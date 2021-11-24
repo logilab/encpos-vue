@@ -51,9 +51,9 @@
         </li>
       </ul>
       <ul class="is-flex">
-        <li><a href="" class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
-        <li><a href="" class="xml-btn" aria-label="Télécharger le XML"></a></li>
-        <li><a href="" class="access_link">Accès à la thèse</a></li>
+        <li><a v-if="metadata.downloadPDF" v-bind:href="metadata.downloadPDF" class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
+        <li><a v-bind:href="metadata.downloadXML" class="xml-btn" aria-label="Télécharger le XML"></a></li>
+        <li><a v-if="metadata.thenca" v-bind:href="metadata.thenca" class="access_link">Accès à la thèse</a></li>
       </ul>
     </nav>
     <div class="document-area is-flex app-width-margin" :class="tocMenuCssClass">
@@ -149,7 +149,8 @@ export default {
       thenca: null,
       iiifManifestUrl: null,
       hal: null,
-      download: null,
+      downloadPDF: null,
+      downloadXML: null,
 
       author: null,
       data_bnf: null,
@@ -173,7 +174,18 @@ export default {
         listmetadata["@context"][k].includes("dc/elements")
       );
       metadata.author = listmetadata["dts:extensions"][dcnamespace + ":creator"];
+
+      for (let meta of listmetadata["dts:download"]){
+        if (meta.includes(".PDF")){
+          metadata.downloadPDF = meta
+        }
+        if (meta.includes("document")){
+          metadata.downloadXML = meta
+        }
+      
+      }
       metadata.download = listmetadata["dts:download"];
+
 
       const dublincore = listmetadata["dts:dublincore"];
       console.log("---------");
