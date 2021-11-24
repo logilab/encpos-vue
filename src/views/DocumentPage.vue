@@ -62,7 +62,7 @@
         <div class="text-view" id="text-view">
           <document :id="$route.params.docId" :key="$route.params.docId" />
         </div>
-        <div class="mirador-view" id="mirador-view"  :style="miradorViewCssStyle" >
+        <div class="mirador-view" id="mirador-view" :style="miradorViewCssStyle">
           <div id="vue-mirador-container" />
         </div>
       </div>
@@ -75,7 +75,16 @@ import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
 import { getMetadataFromApi } from "@/api/document";
 
-import { computed, onMounted, onUnmounted, watch, reactive, provide, ref, inject } from "vue/dist/vue.esm-bundler.js";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  watch,
+  reactive,
+  provide,
+  ref,
+  inject,
+} from "vue/dist/vue.esm-bundler.js";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 
 import ListeTheseAnnee from "@/components/ListeTheseAnnee.vue";
@@ -120,18 +129,17 @@ export default {
   async setup() {
     const manifestIsAvailable = ref(false);
 
-
     // Mirador view sticky behavior
     let miradorViewBoundingTop = ref(0);
     const miradorViewCssStyle = computed(() => {
-      return { marginTop: miradorViewBoundingTop.value + 'px' };
+      return { marginTop: miradorViewBoundingTop.value + "px" };
     });
 
-    const updateMiradorTopPosition = function() {
+    const updateMiradorTopPosition = function () {
       const textView = document.getElementById("text-view");
       if (textView) {
         const top = textView.getBoundingClientRect().top;
-        miradorViewBoundingTop.value = top < 0 ? - Math.floor(top) : 0;
+        miradorViewBoundingTop.value = top < 0 ? -Math.floor(top) : 0;
       }
     };
 
@@ -248,12 +256,12 @@ export default {
 
     onMounted(() => {
       const appView = document.getElementById("app");
-      appView.addEventListener('scroll', updateMiradorTopPosition);
+      appView.addEventListener("scroll", updateMiradorTopPosition);
     });
 
     onUnmounted(() => {
       const appView = document.getElementById("app");
-      appView.removeEventListener('scroll', updateMiradorTopPosition);
+      appView.removeEventListener("scroll", updateMiradorTopPosition);
     });
 
     const route = useRoute();
@@ -625,6 +633,10 @@ export default {
   font-size: 15px;
   font-weight: bold;
   padding: 1em 0 1ex 2ex;
+}
+
+.toc-area-header a {
+  color: inherit;
 }
 
 @media screen and (max-width: 1150px) {

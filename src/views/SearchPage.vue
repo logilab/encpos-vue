@@ -21,15 +21,20 @@
         >
           <div class="tile is-child search-form">
             <!-- Input + submit button -->
-            <div class="field has-addons">
-              <div class="control is-expanded">
+
+            <div class="field is-grouped">
+              <div class="control is-expanded search-control">
                 <input
                   class="input is-medium"
                   type="text"
                   placeholder="Recherche"
                   v-model="inputTerm"
                   @keyup.enter="executeSearches"
+                  @click="$event.preventDefault()"
                 />
+                <span class="icon is-right clear-input" @click="deleteTerm">
+                  <i class="fas fa-times"></i>
+                </span>
               </div>
               <div class="control">
                 <button
@@ -962,6 +967,22 @@ tr td.chevron-up a::before {
   flex: 44px 0 0;
   background: none;
 }
+
+.search-control {
+  margin-right: 0px !important;
+}
+
+.clear-input {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: #b8b8b8;
+}
+.clear-input:hover {
+  cursor: pointer;
+  color: #868686;
+}
+
 .search-minimized .search-form > div:not(.minimized-controls) {
   display: none !important;
 }
