@@ -5,35 +5,64 @@
         <div class="tile is-child">
           <div class="is-flex is-flex-direction-row title-tile">
             <p class="title">Thèses de l'École nationale des chartes</p>
-            <p class="header-baseline"><span>Position</span> : Lieu où est placée une chose, une personne, par rapport à un ensemble.</p>
+            <p class="header-baseline">
+              <span>Position</span> : à l’origine, les positions prises et à défendre par
+              l’élève, face au jury. Depuis, un résumé de la thèse soutenue.
+            </p>
           </div>
         </div>
       </div>
     </div>
     <section class="main container content app-width-margin">
-      <h1>Le projet</h1>
-      <p>Ce site est dédié aux thèses soutenues par les élèves de l'École nationale des chartes. 
-        La thèse pour le diplôme d'archiviste paléographe est un travail de recherche privilégiant l'exploration des champs spécifiques aux enseignements de l'École :</p>
-        <ul>
-          <li>Histoire et étude critique des sources historiques ;</li>
-          <li>Philologie et édition de textes ;</li>
-          <li>Patrimoine documentaire, écrit et gravé ;</li>
-          <li>Patrimoine artistique et monumental.</li>
-        </ul>
-        <p>Ces travaux de recherche sont encadrés par les professeurs de l'École ainsi que par des universitaires, des chercheurs et des conservateurs. 
-          Certaines thèses donnent lieu à des publications (<a href="http://www.chartes.psl.eu/fr/rubrique-bibliotheque/ressources-electroniques-externes?field_collectionedition_value=All&field_periodehistorique_value=All&field_theme_value=All" target="_blank">monographies</a> ou articles). 
-          Sous leur forme dactylographiée, elles sont conservées aux Archives nationales et leur consultation est soumise à une réglementation. 
-          Les thèses font l'objet de résumés détaillés et rédigés par les auteurs, appelés positions de thèses qui donnent lieu, chaque année, à la publication d'un recueil par l'École des chartes. 
-          Le texte des positions de thèses est librement et gratuitement consultable sur ce site depuis 2000.</p>
-        <h2>Réglementation pour la consultation des thèses</h2>
-        <p>Il faut distinguer deux périodes dans l'histoire des thèses de l'École nationale des chartes : avant et après 1961.</p>
-        <p>Avant 1961, l'École n'a pas conservé d'exemplaires des thèses, qui sont restées la propriété de leurs auteurs. 
-          Toutefois, ces derniers ou leurs ayants droit ont pu donner ou déposer, à titre privé, leur thèse auprès d'une institution de conservation, publique (bibliothèque, services d'archives) ou privée (société savante, par exemple).</p>
-        <p>Depuis 1961, un exemplaire de chaque thèse est conservé au Centre historique des Archives nationales, à Paris, dans la sous-série AB XXVIII (<a href="http://www.archivesnationales.culture.gouv.fr/chan/chan/ap03.html#ABchartes" target="_blank">répertoire dactylographié disponible)</a>. 
-          La communication est soumise à l'autorisation préalable de l'auteur, qui est sollicitée directement par les Archives nationales.</p>
-        <p>Toute personne désireuse de consulter une thèse à partir de la promotion 1961 doit donc adresser aux Archives nationales, via son site internet (http://www.archives-nationales.culture.gouv.fr/sia/web/guest/autorisations), une demande d'autorisation qui sera transmise à l'auteur de la thèse. 
-          Celui-ci étant libre de communiquer sa réponse (favorable ou négative) dans le délai qui lui convient, aucun engagement ne peut être pris sur la date de la consultation éventuelle.</p>
-        <p>La consultation se fait uniquement sur place aux Archives nationales et nécessite une inscription préalable avec production d'une pièce d'identité.</p>
+      <h2>Les thèses de l’École des chartes</h2>
+      <p>
+        Depuis 1849, les élèves de l’École nationale des chartes soutiennent une thèse d’École qui conditionne
+        l’obtention du diplôme d’archiviste paléographe. Cette thèse est l’aboutissement d’un cursus d’enseignements
+        consacrés aux disciplines historiques ayant pour objectif la formation de personnels scientifiques des
+        institutions patrimoniales et de recherche. Fondées majoritairement sur l’étude de sources inédites, ces thèses
+        sont garantes de l’excellence scientifique des élèves qui se destinent aux métiers de la conservation et de la
+        recherche.
+      </p>
+      <h2>Les positions de thèses</h2>
+      <p>
+        Chaque année, dès 1849, un volume des <i>Positions des thèses</i> soutenues est publié : les élèves y énoncent
+        les points de doctrine (les <i>positions</i>) à défendre face au jury. Progressivement ces énumérations brèves
+        des hypothèses soutenues se sont étoffées pour devenir des résumés détaillés des thèses. Ce site offre la
+        recherche et la consultation en plein texte du corpus intégral de ces positions, témoin rare de l’évolution des
+        disciplines historiques dans leur ensemble. Certains travaux ont en outre été pionniers dans le renouvellement
+        des méthodes d’analyse et d’étude en histoire. Une appréhension globale de ce corpus offre ainsi un cadre
+        exceptionnel pour étudier l’évolution des concepts historiographiques en France depuis le milieu du
+        XIX<sup>e</sup> siècle.
+      </p>
+      <p>
+        Pour favoriser les études historiographiques, l’application est construite sur <a
+          href="https://theses.chartes.psl.eu/documentation">différentes API</a> qui standardisent l’accès à toutes les
+        ressources disponibles (textes, images et recherche) et en font une véritable plateforme d’accès aux données
+        ouvertes. Cette application entend répondre aux exigences éditoriales de l’accès libre et aux attentes
+        scientifiques combinées de l’ouverture des données.
+      </p>
+      <p>
+        Les volumes de la collection éditée par les Éditions de l’École des chartes sont aussi consultables sous <a
+          href="http://www.chartes.psl.eu/recherche/bundle/publication/im_field_collection/positions-these-33">forme
+        imprimée</a>.
+      </p>
+      <h2>Consultation des thèses : ThENC@</h2>
+      <p>
+        Propriétés de leur auteur jusqu’en 1961, de nombreuses thèses anciennes se retrouvent dans différentes
+        institutions patrimoniales que les auteurs ont fréquentées dans le cadre de leur recherche ou plus tard dans
+        l’exercice de leur profession. Si une partie d’entre elles est déjà identifiée, un travail de prospection pour
+        localiser davantage de thèses est en cours dans le cadre du projet ThENC@. À partir de 1961, toutes les thèses
+        d’École pour l’obtention du diplôme d’archiviste paléographe sont conservées au département des archives privées
+        aux Archives nationales sous la cote AB XXVIII.
+      </p>
+      <p>
+        Le site <a href="https://bibnum.chartes.psl.eu/s/thenca/page/accueil">ThENC@</a> recense toutes les informations
+        disponibles à ce jour sur les thèses et constitue le point d’accès privilégié à leur consultation.
+      </p>
+      <p>
+        Dès que cela est possible, les notices des positions pointent vers les notices correspondantes des thèses,
+        consultables sur le site <a href="https://bibnum.chartes.psl.eu/s/thenca/page/accueil">ThENC@</a>.
+      </p>
     </section>
   </article>
 </template>
