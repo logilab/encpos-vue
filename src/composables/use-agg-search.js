@@ -18,6 +18,8 @@ export default function useAggSearch() {
     const totalCount = ref(0)
     const bucketCount = ref(0)
 
+    const noHighlight = ref(true)
+
     const setTerm = function(t) {
         term.value = t  
     }
@@ -50,13 +52,16 @@ export default function useAggSearch() {
 
         let _withIds = withIds.value ? '&groupby[with-ids]': ''
 
-        api.setQuery(`${_baseApiURL}/search?query=${term.value}${sortArg}${rangesArg}&groupby[field]=${groupbyField.value}${_withIds}`)
+        const highlight = noHighlight.value ? '&no-highlight' : ''
+        const termValue = term.value ? term.value : '***';
+    
+        api.setQuery(`${_baseApiURL}/search?query=${termValue}${sortArg}${rangesArg}&groupby[field]=${groupbyField.value}${_withIds}${highlight}`)
     }
 
     watchEffect(updateQuery, {flush: 'post' })
 
     const execute = debounce(async function() {
-        if (term.value.length >= 2 && api.query.value){
+        if (api.query.value){
             await api.runQuery()
             if (api.error.value) {
                 console.log("api error", api.error.value)

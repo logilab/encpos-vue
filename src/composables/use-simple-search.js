@@ -17,7 +17,7 @@ export default function useSimpleSearch() {
     })
     const result = ref()
     const totalCount = ref(0)
-
+    const noHighlight = ref(false)
 
 
     const setTerm = function(t) {
@@ -32,6 +32,9 @@ export default function useSimpleSearch() {
     const setPageNum = function(num) {
         pageNum.value = num  
     }
+    const setNoHighlight = function(b) {
+        noHighlight.value = b  
+    }
 
     function updateQuery() {
         let rangesArg = ''
@@ -43,15 +46,17 @@ export default function useSimpleSearch() {
         if (sorts.value) {
             sortArg = '&sort=' + sorts.value
         }
-        console.log(term.value);
 
-        api.setQuery(`${_baseApiURL}/search?query=${term.value}${sortArg}${rangesArg}&page[number]=${pageNum.value || 1}&page[size]=${pageSize.value}`)
+        const highlight = noHighlight.value ? '&no-highlight' : ''
+        const termValue = term.value ? term.value : '***';
+
+        api.setQuery(`${_baseApiURL}/search?query=${termValue}${sortArg}${rangesArg}&page[number]=${pageNum.value || 1}&page[size]=${pageSize.value}${highlight}`)
     }
 
     watchEffect(updateQuery, {flush: 'post' })
 
     const execute = debounce(async function() {
-        if (term.value.length >= 2 && api.query.value){
+        if (api.query.value){
             await api.runQuery()
             if (api.error.value) {
                 console.log("api error", api.error.value)
@@ -70,10 +75,12 @@ export default function useSimpleSearch() {
         pageNum: readonly(pageNum),
         pageSize: readonly(pageSize),
         pageCount: pageCount,
+        noHighlight: readonly(noHighlight),
         setTerm,
         setRange,
         setSorts,
         setPageNum,
+        setNoHighlight,
         execute,
         loading: readonly(api.loading),
         result: readonly(result),

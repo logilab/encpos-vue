@@ -26,7 +26,7 @@
                 <input
                   class="input is-medium"
                   type="text"
-                  placeholder="Find a repository"
+                  placeholder="Recherche"
                   v-model="inputTerm"
                   @keyup.enter="executeSearches"
                 />
@@ -108,7 +108,7 @@
               </div>
               <div v-if="search.result.value" class="results-count is-flex">
                 <span>{{ search.totalCount.value }}</span>
-                <span>résultat(s)</span>
+                <span>position(s)</span>
               </div>
             </div>
             <!-- Minimized version -->
@@ -135,7 +135,7 @@
         </div>
         <div class="tile is-parent is-vertical">
           <!-- Table toogle + pagination -->
-          <div class="is-flex toggle-list-and-pagination">
+          <div class="is-flex toggle-list-and-pagination" v-if="search.totalCount.value">
             <div v-if="isFulltextSearch === true" class="is-inline-block">
               <div class="field is-inline-block px-1">
                 <div class="control">
@@ -418,6 +418,7 @@
                     >
                       <a href="#" @click="rollActive($event, position.id)"></a>
                     </td>
+                    <td v-else-if="position.highlight === null"></td>
                   </tr>
                   <tr
                     v-if="
@@ -518,12 +519,12 @@ export default {
 
     function getInitialState() {
       // initial values
-      const initialTerm = "Diplomatie";
+      const initialTerm = "";
       const initialTopicRange = [-500, currentYear];
-      //TODO: should fetch the upper bound
       const initialPromotionYearRange = [minPromotionYear, currentYear];
-      const initialSort = "";
-      const initialIsFulltextSearch = false;
+      const initialSort = "-metadata.promotion_year";
+      const initialIsFulltextSearch = true;
+      const initialIsResultTableMode = true;
 
       // restore content
       const notBefore = search.ranges["metadata.topic_notBefore"];
@@ -534,6 +535,7 @@ export default {
       return {
         term: search.term.value || initialTerm,
         isFulltextSearch: search.isFulltextSearch.value || initialIsFulltextSearch,
+        isResultTableMode: search.isResultTableMode || initialIsResultTableMode,
         topicRange:
           notBefore && notAfter
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
@@ -546,11 +548,12 @@ export default {
     }
 
     const initialState = getInitialState();
+
     const inputTerm = ref(initialState.term);
     const inputSort = ref(initialState.sort);
     const onrollActive = ref([]);
     const isFulltextSearch = ref(initialState.isFulltextSearch);
-
+    const isResultTableMode = ref(initialState.isResultTableMode);
     // Promotion Range : input v-model and validation
 
     const inputPromotionYearRange = ref(initialState.promotionYearRange);
@@ -635,6 +638,13 @@ export default {
       }
     };
 
+    const deleteTerm = function () {
+      inputTerm.value = "";
+    };
+
+    const isEmptyOrWildcards = new RegExp("^[*]*$");
+
+    search.setNoHighlight(isEmptyOrWildcards.test(inputTerm.value));
     search.setTerm(inputTerm.value);
     search.setRange(
       "metadata.promotion_year",
@@ -647,6 +657,7 @@ export default {
     search.setIsFulltextSearch(isFulltextSearch);
 
     watch(inputTerm, () => {
+      search.setNoHighlight(isEmptyOrWildcards.test(inputTerm.value));
       search.setTerm(inputTerm.value);
     });
 
@@ -706,7 +717,7 @@ export default {
       expandSearchForm,
       searchMinimizedCssClass,
       isFulltextSearch,
-      isResultTableMode: search.isResultTableMode,
+      isResultTableMode,
       inputTerm,
       minTopicYear,
       minPromotionYear,
@@ -718,6 +729,7 @@ export default {
       inputTopicRangeEnd,
       onBlurCheckTopicRangeStart,
       onBlurCheckTopicRangeEnd,
+      deleteTerm,
       inputSort,
       currentYear,
       onrollActive,
@@ -1193,6 +1205,9 @@ input[type="number"]::-webkit-inner-spin-button {
   margin-top: 24px;
   overflow-y: auto;
   min-height: 600px;
+}
+.table {
+  min-width: 100%;
 }
 .table thead {
   background-color: #f0f0f0;
