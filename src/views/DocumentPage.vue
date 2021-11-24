@@ -51,9 +51,9 @@
         </li>
       </ul>
       <ul class="is-flex">
-        <li><a href="" class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
-        <li><a href="" class="xml-btn" aria-label="Télécharger le XML"></a></li>
-        <li><a href="" class="access_link">Accès à la thèse</a></li>
+        <li><a v-if="metadata.downloadPDF" v-bind:href="metadata.downloadPDF" target='_blank' class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
+        <li><a v-bind:href="metadata.downloadXML" class="xml-btn" aria-label="Télécharger le XML"></a></li>
+        <li><a v-if="metadata.thenca" v-bind:href="metadata.thenca" target='_blank' class="access_link">Accès à la thèse</a></li>
       </ul>
     </nav>
     <div class="document-area is-flex app-width-margin" :class="tocMenuCssClass">
@@ -149,7 +149,8 @@ export default {
       thenca: null,
       iiifManifestUrl: null,
       hal: null,
-      download: null,
+      downloadPDF: null,
+      downloadXML: null,
 
       author: null,
       data_bnf: null,
@@ -172,8 +173,27 @@ export default {
       var dcnamespace = Object.keys(listmetadata["@context"]).find((k) =>
         listmetadata["@context"][k].includes("dc/elements")
       );
+      var htmlnamespace = Object.keys(listmetadata["@context"]).find((k) =>
+        listmetadata["@context"][k].includes("html")
+      );
+      console.log(htmlnamespace)
+      console.log(listmetadata)
       metadata.author = listmetadata["dts:extensions"][dcnamespace + ":creator"];
+      if (Array.isArray(listmetadata["dts:download"])){
+        for (let meta of listmetadata["dts:download"]){
+          if (meta.includes(".PDF")){
+            metadata.downloadPDF = meta
+          }
+          if (meta.includes("document")){
+            metadata.downloadXML = meta
+          }
+        }
+      } else {
+        metadata.downloadXML = listmetadata["dts:download"]
+        metadata.downloadPDF = null
+      }
       metadata.download = listmetadata["dts:download"];
+
 
       const dublincore = listmetadata["dts:dublincore"];
       console.log("---------");
@@ -189,7 +209,7 @@ export default {
       metadata.page = dublincore["dct:extend"];
       metadata.coverage = dublincore["dct:coverage"];
       metadata.rights = dublincore["dct:rights"][0]["@id"];
-      metadata.title = dublincore["dct:title"][0]["@value"];
+      metadata.title = listmetadata["dts:extensions"][htmlnamespace + ":h1"];
 
       console.log("metadata.iiifManifestUrl", metadata.iiifManifestUrl);
       console.log("metadata", metadata);

@@ -3,7 +3,7 @@
     <div class="document-metadata-header">
       <a href="#" v-on:click="toggleContent">
         <span class="metadata-header-author">{{ metadata.author }}</span>
-        <span class="metadata-header-title">{{ metadata.title }}</span>
+        <span v-html="metadata.title" class="metadata-header-title"></span>
       </a>
       <a href="#" class="toggle-btn" v-on:click="toggleContent"></a>
     </div>
@@ -32,7 +32,7 @@
               <ul>
                 <li class="block" style="text-justify: none">
                   <span style="font-variant: all-small-caps">{{ metadata.author }}</span
-                  >, « {{ metadata.title }} », in
+                  >, « <span v-html="metadata.title"></span> », in
                   <span style="font-style: italic"
                     >Positions des thèses soutenues par les élèves de la promotion de
                     {{ metadata.date }} pour obtenir le diplôme d'archiviste
