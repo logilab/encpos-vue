@@ -42,13 +42,16 @@
         scientifiques combinées de l’ouverture des données.
       </p>
       <p>
-        Les volumes de la collection éditée par les Éditions de l’École des chartes sont aussi consultables sous <a
-          href="http://www.chartes.psl.eu/recherche/bundle/publication/im_field_collection/positions-these-33">forme
-        imprimée</a>.
+        Les volumes de la collection éditée par les Éditions de l’École des chartes sont aussi consultables sous forme
+        imprimée. Les années postérieures à 1960 sont disponibles à la vente sous format papier à l’<a
+          href="http://www.chartes.psl.eu/recherche/bundle/publication/im_field_collection/positions-these-33">École des
+        chartes</a> et sur le <a
+          href="https://www.lcdpu.fr/recherche/index.cfm?fa=recherche&searchtext=positions+des+thèses&x=0&y=0">Comptoir
+        des presses d’universités</a>.
       </p>
       <h2>Consultation des thèses : ThENC@</h2>
       <p>
-        Propriétés de leur auteur jusqu’en 1961, de nombreuses thèses anciennes se retrouvent dans différentes
+        Propriété de leur auteur jusqu’en 1961, de nombreuses thèses anciennes se retrouvent dans différentes
         institutions patrimoniales que les auteurs ont fréquentées dans le cadre de leur recherche ou plus tard dans
         l’exercice de leur profession. Si une partie d’entre elles est déjà identifiée, un travail de prospection pour
         localiser davantage de thèses est en cours dans le cadre du projet ThENC@. À partir de 1961, toutes les thèses
