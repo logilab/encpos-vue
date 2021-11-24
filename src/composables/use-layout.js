@@ -7,6 +7,8 @@ export default function useLayout() {
       let isTOCOpened = ref(false);
       let isTOCMenuOpened = ref(false);
       let viewMode = ref("text-mode");
+
+      let rawSearchedTerm = ref('');
       
 
       const tocCssClass = computed(() => {
@@ -47,6 +49,7 @@ export default function useLayout() {
 
 
     return {
+        rawSearchedTerm,
         imageIsAvailable,
         tocCssClass,
         tocMenuCssClass,

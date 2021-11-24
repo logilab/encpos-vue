@@ -11,7 +11,7 @@ export default function useSimpleSearch() {
     const ranges = reactive({})
     const sorts = ref("")
     const pageNum = ref(1)
-    const pageSize = ref(40)
+    const pageSize = ref(25)
     const pageCount = computed(() => {
         return Math.ceil(totalCount.value / pageSize.value)
     })

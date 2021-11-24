@@ -131,7 +131,11 @@
           <div class="tile is-child carousel-parent">
             <article class="tile is-child">
               <div class="content">
-                <carousel :items="['histogram']" @click="minimizeSearchForm">
+                <carousel
+                  :items="['histogram']"
+                  @click="minimizeSearchForm"
+                  v-show="!search.totalCount || search.totalCount.value > 0"
+                >
                   <template v-slot:histogram><histogram /></template>
                 </carousel>
               </div>
@@ -477,33 +481,22 @@ export default {
   setup() {
     const search = inject("search");
     const aggSearch = inject("agg-search");
+    const layout = inject("variable-layout");
 
     let isSearchMinimized = ref(false);
 
-    function executeSearches() {
+    async function executeSearches() {
+      layout.rawSearchedTerm.value = inputTerm.value;
+
+      const t = inputTerm.value && inputTerm.value.length > 0 ? inputTerm.value : "***";
       if (isFulltextSearch.value) {
-        search.setTerm(inputTerm.value);
+        search.setTerm(`content:${t}`);
       } else {
-        console.log(isNaN(inputTerm.value));
-        if (isNaN(inputTerm.value) === "false") {
-          search.setTerm(
-            `metadata.promotion_year:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.topic_notBefore:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}`
-          );
-        } else if (typeof inputTerm.value === "string") {
-          if (inputTerm.value.includes("metadata")) {
-            inputTerm.value = inputTerm.value
-              .split("+OR+")[0]
-              .replace("metadata.author_name:", "");
-          }
-          console.log(inputTerm.value);
-          search.setTerm(
-            `metadata.author_name:${inputTerm.value}+OR+metadata.title_rich:${inputTerm.value}+OR+metadata.author_firstname:${inputTerm.value}`
-          );
-          console.log(inputTerm.value);
-        }
+        search.setTerm(
+          `metadata.promotion_year:${t}+OR+metadata.topic_notBefore:${t}+OR+metadata.topic_notBefore:${t}+OR+metadata.title_rich:${t}+OR+metadata.author_name:${t}+OR+metadata.author_firstname:${t}`
+        );
       }
-      search.execute();
-      aggSearch.execute();
+      await Promise.all([search.execute(), aggSearch.execute()]);
     }
 
     const minimizeSearchForm = function () {
@@ -538,7 +531,7 @@ export default {
 
       // try to restore else get the initial values
       return {
-        term: search.term.value || initialTerm,
+        term: layout.rawSearchedTerm.value || initialTerm,
         isFulltextSearch: search.isFulltextSearch.value || initialIsFulltextSearch,
         isResultTableMode: search.isResultTableMode || initialIsResultTableMode,
         topicRange:
@@ -715,6 +708,7 @@ export default {
     executeSearches();
 
     return {
+      layout,
       search,
       aggSearch,
       executeSearches,
