@@ -32,7 +32,7 @@
               <ul>
                 <li class="block" style="text-justify: none">
                   <span style="font-variant: all-small-caps">{{ metadata.author }}</span
-                  >, « {{ metadata.title }} », in
+                  >, « <span v-html="metadata.title"></span> », in
                   <span style="font-style: italic"
                     >Positions des thèses soutenues par les élèves de la promotion de
                     {{ metadata.date }} pour obtenir le diplôme d'archiviste
