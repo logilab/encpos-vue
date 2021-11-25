@@ -277,12 +277,15 @@ export default {
     onMounted(() => {
       const appView = document.getElementById("app");
       appView.addEventListener("scroll", updateMiradorTopPosition);
+      window.addEventListener('scroll', updateMiradorTopPosition);
     });
 
     onUnmounted(() => {
       const appView = document.getElementById("app");
       appView.removeEventListener("scroll", updateMiradorTopPosition);
+      window.removeEventListener('scroll', updateMiradorTopPosition);
     });
+
 
     const route = useRoute();
     await getMetadata(route.params.docId);
