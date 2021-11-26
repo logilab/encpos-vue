@@ -14,7 +14,8 @@ export default function useEncposSimpleSearch() {
 
     const isResultTableMode = ref(true)
 
-  
+    search.setSorts("-metadata.promotion_year")
+
     return {
         term: search.term,
         ranges: search.ranges,

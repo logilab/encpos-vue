@@ -520,7 +520,7 @@ export default {
       const initialTerm = "";
       const initialTopicRange = [-500, currentYear];
       const initialPromotionYearRange = [minPromotionYear, currentYear];
-      const initialSort = "-metadata.promotion_year";
+      //const initialSort = "-metadata.promotion_year";
       const initialIsFulltextSearch = true;
       const initialIsResultTableMode = true;
 
@@ -538,7 +538,7 @@ export default {
           notBefore && notAfter
             ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
             : initialTopicRange,
-        sort: search.sorts.value || initialSort,
+        sort: search.sorts.value,
         promotionYearRange: promotionYear
           ? promotionYear.replace("lte:", "").replace("gte:", "").split(",")
           : initialPromotionYearRange,
