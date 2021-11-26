@@ -17,7 +17,7 @@
           >
         </span>
         <span class="level-item">
-          <a href="http://bibnum.chartes.psl.eu/s/thenca/page/accueil" target="_blank" active-class="active">Thenca</a>
+          <a href="https://bibnum.chartes.psl.eu/s/thenca/page/accueil" target="_blank" active-class="active">Thenc@</a>
         </span>
       </div>
       <div class="level-right">
