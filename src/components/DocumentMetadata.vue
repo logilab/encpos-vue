@@ -146,7 +146,7 @@
 <script>
 import { computed, reactive, ref, toRefs, watch } from "vue";
 import md5 from "md5";
-import $rdf from "rdflib";
+//import $rdf from "rdflib";
 
 export default {
   name: "DocumentMetadata",
@@ -220,11 +220,15 @@ export default {
       state.isOpened = !state.isOpened;
     };
 
+    const $rdf = require('rdflib')
     const fetchRDF = async () => {
-      const store = $rdf.graph();
-      const me = store.sym(metadata.value.idref);
-      console.log(me);
-    };
+      if (metadata.value.idref) {
+        console.log("metadata.value.idref : ", metadata.value.idref);
+        const store = $rdf.graph();
+        const me = store.sym(metadata.value.idref);
+        console.log("me : ", me);
+      }
+    }
 
     // when the component is created
     // and when the metadata changes
