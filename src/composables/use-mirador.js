@@ -26,6 +26,20 @@ export default function useMirador(containerId = "vue-mirador-container", _manif
             hideWindowTitle: true,
             maximizedByDefault: true,
           },
+          selectedTheme:'light',
+          themes: {
+             light: {
+               palette: {
+                 type: 'light',
+                 primary: {
+                   main: '#971716'
+                 },
+                 secondary: {
+                   main: '#B9192F'
+                 }
+               },
+             },
+          },
           workspace: {
             showZoomControls: true,
             type: "mosaic", // Which workspace type to load by default. Other possible values are "elastic"

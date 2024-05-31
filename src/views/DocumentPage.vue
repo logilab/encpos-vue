@@ -742,4 +742,7 @@ export default {
   .text-and-images-mode .mirador-view {
   }
 }
+* [class*="mirador-window-top-bar"] {
+  border-top: none !important;
+}
 </style>
