@@ -199,15 +199,23 @@ export default {
       if (metadata.value.data_bnf) {
         const httpsUrl = metadata.value.data_bnf.replace("http:", "https:");
         //console.log("extra metadata:", httpsUrl);
-        console.log(decodeURIComponent(`${httpsUrl}.json`));
-        const response = await fetch(`${httpsUrl}.json`, {
+        console.log(decodeURIComponent(`${httpsUrl}`));
+        const redirectUrl = await fetch(`${httpsUrl}`, {
           method: "GET",
           redirect: "follow",
           mode: "cors",
         });
-        //const document = await response.text();
-        console.log(response.uri.href);
-        console.log("fetch biblio data", response.json());
+        console.log("redirectUrl.url after redirect : ", redirectUrl.url);
+        let httpsUrlJson = redirectUrl.url.replace("/fr", "").slice(0, -1) + ".json";
+        console.log("biblio json URL", httpsUrlJson);
+        const biblioResponse = await fetch(`${httpsUrlJson}`, {
+          method: "GET",
+          mode: "cors",
+        }).then((response) => {
+              return response.json()
+            }
+        )
+        console.log("fetch biblio data", biblioResponse);
       }
     };
 
