@@ -542,7 +542,10 @@ export default {
 }
 .images-mode .text-view,
 .text-mode .mirador-view {
-  display: none;
+  position: absolute;
+  width: 500px;
+  height: 700px;
+  visibility: hidden;
 }
 .text-mode .mirador-view {
   flex: 100% 0 0;
