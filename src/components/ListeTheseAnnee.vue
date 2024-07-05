@@ -50,6 +50,29 @@
             </ul>
           </li>
         </ul>
+        <span v-if="Object.keys(state.metadataSupplement).length > 0" class="menu-list-supplement">Autres positions de thèses de {{ annee }} (supplément)</span>
+        <ul class="menu-list" v-if="state.metadataSupplement">
+          <li v-for="these in state.metadataSupplement" :key="these">
+            <ul v-if="these[1]">
+              <b v-if="these[0] === textid">
+                <div class="thesis-author">{{ these[1] }}</div>
+                <div class="thesis-title" v-html="these[2]"></div>
+              </b>
+              <router-link :to="these[0]" v-else>
+                <div v-on:click="gotoTop">
+                  <div class="thesis-author">{{ these[1] }}</div>
+                  <div v-html="these[2]"></div>
+                </div>
+              </router-link>
+            </ul>
+            <ul v-else>
+              <b v-if="these[0] === textid">{{ these[2] }}</b>
+              <router-link :to="these[0]" v-on:click="gotoTop" v-else
+                ><span v-html="these[2]"></span
+              ></router-link>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -79,7 +102,8 @@ export default {
 
     const getPositionsForCurrentYear = async () => {
       let metadata = {};
-      const data = await getPositionAnneeFromApi(annee.value);
+      let metadataSupplement = {};
+      let [data, dataSupplement] = await getPositionAnneeFromApi(annee.value);
       var htmlnamespace = Object.keys(data["@context"]).find((k) =>
         data["@context"][k].includes("html")
       );
@@ -102,8 +126,23 @@ export default {
           }
         }
       }
-
+      if (dataSupplement && dataSupplement["member"]) {
+        for (these of dataSupplement["member"]) {
+          if (these["@id"].includes("PREV") || these["@id"].includes("NEXT")) {
+            continue;
+          }
+          title = these["dts:extensions"][htmlnamespace + ":h1"];
+          author = these["dts:extensions"][dcnamespace + ":creator"];
+          try {
+            const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
+            metadataSupplement[page] = [these["@id"], author, title];
+          } catch {
+            metadataSupplement[these["@id"].split("_")[2]] = [these["@id"], author, title];
+          }
+        }
+      }
       state.metadata = metadata;
+      state.metadataSupplement = metadataSupplement;
     };
 
     const getAllPositionsYears = async () => {
@@ -381,6 +420,11 @@ nav button > span {
   counter-increment: thesis-counter;
   color: #b9192f;
   margin-right: 5px;
+}
+.menu-list-supplement {
+  display: inline-block;
+  margin-bottom: 5px;
+  color: #b9192f;
 }
 .menu-list li ul {
   padding-left: 0;

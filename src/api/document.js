@@ -15,8 +15,13 @@ async function getDocumentFromApi(id, options={}) {
 
 async function getPositionAnneeFromApi(id, options={}) {
     const response = await fetch(`${_baseApiURL}/collections?id=ENCPOS_${id}`, {mode: 'cors', ...options})
+    const responseSupplement = await fetch(`${_baseApiURL}/collections?id=ENCPOS_${id}b`, {mode: 'cors', ...options})
     const document = await response.json()
-    return document
+    let documentSupplement = {}
+    if (responseSupplement.ok) {
+        documentSupplement = await responseSupplement.json()
+    }
+    return [document, documentSupplement]
 }
 
 async function getMetadataENCPOSFromApi(options={}){
