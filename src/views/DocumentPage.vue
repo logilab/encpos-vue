@@ -51,9 +51,9 @@
         </li>
       </ul>
       <ul class="is-flex">
-        <li><a v-if="metadata.downloadPDF" v-bind:href="metadata.downloadPDF" target='_blank' class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
-        <li><a v-bind:href="metadata.downloadXML" class="xml-btn" aria-label="Télécharger le XML"></a></li>
-        <li><a v-if="metadata.thenca" v-bind:href="metadata.thenca" target='_blank' class="access_link">Accès à la thèse</a></li>
+        <li><a v-if="metadata.downloadPDF" target="_blank" v-bind:href="metadata.downloadPDF" class="pdf-btn" aria-label="Télécharger le PDF"></a></li>
+        <li><a target="_blank" v-bind:href="metadata.downloadXML" class="xml-btn" aria-label="Télécharger le XML"></a></li>
+        <li><a v-if="metadata.thenca" target="_blank" v-bind:href="metadata.thenca" class="access_link">Accès à la thèse</a></li>
       </ul>
     </nav>
     <div class="document-area is-flex app-width-margin" :class="tocMenuCssClass">

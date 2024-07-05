@@ -43,9 +43,10 @@
                 </li>
 
                 <li>
-                  <span
-                    >Licence : <a v-bind:href="metadata.rights">cc. BY-NC-ND 3.0</a></span
-                  >
+                  <span>Licence :
+                    <a target="_blank" v-bind:href="metadata.rights">cc. BY-NC-ND 3.0
+                    </a>
+                  </span>
                 </li>
               </ul>
             </section>
@@ -58,42 +59,42 @@
                 <div class="columns is-multiline is-mobile block">
                   <div v-if="metadata.wikipedia" class="column is-one-quarter">
                     <figure class="image is-48x48">
-                      <a v-bind:href="metadata.wikipedia">
+                      <a target="_blank" v-bind:href="metadata.wikipedia">
                         <img :src="require('@/assets/images/Logo_wikipedia.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.catalogue_bnf" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata['catalogue_bnf']">
+                      <a target="_blank" v-bind:href="metadata['catalogue_bnf']">
                         <img :src="require('@/assets/images/Logo_bnf.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.data_bnf" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.data_bnf">
+                      <a target="_blank" v-bind:href="metadata.data_bnf">
                         <img :src="require('@/assets/images/Logo_databnf.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.idref" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.idref">
+                      <a target="_blank" v-bind:href="metadata.idref">
                         <img :src="require('@/assets/images/Logo_idref.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.dbpedia" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.dbpedia">
+                      <a target="_blank" v-bind:href="metadata.dbpedia">
                         <img :src="require('@/assets/images/Logo_dbpedia.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.wikidata" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.wikidata">
+                      <a target="_blank" v-bind:href="metadata.wikidata">
                         <img :src="require('@/assets/images/Logo_wikidata.png')" />
                       </a>
                     </figure>
@@ -105,28 +106,28 @@
                 <div class="columns is-multiline is-mobile block">
                   <div v-if="metadata.thenca" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.thenca">
+                      <a target="_blank" v-bind:href="metadata.thenca">
                         <img :src="require('@/assets/images/Logo_thenca.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.sudoc" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.sudoc">
+                      <a target="_blank" v-bind:href="metadata.sudoc">
                         <img :src="require('@/assets/images/Logo_sudoc.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.benc" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.benc">
+                      <a target="_blank" v-bind:href="metadata.benc">
                         <img :src="require('@/assets/images/Logo_benc.png')" />
                       </a>
                     </figure>
                   </div>
                   <div v-if="metadata.hal" class="column is-one-quarter">
                     <figure class="image is-48x48 level-left">
-                      <a v-bind:href="metadata.hal">
+                      <a target="_blank" v-bind:href="metadata.hal">
                         <img :src="require('@/assets/images/Logo_hal.png')" />
                       </a>
                     </figure>
