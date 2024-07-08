@@ -130,7 +130,6 @@ export default {
   async setup() {
     const manifestIsAvailable = ref(false);
     var yearsWithAdditionalPositions = [];
-    const listProm = ref([]);
 
     // Mirador view sticky behavior
     let miradorViewBoundingTop = ref(0);
@@ -253,16 +252,17 @@ export default {
     const getAllPositionsYears = async () => {
       const data = await getMetadataENCPOSFromApi();
       let annees = [];
+      let listProm = []
       for (var member of data.member) {
         let annee = member["@id"].replace("ENCPOS_", "");
         annees.push(annee);
       }
       annees.sort();
-      listProm.value = annees;
-      const anneesSupplement = listProm.value.filter(a => a.includes('b'))
+      listProm = annees;
+      let yearsIdwithSupplementalIndicator = listProm.filter(a => a.includes('b'))
+      console.log("yearsIdwithSupplementalIndicator : ", yearsIdwithSupplementalIndicator)
+      yearsWithAdditionalPositions = yearsIdwithSupplementalIndicator.map(string => string.replace('b', ''));
       console.log("yearsWithAdditionalPositions : ", yearsWithAdditionalPositions)
-      yearsWithAdditionalPositions = anneesSupplement.map(string => string.replace('b', ''));
-      console.log("yearsWithAdditionalPositions corrected : ", yearsWithAdditionalPositions)
     };
     const setMirador = function () {
       fetch(metadata.iiifManifestUrl, {
