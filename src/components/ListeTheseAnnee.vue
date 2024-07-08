@@ -80,14 +80,14 @@
 
 <script>
 import { ref, reactive, toRefs, watch, computed } from "vue";
-import { getPositionAnneeFromApi, getMetadataENCPOSFromApi } from "@/api/document";
+import { getMetadataENCPOSFromApi, getPositionAnneeFromApi } from "@/api/document";
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/antd.css";
 
 export default {
   name: "ListeTheseAnnee",
 
-  props: ["id", "textid"],
+  props: ["id", "textid", "yearswithadditionalpositions"],
   components: {
     VueSlider,
   },
@@ -96,14 +96,20 @@ export default {
       isOpened: false,
     });
     const { id } = toRefs(props);
-
     var annee = ref(id.value.toString());
-    const listProm = ref([]);
 
+    var yearsWithSupplement = props.yearswithadditionalpositions.map(string => string.replace('b', ''));
+
+    const listProm = ref([]);
     const getPositionsForCurrentYear = async () => {
       let metadata = {};
       let metadataSupplement = {};
-      let [data, dataSupplement] = await getPositionAnneeFromApi(annee.value);
+      let [data, dataSupplement] = []
+      if (yearsWithSupplement.includes(annee.value)) {
+        [data, dataSupplement] = await getPositionAnneeFromApi(annee.value, true);
+      } else {
+        [data, dataSupplement] = await getPositionAnneeFromApi(annee.value, false);
+      }
       var htmlnamespace = Object.keys(data["@context"]).find((k) =>
         data["@context"][k].includes("html")
       );
@@ -220,7 +226,6 @@ export default {
     });
 
     await Promise.all([getPositionsForCurrentYear(), getAllPositionsYears()]);
-
     const gotoTop = function () {
       scroll(0, 0);
     };

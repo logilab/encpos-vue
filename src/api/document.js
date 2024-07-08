@@ -13,12 +13,15 @@ async function getDocumentFromApi(id, options={}) {
     return document
 }
 
-async function getPositionAnneeFromApi(id, options={}) {
+async function getPositionAnneeFromApi(id, withSupplement = false, options={}) {
     const response = await fetch(`${_baseApiURL}/collections?id=ENCPOS_${id}`, {mode: 'cors', ...options})
-    const responseSupplement = await fetch(`${_baseApiURL}/collections?id=ENCPOS_${id}b`, {mode: 'cors', ...options})
+    let responseSupplement = {}
+    if (withSupplement) {
+        responseSupplement = await fetch(`${_baseApiURL}/collections?id=ENCPOS_${id}b`, {mode: 'cors', ...options})
+    }
     const document = await response.json()
     let documentSupplement = {}
-    if (responseSupplement.ok) {
+    if (responseSupplement && responseSupplement.ok) {
         documentSupplement = await responseSupplement.json()
     }
     return [document, documentSupplement]

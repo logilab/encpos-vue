@@ -6,6 +6,7 @@
         class="liste-theses-area app-width-padding"
         :id="metadata.date"
         :textid="$route.params.docId"
+        :yearswithadditionalpositions="yearsWithAdditionalPositions"
       />
       <document-metadata :metadata="metadata" class="metadata-area app-width-margin" />
     </div>
@@ -73,7 +74,7 @@
 <script>
 import Document from "@/components/Document.vue";
 import DocumentMetadata from "../components/DocumentMetadata.vue";
-import { getMetadataFromApi } from "@/api/document";
+import { getMetadataENCPOSFromApi, getMetadataFromApi } from "@/api/document";
 
 import {
   computed,
@@ -128,6 +129,8 @@ export default {
   },
   async setup() {
     const manifestIsAvailable = ref(false);
+    var yearsWithAdditionalPositions = [];
+    const listProm = ref([]);
 
     // Mirador view sticky behavior
     let miradorViewBoundingTop = ref(0);
@@ -142,7 +145,6 @@ export default {
         miradorViewBoundingTop.value = top < 0 ? -Math.floor(top) : 0;
       }
     };
-
     const metadata = reactive({
       sudoc: null,
       benc: null,
@@ -248,7 +250,20 @@ export default {
         }
       }
     };
-
+    const getAllPositionsYears = async () => {
+      const data = await getMetadataENCPOSFromApi();
+      let annees = [];
+      for (var member of data.member) {
+        let annee = member["@id"].replace("ENCPOS_", "");
+        annees.push(annee);
+      }
+      annees.sort();
+      listProm.value = annees;
+      const anneesSupplement = listProm.value.filter(a => a.includes('b'))
+      console.log("yearsWithAdditionalPositions : ", yearsWithAdditionalPositions)
+      yearsWithAdditionalPositions = anneesSupplement.map(string => string.replace('b', ''));
+      console.log("yearsWithAdditionalPositions corrected : ", yearsWithAdditionalPositions)
+    };
     const setMirador = function () {
       fetch(metadata.iiifManifestUrl, {
         method: "HEAD",
@@ -290,6 +305,8 @@ export default {
     const route = useRoute();
     await getMetadata(route.params.docId);
 
+    await getAllPositionsYears()
+
     return {
       tocCssClass: layout.tocCssClass,
       toggleTOCContent: layout.toggleTOCContent,
@@ -302,6 +319,7 @@ export default {
       metadata,
       manifestIsAvailable,
       layout,
+      yearsWithAdditionalPositions
     };
   },
 };
