@@ -155,11 +155,11 @@ export default {
       const data = await getMetadataENCPOSFromApi();
       let annees = [];
       for (var member of data.member) {
-        let annee = member["@id"].replace("ENCPOS_", "");
+        let annee = member["@id"].replace("ENCPOS_", "").replace("b", "");
         annees.push(annee);
       }
       annees.sort();
-      listProm.value = annees;
+      listProm.value = [...new Set(annees)];
     };
 
     watch(annee, getPositionsForCurrentYear);
