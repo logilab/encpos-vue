@@ -35,35 +35,35 @@
   </section>
 </template>
 <script>
-  import Burger from "./Burger";
-  export default {
-    name: "AppNavBar",
-    components: {Burger},
-    data() {
-      return {
-        isMenuOpened: false
-      }
+import Burger from './Burger'
+export default {
+  name: 'AppNavBar',
+  components: { Burger },
+  data () {
+    return {
+      isMenuOpened: false
+    }
+  },
+  computed: {
+    menuCsscClass () {
+      return this.isMenuOpened ? 'is-opened' : ''
+    }
+  },
+  methods: {
+    burgerChanged ($event) {
+      this.isMenuOpened = $event.isOpened
     },
-    computed: {
-      menuCsscClass () {
-        return this.isMenuOpened ? 'is-opened' : ''
-      }
-    },
-    methods: {
-      burgerChanged($event) {
-        this.isMenuOpened = $event.isOpened;
-      },
-      closeMenu() {
-        this.isMenuOpened = false;
-      },
-    },
-    mounted () {
-      document.body.addEventListener('click', this.closeMenu)
-    },
-    beforeUnmount () {
-      document.body.removeEventListener('click', this.closeMenu)
-    },
+    closeMenu () {
+      this.isMenuOpened = false
+    }
+  },
+  mounted () {
+    document.body.addEventListener('click', this.closeMenu)
+  },
+  beforeUnmount () {
+    document.body.removeEventListener('click', this.closeMenu)
   }
+}
 </script>
 <style scoped>
 nav {

@@ -79,156 +79,156 @@
 </template>
 
 <script>
-import { ref, reactive, toRefs, watch, computed } from "vue";
-import { getMetadataENCPOSFromApi, getPositionAnneeFromApi } from "@/api/document";
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/antd.css";
+import { ref, reactive, toRefs, watch, computed } from 'vue'
+import { getMetadataENCPOSFromApi, getPositionAnneeFromApi } from '@/api/document'
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/antd.css'
 
 export default {
-  name: "ListeTheseAnnee",
+  name: 'ListeTheseAnnee',
 
-  props: ["id", "textid", "yearswithadditionalpositions"],
+  props: ['id', 'textid', 'yearswithadditionalpositions'],
   components: {
-    VueSlider,
+    VueSlider
   },
-  async setup(props) {
-    let state = reactive({
-      isOpened: false,
-    });
-    const { id } = toRefs(props);
-    var annee = ref(id.value.toString());
+  async setup (props) {
+    const state = reactive({
+      isOpened: false
+    })
+    const { id } = toRefs(props)
+    const annee = ref(id.value.toString())
 
-    var yearsWithSupplement = props.yearswithadditionalpositions.map(string => string.replace('b', ''));
+    const yearsWithSupplement = props.yearswithadditionalpositions.map(string => string.replace('b', ''))
 
-    const listProm = ref([]);
+    const listProm = ref([])
     const getPositionsForCurrentYear = async () => {
-      let metadata = {};
-      let metadataSupplement = {};
+      const metadata = {}
+      const metadataSupplement = {}
       let [data, dataSupplement] = []
       if (yearsWithSupplement.includes(annee.value)) {
-        [data, dataSupplement] = await getPositionAnneeFromApi(annee.value, true);
+        [data, dataSupplement] = await getPositionAnneeFromApi(annee.value, true)
       } else {
-        [data, dataSupplement] = await getPositionAnneeFromApi(annee.value, false);
+        [data, dataSupplement] = await getPositionAnneeFromApi(annee.value, false)
       }
-      var htmlnamespace = Object.keys(data["@context"]).find((k) =>
-        data["@context"][k].includes("html")
-      );
-      var dcnamespace = Object.keys(data["@context"]).find((k) =>
-        data["@context"][k].includes("dc/elements")
-      );
+      const htmlnamespace = Object.keys(data['@context']).find((k) =>
+        data['@context'][k].includes('html')
+      )
+      const dcnamespace = Object.keys(data['@context']).find((k) =>
+        data['@context'][k].includes('dc/elements')
+      )
 
-      if (data && data["member"]) {
-        for (var these of data["member"]) {
-          if (these["@id"].includes("PREV") || these["@id"].includes("NEXT")) {
-            continue;
+      if (data && data.member) {
+        for (const these of data.member) {
+          if (these['@id'].includes('PREV') || these['@id'].includes('NEXT')) {
+            continue
           }
-          var title = these["dts:extensions"][htmlnamespace + ":h1"];
-          var author = these["dts:extensions"][dcnamespace + ":creator"];
+          const title = these['dts:extensions'][htmlnamespace + ':h1']
+          const author = these['dts:extensions'][dcnamespace + ':creator']
           try {
-            const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
-            metadata[page] = [these["@id"], author, title];
+            const page = these['dts:dublincore']['dct:extend'].toString().split('-')[0]
+            metadata[page] = [these['@id'], author, title]
           } catch {
-            metadata[these["@id"].split("_")[2]] = [these["@id"], author, title];
+            metadata[these['@id'].split('_')[2]] = [these['@id'], author, title]
           }
         }
       }
-      if (dataSupplement && dataSupplement["member"]) {
-        for (these of dataSupplement["member"]) {
-          if (these["@id"].includes("PREV") || these["@id"].includes("NEXT")) {
-            continue;
+      if (dataSupplement && dataSupplement.member) {
+        for (const these of dataSupplement.member) {
+          if (these['@id'].includes('PREV') || these['@id'].includes('NEXT')) {
+            continue
           }
-          title = these["dts:extensions"][htmlnamespace + ":h1"];
-          author = these["dts:extensions"][dcnamespace + ":creator"];
+          const title = these['dts:extensions'][htmlnamespace + ':h1']
+          const author = these['dts:extensions'][dcnamespace + ':creator']
           try {
-            const page = these["dts:dublincore"]["dct:extend"].toString().split("-")[0];
-            metadataSupplement[page] = [these["@id"], author, title];
+            const page = these['dts:dublincore']['dct:extend'].toString().split('-')[0]
+            metadataSupplement[page] = [these['@id'], author, title]
           } catch {
-            metadataSupplement[these["@id"].split("_")[2]] = [these["@id"], author, title];
+            metadataSupplement[these['@id'].split('_')[2]] = [these['@id'], author, title]
           }
         }
       }
-      state.metadata = metadata;
-      state.metadataSupplement = metadataSupplement;
-    };
+      state.metadata = metadata
+      state.metadataSupplement = metadataSupplement
+    }
 
     const getAllPositionsYears = async () => {
-      const data = await getMetadataENCPOSFromApi();
-      let annees = [];
-      for (var member of data.member) {
-        let annee = member["@id"].replace("ENCPOS_", "").replace("b", "");
-        annees.push(annee);
+      const data = await getMetadataENCPOSFromApi()
+      const annees = []
+      for (const member of data.member) {
+        const annee = member['@id'].replace('ENCPOS_', '').replace('b', '')
+        annees.push(annee)
       }
-      annees.sort();
-      listProm.value = [...new Set(annees)];
-    };
+      annees.sort()
+      listProm.value = [...new Set(annees)]
+    }
 
-    watch(annee, getPositionsForCurrentYear);
+    watch(annee, getPositionsForCurrentYear)
 
     const listCssClass = computed(() => {
-      return state.isOpened ? "is-opened" : "";
-    });
+      return state.isOpened ? 'is-opened' : ''
+    })
 
     const toggleContent = function (event) {
-      event.preventDefault();
-      state.isOpened = !state.isOpened;
-    };
+      event.preventDefault()
+      state.isOpened = !state.isOpened
+    }
 
     const isNotInitialAnnee = computed(() => {
-      return annee.value.toString() !== id.value.toString();
-    });
+      return annee.value.toString() !== id.value.toString()
+    })
 
     const downOneAnne = function () {
-      if (listProm.value.indexOf(annee.value.toString()) != "0") {
+      if (listProm.value.indexOf(annee.value.toString()) !== '0') {
         annee.value = listProm.value[
           listProm.value.indexOf(annee.value.toString()) - 1
-        ].toString();
+        ].toString()
       }
-      return annee;
-    };
+      return annee
+    }
 
     const reinitalise = function () {
-      annee.value = id.value.toString();
-      return annee;
-    };
+      annee.value = id.value.toString()
+      return annee
+    }
 
     const addOneAnne = function () {
       if (
-        listProm.value.indexOf(annee.value.toString()) !=
+        listProm.value.indexOf(annee.value.toString()) !==
         listProm.value.length.toString() - 1
       ) {
         annee.value = listProm.value[
           listProm.value.indexOf(annee.value.toString()) + 1
-        ].toString();
+        ].toString()
       }
-      return annee;
-    };
+      return annee
+    }
 
     const inputAnnee = computed({
       get: () => annee.value,
       set: (val) => {
-        const valStr = val.toString().toLowerCase(); // special string value : 1942b
+        const valStr = val.toString().toLowerCase() // special string value : 1942b
         if (valStr.length >= 4) {
           if (listProm.value.indexOf(valStr) !== -1) {
-            annee.value = valStr;
+            annee.value = valStr
           } else {
-            const valNum = parseInt(val);
-            const minDate = listProm.value[0];
-            const maxDate = listProm.value[listProm.value.length - 1];
-            annee.value = Math.min(maxDate, Math.max(minDate, valNum)).toString();
-            console.log(minDate, annee.value);
+            const valNum = parseInt(val)
+            const minDate = listProm.value[0]
+            const maxDate = listProm.value[listProm.value.length - 1]
+            annee.value = Math.min(maxDate, Math.max(minDate, valNum)).toString()
+            console.log(minDate, annee.value)
           }
         }
-      },
-    });
+      }
+    })
 
     watch(inputAnnee, () => {
-      state.isOpened = true;
-    });
+      state.isOpened = true
+    })
 
-    await Promise.all([getPositionsForCurrentYear(), getAllPositionsYears()]);
+    await Promise.all([getPositionsForCurrentYear(), getAllPositionsYears()])
     const gotoTop = function () {
-      scroll(0, 0);
-    };
+      scroll(0, 0)
+    }
 
     return {
       state,
@@ -241,10 +241,10 @@ export default {
       downOneAnne,
       inputAnnee,
       gotoTop,
-      listProm,
-    };
-  },
-};
+      listProm
+    }
+  }
+}
 </script>
 
 <style scoped>

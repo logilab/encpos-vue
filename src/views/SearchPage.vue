@@ -231,13 +231,15 @@
               class="table is-hoverable is-narrow is-fulldwidth"
               v-if="search.result.value && search.result.value.length"
             >
-              <template v-for="position in search.result.value" :key="position.id">
+              <template
+                v-for="position in search.result.value"
+                :key="position.id"
+              >
                 <router-link
                   :to="{
                     name: 'DocumentPage',
                     params: { docId: position.id },
                   }"
-                  tag="tr"
                   style="text-decoration: none; color: inherit"
                 >
                   <div class="columns mb-6">
@@ -387,8 +389,14 @@
                 </tr>
               </thead>
               <tbody>
-                <template v-for="position in search.result.value" :key="position.id">
-                  <tr class="row-infos" :class="positionCssClass(position)">
+                <template
+                  v-for="position in search.result.value"
+                  :key="position.id"
+                >
+                  <tr
+                    class="row-infos"
+                    :class="positionCssClass(position)"
+                  >
                     <td>
                       <router-link
                         :to="{ name: 'DocumentPage', params: { docId: position.id } }"
@@ -458,76 +466,76 @@
 
 <script>
 // @ is an alias to /src
-import { computed, inject, ref, watch } from "vue";
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/antd.css";
-import Pagination from "@/components/Pagination";
-import Toggle from "@vueform/toggle";
+import { computed, inject, ref, watch } from 'vue'
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/antd.css'
+import Pagination from '@/components/Pagination'
+import Toggle from '@vueform/toggle'
 
-import Histogram from "@/components/charts/Histogram";
-import Carousel from "@/components/Carousel";
+import Histogram from '@/components/charts/Histogram'
+import Carousel from '@/components/Carousel'
 
-const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`;
+const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     VueSlider,
     Pagination,
     Histogram,
     Carousel,
-    Toggle,
+    Toggle
   },
-  setup() {
-    const search = inject("search");
-    const aggSearch = inject("agg-search");
-    const layout = inject("variable-layout");
+  setup () {
+    const search = inject('search')
+    const aggSearch = inject('agg-search')
+    const layout = inject('variable-layout')
 
-    let isSearchMinimized = ref(false);
+    const isSearchMinimized = ref(false)
 
-    async function executeSearches() {
-      layout.rawSearchedTerm.value = inputTerm.value;
+    async function executeSearches () {
+      layout.rawSearchedTerm.value = inputTerm.value
 
-      const t = inputTerm.value && inputTerm.value.length > 0 ? inputTerm.value : "***";
+      const t = inputTerm.value && inputTerm.value.length > 0 ? inputTerm.value : '***'
       if (isFulltextSearch.value) {
-        search.setTerm(`content:${t}`);
+        search.setTerm(`content:${t}`)
       } else {
         search.setTerm(
           `metadata.promotion_year:${t}+OR+metadata.topic_notBefore:${t}+OR+metadata.topic_notBefore:${t}+OR+metadata.title_rich:${t}+OR+metadata.author_name:${t}+OR+metadata.author_firstname:${t}`
-        );
+        )
       }
-      await Promise.all([search.execute(), aggSearch.execute()]);
+      await Promise.all([search.execute(), aggSearch.execute()])
     }
 
     const minimizeSearchForm = function () {
-      isSearchMinimized.value = true;
-    };
+      isSearchMinimized.value = true
+    }
 
     const expandSearchForm = function () {
-      isSearchMinimized.value = false;
-    };
+      isSearchMinimized.value = false
+    }
 
     const searchMinimizedCssClass = computed(() => {
-      return isSearchMinimized.value ? "search-minimized" : "";
-    });
+      return isSearchMinimized.value ? 'search-minimized' : ''
+    })
 
-    const minPromotionYear = 1849;
-    const minTopicYear = -500;
-    const currentYear = new Date().getFullYear();
+    const minPromotionYear = 1849
+    const minTopicYear = -500
+    const currentYear = new Date().getFullYear()
 
-    function getInitialState() {
+    function getInitialState () {
       // initial values
-      const initialTerm = "";
-      const initialTopicRange = [-500, currentYear];
-      const initialPromotionYearRange = [minPromotionYear, currentYear];
-      //const initialSort = "-metadata.promotion_year";
-      const initialIsFulltextSearch = true;
-      const initialIsResultTableMode = true;
+      const initialTerm = ''
+      const initialTopicRange = [-500, currentYear]
+      const initialPromotionYearRange = [minPromotionYear, currentYear]
+      // const initialSort = "-metadata.promotion_year";
+      const initialIsFulltextSearch = true
+      const initialIsResultTableMode = true
 
       // restore content
-      const notBefore = search.ranges["metadata.topic_notBefore"];
-      const notAfter = search.ranges["metadata.topic_notAfter"];
-      const promotionYear = search.ranges["metadata.promotion_year"];
+      const notBefore = search.ranges['metadata.topic_notBefore']
+      const notAfter = search.ranges['metadata.topic_notAfter']
+      const promotionYear = search.ranges['metadata.promotion_year']
 
       // try to restore else get the initial values
       return {
@@ -536,176 +544,176 @@ export default {
         isResultTableMode: search.isResultTableMode || initialIsResultTableMode,
         topicRange:
           notBefore && notAfter
-            ? [notBefore.replace("gte:", ""), notAfter.replace("lte:", "")]
+            ? [notBefore.replace('gte:', ''), notAfter.replace('lte:', '')]
             : initialTopicRange,
         sort: search.sorts.value,
         promotionYearRange: promotionYear
-          ? promotionYear.replace("lte:", "").replace("gte:", "").split(",")
-          : initialPromotionYearRange,
-      };
+          ? promotionYear.replace('lte:', '').replace('gte:', '').split(',')
+          : initialPromotionYearRange
+      }
     }
 
-    const initialState = getInitialState();
+    const initialState = getInitialState()
 
-    const inputTerm = ref(initialState.term);
-    const inputSort = ref(initialState.sort);
-    const onrollActive = ref([]);
-    const isFulltextSearch = ref(initialState.isFulltextSearch);
-    const isResultTableMode = ref(initialState.isResultTableMode);
+    const inputTerm = ref(initialState.term)
+    const inputSort = ref(initialState.sort)
+    const onrollActive = ref([])
+    const isFulltextSearch = ref(initialState.isFulltextSearch)
+    const isResultTableMode = ref(initialState.isResultTableMode)
     // Promotion Range : input v-model and validation
 
-    const inputPromotionYearRange = ref(initialState.promotionYearRange);
+    const inputPromotionYearRange = ref(initialState.promotionYearRange)
 
     const promotionYearValueValidation = function (val, defaultValue) {
-      const valStr = String(val);
+      const valStr = String(val)
       if (valStr.length === 0 || isNaN(val)) {
-        return defaultValue;
+        return defaultValue
       } else if (valStr.length >= 4) {
-        return Math.max(minPromotionYear, Math.min(currentYear, val));
+        return Math.max(minPromotionYear, Math.min(currentYear, val))
       }
-    };
+    }
 
     const inputPromotionYearRangeStart = computed({
       get: () => inputPromotionYearRange.value[0],
       set: (val) => {
-        const validatedVal = promotionYearValueValidation(val, minPromotionYear);
+        const validatedVal = promotionYearValueValidation(val, minPromotionYear)
         if (validatedVal) {
           inputPromotionYearRange.value = [
             validatedVal,
-            inputPromotionYearRange.value[1],
-          ];
+            inputPromotionYearRange.value[1]
+          ]
         }
-      },
-    });
+      }
+    })
 
     const inputPromotionYearRangeEnd = computed({
       get: () => inputPromotionYearRange.value[1],
       set: (val) => {
-        const validatedVal = promotionYearValueValidation(val, currentYear);
+        const validatedVal = promotionYearValueValidation(val, currentYear)
         if (validatedVal) {
           inputPromotionYearRange.value = [
             inputPromotionYearRange.value[0],
-            validatedVal,
-          ];
+            validatedVal
+          ]
         }
-      },
-    });
+      }
+    })
 
     // Topic Range : input v-model and validation
 
-    const inputTopicRange = ref(initialState.topicRange);
+    const inputTopicRange = ref(initialState.topicRange)
 
     const topicYearValueValidation = function (val, defaultValue) {
-      const valStr = String(val);
+      const valStr = String(val)
       if (valStr.length > 0 && isNaN(val)) {
-        return defaultValue;
+        return defaultValue
       } else {
-        return Math.max(minTopicYear, Math.min(currentYear, val));
+        return Math.max(minTopicYear, Math.min(currentYear, val))
       }
-    };
+    }
 
     const inputTopicRangeStart = computed({
       get: () => inputTopicRange.value[0],
       set: (val) => {
-        const validatedVal = topicYearValueValidation(val, minTopicYear);
+        const validatedVal = topicYearValueValidation(val, minTopicYear)
         if (validatedVal) {
-          inputTopicRange.value = [validatedVal, inputTopicRange.value[1]];
+          inputTopicRange.value = [validatedVal, inputTopicRange.value[1]]
         }
-      },
-    });
+      }
+    })
 
     const inputTopicRangeEnd = computed({
       get: () => inputTopicRange.value[1],
       set: (val) => {
-        const validatedVal = topicYearValueValidation(val, currentYear);
+        const validatedVal = topicYearValueValidation(val, currentYear)
         if (validatedVal) {
-          inputTopicRange.value = [inputTopicRange.value[0], validatedVal];
+          inputTopicRange.value = [inputTopicRange.value[0], validatedVal]
         }
-      },
-    });
+      }
+    })
 
     const onBlurCheckTopicRangeStart = function ($event) {
-      if ($event.target.value === "" || isNaN($event.target.value)) {
-        inputTopicRange.value = [minTopicYear, inputTopicRange.value[1]];
+      if ($event.target.value === '' || isNaN($event.target.value)) {
+        inputTopicRange.value = [minTopicYear, inputTopicRange.value[1]]
       }
-    };
+    }
 
     const onBlurCheckTopicRangeEnd = function ($event) {
-      if ($event.target.value === "" || isNaN($event.target.value)) {
-        inputTopicRange.value = [inputTopicRange.value[0], currentYear];
+      if ($event.target.value === '' || isNaN($event.target.value)) {
+        inputTopicRange.value = [inputTopicRange.value[0], currentYear]
       }
-    };
+    }
 
     const deleteTerm = function () {
-      inputTerm.value = "";
-    };
+      inputTerm.value = ''
+    }
 
-    const isEmptyOrWildcards = new RegExp("^[*]*$");
+    const isEmptyOrWildcards = /^[*]*$/
 
-    search.setNoHighlight(isEmptyOrWildcards.test(inputTerm.value));
-    search.setTerm(inputTerm.value);
+    search.setNoHighlight(isEmptyOrWildcards.test(inputTerm.value))
+    search.setTerm(inputTerm.value)
     search.setRange(
-      "metadata.promotion_year",
+      'metadata.promotion_year',
       `gte:${inputPromotionYearRange.value[0]},lte:${inputPromotionYearRange.value[1]}`
-    );
+    )
 
-    search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
-    search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
-    search.setSorts(inputSort.value);
-    search.setIsFulltextSearch(isFulltextSearch);
+    search.setRange('metadata.topic_notBefore', 'gte:' + inputTopicRange.value[0])
+    search.setRange('metadata.topic_notAfter', 'lte:' + inputTopicRange.value[1])
+    search.setSorts(inputSort.value)
+    search.setIsFulltextSearch(isFulltextSearch)
 
     watch(inputTerm, () => {
-      search.setNoHighlight(isEmptyOrWildcards.test(inputTerm.value));
-      search.setTerm(inputTerm.value);
-    });
+      search.setNoHighlight(isEmptyOrWildcards.test(inputTerm.value))
+      search.setTerm(inputTerm.value)
+    })
 
-    watch(isFulltextSearch, executeSearches);
+    watch(isFulltextSearch, executeSearches)
 
     watch(inputPromotionYearRange, () => {
       search.setRange(
-        "metadata.promotion_year",
+        'metadata.promotion_year',
         `gte:${inputPromotionYearRange.value[0]},lte:${inputPromotionYearRange.value[1]}`
-      );
-      search.setPageNum(1);
-      executeSearches();
-    });
+      )
+      search.setPageNum(1)
+      executeSearches()
+    })
 
     watch(inputTopicRange, () => {
-      search.setRange("metadata.topic_notBefore", "gte:" + inputTopicRange.value[0]);
-      search.setRange("metadata.topic_notAfter", "lte:" + inputTopicRange.value[1]);
-      search.setPageNum(1);
-      executeSearches();
-    });
+      search.setRange('metadata.topic_notBefore', 'gte:' + inputTopicRange.value[0])
+      search.setRange('metadata.topic_notAfter', 'lte:' + inputTopicRange.value[1])
+      search.setPageNum(1)
+      executeSearches()
+    })
 
     watch(inputSort, () => {
-      search.setSorts(inputSort.value);
-      search.setPageNum(1);
-      search.execute();
-    });
+      search.setSorts(inputSort.value)
+      search.setPageNum(1)
+      search.execute()
+    })
 
     // set up the agg search and bind it to the search inputs changes
-    aggSearch.setTerm(search.term.value);
-    aggSearch.setSorts(search.sorts.value);
-    aggSearch.setGroupbyField("metadata.promotion_year");
-    aggSearch.setWithIds(true);
-    Object.keys(search.ranges).map((k) => {
-      aggSearch.setRange(k, search.ranges[k]);
-    });
+    aggSearch.setTerm(search.term.value)
+    aggSearch.setSorts(search.sorts.value)
+    aggSearch.setGroupbyField('metadata.promotion_year')
+    aggSearch.setWithIds(true)
+    Object.keys(search.ranges).forEach((k) => {
+      aggSearch.setRange(k, search.ranges[k])
+    })
 
     watch(search.term, () => {
-      aggSearch.setTerm(search.term.value);
-    });
+      aggSearch.setTerm(search.term.value)
+    })
     watch(search.sorts, () => {
-      aggSearch.setSorts(search.sorts.value);
-    });
+      aggSearch.setSorts(search.sorts.value)
+    })
     watch(search.ranges, () => {
-      Object.keys(search.ranges).map((k) => {
-        aggSearch.setRange(k, search.ranges[k]);
-      });
-    });
+      Object.keys(search.ranges).forEach((k) => {
+        aggSearch.setRange(k, search.ranges[k])
+      })
+    })
 
     // run the initial searches
-    executeSearches();
+    executeSearches()
 
     return {
       layout,
@@ -732,18 +740,18 @@ export default {
       inputSort,
       currentYear,
       onrollActive,
-      VUE_APP_IIIF_IMAGES_URL,
-    };
+      VUE_APP_IIIF_IMAGES_URL
+    }
   },
   methods: {
     rollActive: function (event, id) {
-      event.preventDefault();
+      event.preventDefault()
       if (this.onrollActive.includes(id) === false) {
-        this.onrollActive.push(id);
+        this.onrollActive.push(id)
       } else {
-        const index = this.onrollActive.indexOf(id);
+        const index = this.onrollActive.indexOf(id)
         if (index > -1) {
-          this.onrollActive.splice(index, 1);
+          this.onrollActive.splice(index, 1)
         }
       }
     },
@@ -752,11 +760,11 @@ export default {
         this.isFulltextSearch &&
         this.isResultTableMode &&
         position.highlight !== null
-        ? "is-selected"
-        : "";
-    },
-  },
-};
+        ? 'is-selected'
+        : ''
+    }
+  }
+}
 </script>
 
 <style src="@vueform/toggle/themes/default.css"></style>

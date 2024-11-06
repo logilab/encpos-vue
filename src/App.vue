@@ -10,23 +10,23 @@
 </template>
 
 <script>
-import AppNavbar from "@/components/AppNavbar";
-import AppFooter from "@/components/AppFooter";
-import BackToTopButton from "@/components/BackToToButton";
+import AppNavbar from '@/components/AppNavbar'
+import AppFooter from '@/components/AppFooter'
+import BackToTopButton from '@/components/BackToToButton'
 
-import { onMounted } from "vue";
+import { onMounted } from 'vue'
 
 export default {
   components: {
     BackToTopButton,
     AppNavbar,
-    AppFooter,
+    AppFooter
   },
 
-  setup() {
-    onMounted(() => {});
-  },
-};
+  setup () {
+    onMounted(() => {})
+  }
+}
 </script>
 
 <style>

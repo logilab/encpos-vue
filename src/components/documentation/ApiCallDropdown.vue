@@ -26,33 +26,33 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
-import "highlight.js/styles/tomorrow.css";
+import { ref, watch } from 'vue'
+import 'highlight.js/styles/tomorrow.css'
 
 export default {
-  name: "ApiCallDropdown",
-  props: ["url", "description", "method", "format"],
-  setup(props) {
-    const enabled = ref(false);
-    const result = ref(null);
+  name: 'ApiCallDropdown',
+  props: ['url', 'description', 'method', 'format'],
+  setup (props) {
+    const enabled = ref(false)
+    const result = ref(null)
 
     const runApiCall = async function () {
-      const res = await fetch(props.url, { method: props.method });
-      result.value = await res.text();
-    };
+      const res = await fetch(props.url, { method: props.method })
+      result.value = await res.text()
+    }
 
     watch(enabled, () => {
       if (result.value === null && enabled.value) {
-        runApiCall();
+        runApiCall()
       }
-    });
+    })
 
     return {
       enabled,
-      result,
-    };
-  },
-};
+      result
+    }
+  }
+}
 </script>
 
 <style scoped>

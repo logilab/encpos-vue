@@ -20,51 +20,51 @@
   </div>
 </template>
 <script>
-import { ref, inject, watch } from "vue";
+import { ref, inject, watch } from 'vue'
 
 export default {
-  name: "Pagination",
-  setup() {
-    const search = inject("search");
+  name: 'Pagination',
+  setup () {
+    const search = inject('search')
 
-    console.log("pagination:", search.pageCount);
+    console.log('pagination:', search.pageCount)
 
-    const start = 1;
-    let currentInput = ref(search.pageNum.value || start);
+    const start = 1
+    const currentInput = ref(search.pageNum.value || start)
 
     const goToPage = function (num) {
       if (!parseInt(num)) {
-        num = start;
+        num = start
       }
 
       if (num > search.pageCount.value) {
-        num = search.pageCount.value;
+        num = search.pageCount.value
       } else if (num < start) {
-        num = start;
+        num = start
       }
-      currentInput.value = num;
+      currentInput.value = num
 
       if (search.pageNum !== num) {
-        search.setPageNum(num);
-        search.execute();
+        search.setPageNum(num)
+        search.execute()
       }
-    };
+    }
 
     watch(search.pageNum, () => {
-      if (search.pageNum.value != currentInput.value) {
-        currentInput.value = search.pageNum.value;
+      if (search.pageNum.value !== currentInput.value) {
+        currentInput.value = search.pageNum.value
       }
-    });
+    })
 
     watch(currentInput, () => {
-      goToPage(currentInput.value);
-    });
+      goToPage(currentInput.value)
+    })
 
-    //currentInput.value = search.numPage.value || start;
+    // currentInput.value = search.numPage.value || start;
 
-    return { pageCount: search.pageCount, currentInput, goToPage };
-  },
-};
+    return { pageCount: search.pageCount, currentInput, goToPage }
+  }
+}
 </script>
 
 <style scoped>

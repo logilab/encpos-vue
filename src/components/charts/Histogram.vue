@@ -14,99 +14,99 @@
 </template>
 
 <script>
-import { ref, inject, watch } from "vue";
-import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
+import { ref, inject, watch } from 'vue'
+import Vue3ChartJs from '@j-t-mcc/vue3-chartjs'
 
 export default {
-  name: "Histogram",
+  name: 'Histogram',
   components: {
-    Vue3ChartJs,
+    Vue3ChartJs
   },
-  setup() {
-    const aggSearch = inject("agg-search");
+  setup () {
+    const aggSearch = inject('agg-search')
 
-    const chartRef = ref(null);
+    const chartRef = ref(null)
 
     const histoChart = {
-      id: "doughnut",
-      type: "bar",
+      id: 'doughnut',
+      type: 'bar',
       data: {
         labels: [],
-        datasets: [],
+        datasets: []
       },
       options: {
         beginAtZero: true,
         plugins: {
           title: {
             display: true,
-            text: "Nombre de positions par année",
-            position: "bottom",
+            text: 'Nombre de positions par année',
+            position: 'bottom'
           },
           legend: {
-            display: false,
-          },
+            display: false
+          }
         },
         scales: {
           x: {
             grid: {
-              display: false,
-            },
+              display: false
+            }
           },
           y: {
-            type: "linear",
+            type: 'linear',
             ticks: {
-              stepSize: 1,
+              stepSize: 1
             },
             grid: {
-              display: false,
-            },
-          },
-        },
-      },
-    };
+              display: false
+            }
+          }
+        }
+      }
+    }
 
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear()
 
     const updateChart = () => {
-      let labels = [];
-      let data = [];
+      const labels = []
+      const data = []
 
-      //TODO: should fetch the upper bound
+      // TODO: should fetch the upper bound
       for (let i = 1849; i <= currentYear; i++) {
-        labels.push(i);
-        let found = aggSearch.result.value.find(
-          (bucket) => bucket["key"]["metadata.promotion_year"] === i
-        );
+        labels.push(i)
+        const found = aggSearch.result.value.find(
+          (bucket) => bucket.key['metadata.promotion_year'] === i
+        )
         if (found) {
-          data.push(parseInt(found["doc_count"]));
+          data.push(parseInt(found.doc_count))
         } else {
-          data.push(0);
+          data.push(0)
         }
       }
 
-      histoChart.data.labels = labels;
+      histoChart.data.labels = labels
       histoChart.data.datasets = [
         {
-          label: "Par année de promotion",
-          backgroundColor: ["rgba(255, 206, 86, 0.75)"],
-          borderColor: ["rgba(255, 206, 86, 1)"],
+          label: 'Par année de promotion',
+          backgroundColor: ['rgba(255, 206, 86, 0.75)'],
+          borderColor: ['rgba(255, 206, 86, 1)'],
           borderWidth: 0.4,
-          data,
-        },
-      ];
+          data
+        }
+      ]
 
-      chartRef.value.update();
-    };
+      chartRef.value.update()
+    }
 
-    watch(aggSearch.result, updateChart);
+    watch(aggSearch.result, updateChart)
 
     return {
       aggSearch,
       histoChart,
       updateChart,
-      chartRef,
-    };
-  },
-};
+      chartRef
+    }
+  }
+}
 </script>
 <style scoped></style>
