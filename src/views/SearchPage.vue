@@ -475,7 +475,7 @@ import Toggle from '@vueform/toggle'
 import Histogram from '@/components/charts/Histogram'
 import Carousel from '@/components/Carousel'
 
-const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`
+const VUE_APP_IIIF_IMAGES_URL = `${import.meta.env.VUE_APP_IIIF_IMAGES_URL}`
 
 export default {
   name: 'Home',

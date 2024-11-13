@@ -8,7 +8,7 @@
 import { defineAsyncComponent } from 'vue/dist/vue.esm-bundler.js'
 import { getDocumentFromApi } from '@/api/document'
 
-const VUE_APP_IIIF_URL = `${process.env.VUE_APP_IIIF_URL}`
+const VUE_APP_IIIF_URL = `${import.meta.env.VUE_APP_IIIF_URL}`
 
 export default {
   name: 'Document',
