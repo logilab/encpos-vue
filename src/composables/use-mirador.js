@@ -1,9 +1,15 @@
-import { computed, readonly, ref } from 'vue'
+import { computed, onUnmounted, readonly, ref } from 'vue'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { Provider } from 'react-redux'
 import Mirador from 'mirador'
+import MiradorApp from 'mirador/dist/es/src/components/App'
+import createPluggableStore from 'mirador/dist/es/src/state/createPluggableStore'
 
 export default function useMirador (containerId = 'vue-mirador-container', _manifestUrl, _canvasIndex = 0) {
   const _windowId = 'document'
-  let mirador = null
+  let miradorStore = null
+  const reactRoot = ref(null)
 
   const manifestUrl = ref(_manifestUrl)
 
@@ -51,14 +57,37 @@ export default function useMirador (containerId = 'vue-mirador-container', _mani
 
   const initialize = function () {
     console.log('mirador init')
-    mirador = Mirador.viewer(config.value)
+    if (reactRoot.value !== null) {
+      console.log('mirador unmount in initialize')
+      reactRoot.value.unmount()
+    }
+    console.log('document.getElementById(containerId)', containerId, document.getElementById(containerId))
+    reactRoot.value = ReactDOM.createRoot(document.getElementById(containerId))
+    miradorStore = createPluggableStore(config.value)
+    reactRoot.value.render(
+      React.createElement(
+        Provider,
+        { store: miradorStore },
+        React.createElement(
+          MiradorApp,
+          { plugins: [] }
+        )
+      )
+    )
   }
 
+  onUnmounted(() => {
+    if (reactRoot.value !== null) {
+      console.log('mirador unmount in onUnmounted')
+      reactRoot.value.unmount()
+    }
+  })
+
   const dispatchAction = function (action) {
-    if (mirador === null) {
+    if (miradorStore === null) {
       initialize()
     }
-    mirador.store.dispatch(action)
+    miradorStore.dispatch(action)
   }
 
   const setManifestUrl = function (newUrl) {
