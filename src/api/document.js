@@ -1,4 +1,4 @@
-const _baseApiURL = `${import.meta.env.VUE_APP_API_URL}`
+const _baseApiURL = `${import.meta.env.VITE_API_URL}`
 
 async function getMetadataFromApi (id, options = {}) {
   const response_metadata = await fetch(`${_baseApiURL}/collections?id=${id}`, { mode: 'cors', ...options })

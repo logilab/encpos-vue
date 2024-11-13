@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-const rootURL = `${import.meta.env.VUE_APP_APP_ROOT_URL}`
+const rootURL = `${import.meta.env.VITE_APP_ROOT_URL}`
 
 const routes = [
   {
