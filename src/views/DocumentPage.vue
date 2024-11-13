@@ -31,7 +31,7 @@
             href=""
             class="text-btn"
             aria-label="texte seul"
-            @click="changeViewMode($event, 'text-mode')"
+            @click.prevent="changeViewMode('text-mode')"
           ></a>
         </li>
         <li>
@@ -39,7 +39,7 @@
             href=""
             class="text-images-btn"
             aria-label="texte et images"
-            @click="changeViewMode($event, 'text-and-images-mode')"
+            @click.prevent="changeViewMode('text-and-images-mode')"
           ></a>
         </li>
         <li>
@@ -47,7 +47,7 @@
             href=""
             class="images-btn"
             aria-label="images seules"
-            @click="changeViewMode($event, 'images-mode')"
+            @click.prevent="changeViewMode('images-mode')"
           ></a>
         </li>
       </ul>
@@ -64,7 +64,7 @@
           <document :id="$route.params.docId" :key="$route.params.docId" />
         </div>
         <div class="mirador-view" id="mirador-view" :style="miradorViewCssStyle">
-          <div id="vue-mirador-container" />
+          <div id="vue-mirador-container" ref="miradorContainer"/>
         </div>
       </div>
     </div>
@@ -84,7 +84,8 @@ import {
   reactive,
   provide,
   ref,
-  inject
+  inject,
+  watchEffect
 } from 'vue/dist/vue.esm-bundler.js'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
@@ -161,6 +162,8 @@ export default {
       wikidata: null,
       wikipedia: null
     })
+    const manifest = ref(null)
+    const miradorContainer = ref(null)
 
     const miradorInstance = useMirador('vue-mirador-container', null, 0)
     // provide an uninitialized instance of Mirador
@@ -265,14 +268,16 @@ export default {
     }
     const setMirador = function () {
       fetch(metadata.iiifManifestUrl, {
-        method: 'HEAD'
+        method: 'GET'
       })
         .then((r) => {
           manifestIsAvailable.value = r.ok
-          miradorInstance.setManifestUrl(metadata.iiifManifestUrl)
-          miradorInstance.initialize()
+          return r.json()
         })
-        .catch(() => {
+        .then((loadedManifest) => {
+          manifest.value = loadedManifest
+        })
+        .catch((error) => {
           manifestIsAvailable.value = false
         })
     }
@@ -283,6 +288,14 @@ export default {
         setMirador()
       }
     )
+
+    watchEffect(() => {
+      if (manifest.value !== null && miradorContainer.value !== null) {
+        miradorInstance.initialize()
+        miradorInstance.setCanvasId(manifest.value.items[0].id)
+        miradorInstance.setManifestUrl(metadata.iiifManifestUrl)
+      }
+    })
 
     onBeforeRouteUpdate(async (to) => {
       getMetadata(to.params.docId)
@@ -296,6 +309,7 @@ export default {
 
     onUnmounted(() => {
       const appView = document.getElementById('app')
+      layout.changeViewMode('text-mode')
       appView.removeEventListener('scroll', updateMiradorTopPosition)
       window.removeEventListener('scroll', updateMiradorTopPosition)
     })
@@ -317,7 +331,8 @@ export default {
       metadata,
       manifestIsAvailable,
       layout,
-      yearsWithAdditionalPositions
+      yearsWithAdditionalPositions,
+      miradorContainer
     }
   }
 }
