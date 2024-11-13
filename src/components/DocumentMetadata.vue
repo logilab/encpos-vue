@@ -212,8 +212,9 @@ export default {
           mode: 'cors'
         }).then((response) => {
           return response.json()
-        }
-        )
+        }).catch(() => {
+          console.error('Error while loading databnf data')
+        })
         console.log('fetch biblio data', biblioResponse)
       }
     }
