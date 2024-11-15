@@ -23,6 +23,7 @@ export default {
 
     const goToCanvas = function () {
       if (mirador) {
+        console.log(props.canvasId)
         mirador.setCanvasId(props.canvasId)
         // if (layout.miradorVisible != true) {
         // layout.setMiradorVisible(true);

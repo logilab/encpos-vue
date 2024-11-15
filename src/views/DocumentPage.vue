@@ -165,7 +165,7 @@ export default {
     const manifest = ref(null)
     const miradorContainer = ref(null)
 
-    const miradorInstance = useMirador('vue-mirador-container', null, 0)
+    const miradorInstance = useMirador(miradorContainer, manifest)
     // provide an uninitialized instance of Mirador
     provide('mirador', miradorInstance)
 
@@ -289,14 +289,6 @@ export default {
         setMirador()
       }
     )
-
-    watchEffect(() => {
-      if (manifest.value !== null && miradorContainer.value !== null) {
-        miradorInstance.initialize()
-        miradorInstance.setCanvasId(manifest.value.items[0].id)
-        miradorInstance.setManifestUrl(metadata.iiifManifestUrl)
-      }
-    })
 
     onBeforeRouteUpdate(async (to) => {
       getMetadata(to.params.docId)
