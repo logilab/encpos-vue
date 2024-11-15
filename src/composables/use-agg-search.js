@@ -2,7 +2,7 @@ import { reactive, readonly, ref, watchEffect } from 'vue'
 import { debounce } from 'lodash'
 import useApi from '@/composables/use-api'
 
-const _baseApiURL = `${process.env.VUE_APP_ELASTICSEARCH_URL}`
+const _baseApiURL = `${import.meta.env.VITE_ELASTICSEARCH_URL}`
 
 export default function useAggSearch () {
   const api = useApi()

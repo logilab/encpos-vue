@@ -1,7 +1,8 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
+    es2022: true
   },
   extends: [
     'plugin:vue/vue3-essential',
@@ -13,7 +14,4 @@ module.exports = {
     camelcase: 'warn',
     'vue/multi-word-component-names': ['error', { ignores: ['Burger', 'Carousel', 'Document', 'Histogram', 'Home', 'Pagination'] }]
   },
-  parserOptions: {
-    parser: '@babel/eslint-parser'
-  }
 }

@@ -878,11 +878,11 @@ export default {
   components: { ApiCallDropdown },
   data () {
     return {
-      API_URL: `${process.env.VUE_APP_ELASTICSEARCH_URL}`,
-      DTS_URL: `${process.env.VUE_APP_API_URL}`,
-      IIIF_SERVER_URL: `${process.env.VUE_APP_IIIF_SERVER_URL}`,
-      IIIF_URL: `${process.env.VUE_APP_IIIF_URL}`,
-      IIIF_IMAGES_URL: `${process.env.VUE_APP_IIIF_IMAGES_URL}`,
+      API_URL: `${import.meta.env.VITE_ELASTICSEARCH_URL}`,
+      DTS_URL: `${import.meta.env.VITE_API_URL}`,
+      IIIF_SERVER_URL: `${import.meta.env.VITE_IIIF_SERVER_URL}`,
+      IIIF_URL: `${import.meta.env.VITE_IIIF_URL}`,
+      IIIF_IMAGES_URL: `${import.meta.env.VITE_IIIF_IMAGES_URL}`,
       isMenuOpened: false
     }
   },

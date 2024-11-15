@@ -8,7 +8,7 @@
 import { defineAsyncComponent } from 'vue/dist/vue.esm-bundler.js'
 import { getDocumentFromApi } from '@/api/document'
 
-const VUE_APP_IIIF_URL = `${process.env.VUE_APP_IIIF_URL}`
+const VITE_IIIF_URL = `${import.meta.env.VITE_IIIF_URL}`
 
 export default {
   name: 'Document',
@@ -28,7 +28,7 @@ export default {
       tmpDom.querySelectorAll('a.pb.facs').forEach((a) => {
         const container = document.createElement('div')
         // TODO: gérer ce lowercase un peu gênant
-        const canvadId = `${VUE_APP_IIIF_URL}/${props.id.toLowerCase()}/canvas/f${frameNum}`
+        const canvadId = `${VITE_IIIF_URL}/${props.id.toLowerCase()}/canvas/f${frameNum}`
         container.innerHTML = `<page-break canvas-id="${canvadId}" canvas-num="${frameNum}" image="${a.href}"/>`
         frameNum += 1
         // replace the link with a PageBreak component

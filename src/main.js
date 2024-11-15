@@ -7,6 +7,8 @@ import useAggSearch from '@/composables/use-agg-search'
 import VueHighlightJS from 'vue3-highlightjs'
 import useLayout from './composables/use-layout'
 
+window.global = window
+
 createApp(App).provide('search', useEncposSimpleSearch())
   .provide('agg-search', useAggSearch())
   .provide('variable-layout', useLayout())

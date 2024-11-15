@@ -247,7 +247,7 @@
                       <img
                         class="pb-thumnbail"
                         onerror="this.onerror=null; this.src='https://iiif.chartes.psl.eu/images/enc/logo-enc.png/full/120,/0/default.png'"
-                        :src="`${VUE_APP_IIIF_IMAGES_URL}/${position.id}/${position.id}_01.TIF/full/120,/0/default.jpg`"
+                        :src="`${VITE_IIIF_IMAGES_URL}/${position.id}/${position.id}_01.TIF/full/120,/0/default.jpg`"
                       />
                     </div>
                     <div class="block column is-10">
@@ -475,7 +475,7 @@ import Toggle from '@vueform/toggle'
 import Histogram from '@/components/charts/Histogram'
 import Carousel from '@/components/Carousel'
 
-const VUE_APP_IIIF_IMAGES_URL = `${process.env.VUE_APP_IIIF_IMAGES_URL}`
+const VITE_IIIF_IMAGES_URL = `${import.meta.env.VITE_IIIF_IMAGES_URL}`
 
 export default {
   name: 'Home',
@@ -740,7 +740,7 @@ export default {
       inputSort,
       currentYear,
       onrollActive,
-      VUE_APP_IIIF_IMAGES_URL
+      VITE_IIIF_IMAGES_URL
     }
   },
   methods: {

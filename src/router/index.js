@@ -1,27 +1,27 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-const rootURL = `${process.env.VUE_APP_APP_ROOT_URL}`
+const rootURL = `${import.meta.env.VITE_APP_ROOT_URL}`
 
 const routes = [
   {
     path: '/',
     name: 'SearchPage',
-    component: () => import(/* webpackChunkName: "search" */ '../views/SearchPage.vue')
+    component: () => import('../views/SearchPage.vue')
   },
   {
     path: '/about',
     name: 'AboutPage',
-    component: () => import(/* webpackChunkName: "search" */ '../views/AboutPage.vue')
+    component: () => import('../views/AboutPage.vue')
   },
   {
     path: '/documentation',
     name: 'DocumentationPage',
-    component: () => import(/* webpackChunkName: "search" */ '../views/DocumentationPage.vue')
+    component: () => import('../views/DocumentationPage.vue')
   },
   {
     path: '/document/:docId',
     name: 'DocumentPage',
-    component: () => import(/* webpackChunkName: "document" */ '../views/DocumentPage.vue'),
+    component: () => import('../views/DocumentPage.vue'),
     props: true
   }
 ]
